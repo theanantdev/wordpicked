@@ -26,12 +26,12 @@ export function ArticleBody() {
 
                 <blockquote className="my-6 py-6 px-8 bg-[#11412A]/5 border-l-[3px] border-[#2B5940]">
                     <p className="font-heading italic text-[22px] md:text-[24px] leading-[32px] text-[#11412A] m-0">
-                        "Memory is a fragile instrument, prone to the warping of desire and the softening edges of regret. We do not remember what happened; we remember what we can live with."
+                        &ldquo;Memory is a fragile instrument, prone to the warping of desire and the softening edges of regret. We do not remember what happened; we remember what we can live with.&rdquo;
                     </p>
                 </blockquote>
 
                 <p>
-                    The supporting cast of characters serves as a mirror to the protagonist's own fading relevance. They move through the story like ghosts in a house they no longer recognize, searching for a meaning that was lost decades prior. It is a masterclass in atmospheric tension, proving once again that silence is the most powerful tool in a writer's arsenal.
+                    The supporting cast of characters serves as a mirror to the protagonist&apos;s own fading relevance. They move through the story like ghosts in a house they no longer recognize, searching for a meaning that was lost decades prior. It is a masterclass in atmospheric tension, proving once again that silence is the most powerful tool in a writer&apos;s arsenal.
                 </p>
 
                 {/* Ad Placeholder Inside Content */}
@@ -43,11 +43,11 @@ export function ArticleBody() {
                 </div>
 
                 <p>
-                    Critics often mistake this restraint for coldness, but they miss the profound empathy at the heart of the project. Every omission is an act of mercy; every silence, a space for the reader to insert their own grief. By the final chapters, the weight of what has been unsaid becomes almost unbearable, a testament to the author's control over the medium.
+                    Critics often mistake this restraint for coldness, but they miss the profound empathy at the heart of the project. Every omission is an act of mercy; every silence, a space for the reader to insert their own grief. By the final chapters, the weight of what has been unsaid becomes almost unbearable, a testament to the author&apos;s control over the medium.
                 </p>
 
                 <p>
-                    In conclusion, this is not merely a book to be read, but a space to be inhabited. It demands a slow pace, a quiet room, and a willingness to confront the shadows of one's own past. It is, quite simply, a triumph of the human spirit over the decay of time.
+                    In conclusion, this is not merely a book to be read, but a space to be inhabited. It demands a slow pace, a quiet room, and a willingness to confront the shadows of one&apos;s own past. It is, quite simply, a triumph of the human spirit over the decay of time.
                 </p>
             </div>
 

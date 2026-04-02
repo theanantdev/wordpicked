@@ -1,4 +1,3 @@
-import { Play } from "lucide-react";
 import Image from "next/image";
 
 export function FilmTrailer() {

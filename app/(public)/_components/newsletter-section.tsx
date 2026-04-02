@@ -1,5 +1,3 @@
-import { BookOpenText } from "lucide-react";
-
 export function NewsletterSection() {
     return (
         <section className="bg-[#ebe8e1] py-24">

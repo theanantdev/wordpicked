@@ -8,7 +8,7 @@ export function FilmContent() {
 
                 <p className="font-sans font-light text-[18px] md:text-[20px] leading-[28px] text-[#1A1A1A]/90">
                     <span className="float-left font-sans font-bold text-[60px] md:text-[72px] leading-[65px] md:leading-[72px] text-[#1A1A1A]/60 mr-4">I</span>
-                    n an era where cinema often screams for attention, Korvhoven's latest masterpiece whispers. It is a work of profound stillness, where every frame is meticulously composed with the precision of an Old Master's painting. The narrative unfolds not through dialogue, but through the shifting of light across a barren kitchen floor or the subtle tension in a glance. Moore is a revelation, adopting a stoic approach for a maelstrom.
+                    n an era where cinema often screams for attention, Korvhoven&apos;s latest masterpiece whispers. It is a work of profound stillness, where every frame is meticulously composed with the precision of an Old Master&apos;s painting. The narrative unfolds not through dialogue, but through the shifting of light across a barren kitchen floor or the subtle tension in a glance. Moore is a revelation, adopting a stoic approach for a maelstrom.
                 </p>
 
                 <p className="font-sans font-light text-[18px] md:text-[20px] leading-[28px] text-[#1A1A1A]/90">
@@ -17,7 +17,7 @@ export function FilmContent() {
 
                 <blockquote className="my-[40px] pl-[32px] py-4 border-l-[2px] border-[#E50914] flex flex-col gap-4">
                     <p className="font-heading italic font-bold text-[24px] md:text-[30px] leading-[36px] text-[#1A1A1A]">
-                        "Cinema is not the movement of images, but the architecture of time perceived through light."
+                        &apos;Cinema is not the movement of images, but the architecture of time perceived through light.&apos; - Elena Korvhoven&apos;
                     </p>
                     <span className="font-sans font-medium text-[12px] md:text-[14px] uppercase tracking-[1.4px] text-[#1A1A1A]/40">
                         — Elena Korvhoven
