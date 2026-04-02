@@ -8,7 +8,7 @@ export function FilmRelated() {
             tag: "NOIR",
             title: "Shadows in the Metropolis",
             description: "A deep dive into the resurgence of minimalist neo-noir in the 21st century.",
-            image: "https://images.unsplash.com/photo-1510884343110-394ffdc61f74?q=80&w=800&auto=format&fit=crop"
+            image: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=800&auto=format&fit=crop"
         },
         {
             id: "2",
