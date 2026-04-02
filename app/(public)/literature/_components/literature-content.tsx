@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 type Category = "ALL" | "FICTION" | "NON-FICTION" | "POETRY";
 type SortOption = "LATEST" | "OLDEST" | "TITLE_A_Z";
@@ -16,6 +17,7 @@ interface Article {
     author: string;
     description: string;
     imageUrl: string;
+    slug?: string;
 }
 
 const ARTICLES: Article[] = [
@@ -27,7 +29,8 @@ const ARTICLES: Article[] = [
         title: "The Silent Resonance of Modern Echoes",
         author: "By Julianna Vance",
         description: "An examination of silence as a narrative tool in contemporary prose, focusing on the weight of...",
-        imageUrl: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?q=80&w=600&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?q=80&w=600&auto=format&fit=crop",
+        slug: "the-silent-resonance-of-modern-echoes"
     },
     {
         id: "2",
@@ -37,7 +40,8 @@ const ARTICLES: Article[] = [
         title: "Ink & Ideology: The History of Printing",
         author: "By Marcus Thorne",
         description: "How the mechanical press didn't just reproduce words, but fundamentally restructured the human...",
-        imageUrl: "https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=600&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=600&auto=format&fit=crop",
+        slug: "ink-and-ideology-the-history-of-printing"
     },
     {
         id: "3",
@@ -47,7 +51,8 @@ const ARTICLES: Article[] = [
         title: "The Geometry of Verse in the Digital Age",
         author: "By Elena Rossi",
         description: "Exploring the visual architecture of concrete poetry and how screen-based reading changes our spati...",
-        imageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
+        slug: "the-geometry-of-verse-in-the-digital-age"
     },
     {
         id: "4",
@@ -57,7 +62,8 @@ const ARTICLES: Article[] = [
         title: "Shadows of the Protaganist",
         author: "By David Chen",
         description: "A deep dive into the psychological complexity of unreliable narrators in 21st-century psychological...",
-        imageUrl: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop",
+        slug: "shadows-of-the-protaganist"
     },
     {
         id: "5",
@@ -67,7 +73,8 @@ const ARTICLES: Article[] = [
         title: "The Architecture of an Argument",
         author: "By Sarah Jenkins",
         description: "Decoding the structural foundations of iconic essays and how they manipulate reader logic...",
-        imageUrl: "https://images.unsplash.com/photo-1575881875475-31023242e3f9?q=80&w=600&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1575881875475-31023242e3f9?q=80&w=600&auto=format&fit=crop",
+        slug: "the-architecture-of-an-argument"
     },
     {
         id: "6",
@@ -77,7 +84,8 @@ const ARTICLES: Article[] = [
         title: "Landscape as Metaphor",
         author: "By Thomas O'Brien",
         description: "Tracing the evolution of nature imagery from Romanticism to the industrial-coded pastoral poe...",
-        imageUrl: "https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=600&auto=format&fit=crop"
+        imageUrl: "https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=600&auto=format&fit=crop",
+        slug: "landscape-as-metaphor"
     }
 ];
 
@@ -171,7 +179,7 @@ export function LiteratureContent() {
             <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 sm:gap-12 lg:gap-15 px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
                 <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-x-8 md:gap-y-12">
                     {sortedArticles.map(article => (
-                        <article key={article.id} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
+                        <Link key={article.id} href={`/literature/${article.slug}`} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
                             {/* Image */}
                             <div className="relative w-full aspect-3/4">
                                 <Image
@@ -209,7 +217,7 @@ export function LiteratureContent() {
                                     {article.description}
                                 </p>
                             </div>
-                        </article>
+                        </Link>
                     ))}
                     {/* Empty state if all items are filtered out */}
                     {filteredArticles.length === 0 && (
