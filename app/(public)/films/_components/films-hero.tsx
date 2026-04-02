@@ -31,11 +31,10 @@ export function FilmsHero() {
                         Films
                     </h1>
                     <p className="mt-4 max-w-195.25 font-sans text-[15px] leading-[150%] text-white sm:text-[17px] md:text-[18px]">
-                        Curated insights into the world of cinema. From contemporary blockbusters to timeless classics, we explore the stories that shape our cultural landscape.
-                    </p>
+                        Curated insights into the world of cinema. From independent shorts to blockbuster hits, we explore the stories that move us.                    </p>
                 </div>
 
-                <Link href="#latest-pick" className="inline-flex h-12.5 w-full shrink-0 items-center justify-center gap-2.5 rounded-[8px] bg-[#DC2828] px-6 py-4.5 transition-colors hover:bg-[#b02020] sm:w-52.25">
+                <Link href="#latest-pick" className="hidden sm:inline-flex h-12.5 w-full shrink-0 items-center justify-center gap-2.5 rounded-[8px] bg-[#DC2828] px-6 py-4.5 transition-colors hover:bg-[#b02020] sm:w-52.25">
                     <span className="font-sans text-[18px] font-semibold leading-6.75 text-white sm:text-[22px]">
                         Read Now
                     </span>

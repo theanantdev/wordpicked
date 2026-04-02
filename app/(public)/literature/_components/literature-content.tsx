@@ -111,7 +111,7 @@ export function LiteratureContent() {
     return (
         <section className="w-full flex flex-col items-center">
             {/* Tab and Sort Bar */}
-            <div className="z-20 w-full bg-[#F5F0E8] py-4 sm:py-5 -mt-15">
+            <div className="z-20 max-w-[1200px] w-full bg-[#F5F0E8] py-4 sm:py-5 -mt-15">
                 <div className="mx-auto flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 px-4 sm:px-6 md:px-8">
                     <div className="flex flex-row items-center gap-2 sm:gap-2.5 overflow-x-auto">
                         {(["ALL", "FICTION", "NON-FICTION", "POETRY"] as Category[]).map(tab => (

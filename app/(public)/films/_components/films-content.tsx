@@ -111,14 +111,14 @@ export function FilmsContent() {
     return (
         <section className="w-full flex flex-col items-center">
             {/* Tab and Sort Bar */}
-            <div className="z-20 w-full max-w-7xl bg-[#F5F0E8] py-5 -mt-15">
-                <div className="mx-auto flex w-full flex-row items-center justify-between px-8">
-                    <div className="flex flex-row items-center gap-2.5">
+            <div className="z-20 max-w-[1200px] w-full bg-[#F5F0E8] py-4 sm:py-5 -mt-15">
+                <div className="mx-auto flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 px-4 sm:px-6 md:px-8">
+                    <div className="flex flex-row items-center gap-2 sm:gap-2.5 overflow-x-auto">
                         {(["ALL", "FICTION", "NON-FICTION", "POETRY"] as Category[]).map(tab => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`flex h-7.25 justify-center items-center px-4.5 py-2.5 font-heading font-medium tracking-[2px] text-[14px] uppercase transition-colors ${activeTab === tab
+                                className={`flex h-7.25 justify-center items-center px-3 sm:px-4.5 py-2.5 font-heading font-medium tracking-[1px] sm:tracking-[2px] text-xs sm:text-[14px] uppercase transition-colors whitespace-nowrap ${activeTab === tab
                                     ? "bg-[#DC2828] text-white"
                                     : "bg-white text-[#52525B] hover:text-[#18181B]"
                                     }`}
@@ -128,23 +128,23 @@ export function FilmsContent() {
                         ))}
                     </div>
 
-                    <div className="relative">
+                    <div className="relative w-full sm:w-auto">
                         <button
                             type="button"
                             onClick={() => setIsSortOpen((prev) => !prev)}
-                            className="group flex cursor-pointer flex-row items-center gap-2"
+                            className="group flex w-full sm:w-auto cursor-pointer flex-row items-center justify-between sm:justify-start gap-2"
                         >
-                            <span className="font-sans font-medium text-[#A1A1AA] tracking-[1.5px] uppercase text-[13px]">
+                            <span className="hidden sm:inline font-sans font-medium text-[#A1A1AA] tracking-[1.5px] uppercase text-[13px]">
                                 Sort by:
                             </span>
-                            <span className="font-heading font-bold text-[#18181B] tracking-[2px] uppercase text-[14px]">
+                            <span className="font-heading font-bold text-[#18181B] tracking-[1.5px] sm:tracking-[2px] uppercase text-xs sm:text-[14px]">
                                 {sortLabelMap[activeSort]}
                             </span>
-                            <ChevronDown className={`h-4.5 w-4.5 text-[#A1A1AA] transition group-hover:text-[#18181B] ${isSortOpen ? "rotate-180" : "rotate-0"}`} />
+                            <ChevronDown className={`h-4 sm:h-4.5 w-4 sm:w-4.5 text-[#A1A1AA] transition group-hover:text-[#18181B] ${isSortOpen ? "rotate-180" : "rotate-0"}`} />
                         </button>
 
                         {isSortOpen && (
-                            <div className="absolute right-0 z-30 mt-2 min-w-47.5 border border-[#E4E4E7] bg-white shadow-lg">
+                            <div className="absolute right-0 sm:right-0 z-30 mt-2 w-full sm:w-auto sm:min-w-47.5 border border-[#E4E4E7] bg-white shadow-lg">
                                 {(["LATEST", "OLDEST", "TITLE_A_Z"] as SortOption[]).map((option) => (
                                     <button
                                         key={option}
@@ -153,7 +153,7 @@ export function FilmsContent() {
                                             setActiveSort(option);
                                             setIsSortOpen(false);
                                         }}
-                                        className={`block w-full px-4 py-3 text-left font-sans text-[13px] tracking-[1.1px] uppercase transition-colors ${activeSort === option
+                                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left font-sans text-xs sm:text-[13px] tracking-[1px] sm:tracking-[1.1px] uppercase transition-colors ${activeSort === option
                                             ? "bg-[#F4F4F5] text-[#18181B]"
                                             : "text-[#52525B] hover:bg-[#FAFAFA]"
                                             }`}
@@ -168,8 +168,8 @@ export function FilmsContent() {
             </div>
 
             {/* Grid */}
-            <div className="mx-auto flex w-full max-w-300 flex-col items-center gap-15 px-8 py-16">
-                <div className="grid w-full grid-cols-3 gap-x-8 gap-y-12">
+            <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 sm:gap-12 lg:gap-15 px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
+                <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-x-8 md:gap-y-12">
                     {sortedArticles.map(article => (
                         <article key={article.id} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
                             {/* Image */}
@@ -178,6 +178,7 @@ export function FilmsContent() {
                                     src={article.imageUrl}
                                     alt={article.title}
                                     fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-500 rounded-t-sm"
                                 />
                                 {/* Vintage overlay effect similar to user's figma reference */}
@@ -185,26 +186,26 @@ export function FilmsContent() {
                             </div>
 
                             {/* Content */}
-                            <div className="flex flex-col gap-4 p-6">
-                                <div className="flex flex-row items-center gap-3">
-                                    <span className="font-sans font-black text-[10.4px] leading-4 tracking-[2.08px] text-[#E50914] uppercase">
+                            <div className="flex flex-col gap-2.5 sm:gap-3 md:gap-4 p-4 sm:p-5 md:p-6">
+                                <div className="flex flex-row items-center gap-2.5 sm:gap-3">
+                                    <span className="font-sans font-black text-[9px] sm:text-[10.4px] leading-3.5 sm:leading-4 tracking-[1.8px] sm:tracking-[2.08px] text-[#E50914] uppercase">
                                         {article.category}
                                     </span>
-                                    <div className="w-1 h-1 bg-[#E4E4E7] rounded-full" />
-                                    <span className="font-sans font-bold text-[10.4px] leading-4 tracking-[2.08px] text-[#A1A1AA] uppercase">
+                                    <div className="w-0.5 sm:w-1 h-0.5 sm:h-1 bg-[#E4E4E7] rounded-full" />
+                                    <span className="font-sans font-bold text-[9px] sm:text-[10.4px] leading-3.5 sm:leading-4 tracking-[1.8px] sm:tracking-[2.08px] text-[#A1A1AA] uppercase">
                                         {article.readTime}
                                     </span>
                                 </div>
 
-                                <h2 className="font-heading h-16.5 text-[28px] leading-8.25 font-bold tracking-tight text-[#18181B] line-clamp-2 transition-colors group-hover:text-[#DC2828]">
+                                <h2 className="font-heading h-auto sm:h-16 md:h-16.5 text-xl sm:text-2xl md:text-[28px] leading-5.75 sm:leading-7 md:leading-8.25 font-bold tracking-tight text-[#18181B] line-clamp-2 transition-colors group-hover:text-[#DC2828]">
                                     {article.title}
                                 </h2>
 
-                                <p className="font-heading text-[16px] leading-6 italic text-[#71717A]">
+                                <p className="font-heading text-sm sm:text-base md:text-[16px] leading-5 sm:leading-5.75 md:leading-6 italic text-[#71717A]">
                                     {article.author}
                                 </p>
 
-                                <p className="font-sans h-11.5 text-[14px] leading-5.75 text-[#52525B] line-clamp-2">
+                                <p className="font-sans h-auto sm:h-10 md:h-11.5 text-xs sm:text-sm md:text-[14px] leading-4.5 sm:leading-5 md:leading-5.75 text-[#52525B] line-clamp-2">
                                     {article.description}
                                 </p>
                             </div>
@@ -212,15 +213,15 @@ export function FilmsContent() {
                     ))}
                     {/* Empty state if all items are filtered out */}
                     {filteredArticles.length === 0 && (
-                        <div className="col-span-3 text-center py-20 text-gray-500">
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 sm:py-16 md:py-20 text-gray-500">
                             No articles found in this category.
                         </div>
                     )}
                 </div>
 
                 {filteredArticles.length > 0 && (
-                    <button className="flex items-center justify-center bg-[#DC2828] px-12 py-5 text-white shadow-lg transition-colors hover:bg-[#b02020]">
-                        <span className="relative z-10 font-sans text-[14px] leading-4.25 font-bold tracking-[2.24px] uppercase">
+                    <button className="flex items-center justify-center bg-[#DC2828] px-6 sm:px-8 md:px-12 py-3.5 sm:py-4 md:py-5 text-white shadow-lg transition-colors hover:bg-[#b02020] w-full sm:w-auto">
+                        <span className="relative z-10 font-sans text-xs sm:text-sm md:text-[14px] leading-3.5 sm:leading-4 md:leading-4.25 font-bold tracking-[1.8px] sm:tracking-[2px] md:tracking-[2.24px] uppercase">
                             Load More Reviews
                         </span>
                     </button>
