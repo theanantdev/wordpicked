@@ -9,7 +9,7 @@ import Link from "next/link";
 export function PickOfDaySection() {
     return (
         <section className="mx-auto w-full max-w-[1171px] px-4 py-14 md:px-6">
-            <SectionHeader title="Pick of the Day" redirectionUrl="/pic-of-the-day" />
+            <SectionHeader title="Pick of the Day" redirectionUrl="/pick-of-the-day" />
             <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1.9fr] lg:items-start">
                 <Image
                     src="/home/pick-of-the-day.png"
