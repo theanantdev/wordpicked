@@ -11,6 +11,7 @@ export function FeaturedPickCard() {
                     src="/home/pick-of-the-day.png"
                     alt="The Weight of Silence: A Meditation on Absence"
                     fill
+                    sizes="(max-width: 1024px) 100vw, 429px"
                     className="object-cover"
                 />
             </div>
