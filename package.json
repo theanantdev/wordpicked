@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "check": "sh ./scripts/verify.sh",
+    "setup:dev": "sh ./scripts/setup-dev.sh",
     "prepare": "husky",
     "test": "vitest run"
   },

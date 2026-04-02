@@ -3,10 +3,5 @@
 
 set -e
 
-echo "🏃 Running tests before push..."
-echo "- Lint"
-pnpm run lint
-echo "- Build"
-pnpm run build
-echo "- Test"
-pnpm run test
+echo "🏃 Running checks before push..."
+pnpm run check
