@@ -39,6 +39,46 @@ Git hooks:
 - `pre-commit`: runs tests
 - `pre-push`: runs lint, build, and tests
 
+## CI/CD
+
+GitHub Actions workflows are included:
+
+- CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+	- Runs on all pushes and pull requests
+	- Executes lint, build, and tests
+- CD: [`.github/workflows/cd.yml`](.github/workflows/cd.yml)
+	- Runs on pushes to `main` and manual dispatch
+	- Deploys to Vercel after checks pass
+
+To enable deployment, add these repository secrets:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+If those secrets are missing, the CD workflow will skip deployment safely.
+
+## Branch Protection
+
+Set this up in GitHub for the main branch:
+
+1. Go to Settings > Branches > Add branch protection rule.
+2. Branch name pattern: `main`.
+3. Enable Require a pull request before merging.
+4. Enable Require status checks to pass before merging.
+5. Select required checks:
+	- CI / Lint, Build, Test
+6. Enable Require branches to be up to date before merging.
+7. Enable Require conversation resolution before merging.
+8. Optional but recommended: Restrict who can push to matching branches.
+9. Save changes.
+
+Recommended repository settings:
+
+1. Disable force pushes to main.
+2. Disable branch deletion for protected branches.
+3. Keep direct pushes to main blocked for non-admins.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
