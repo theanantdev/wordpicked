@@ -1,11 +1,15 @@
+
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export function PickOfDaySection() {
     return (
         <section className="mx-auto w-full max-w-[1171px] px-4 py-14 md:px-6">
-            <SectionHeader title="Pick of the Day" />
+            <SectionHeader title="Pick of the Day" redirectionUrl="/pic-of-the-day" />
             <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1.9fr] lg:items-start">
                 <Image
                     src="/home/pick-of-the-day.png"
@@ -26,25 +30,32 @@ export function PickOfDaySection() {
                             achieve: intimate, devastating, and utterly unforgettable.
                         </p>
                     </div>
-                    <button className="inline-flex h-11 items-center gap-2 self-center rounded-full bg-[#DC2828] px-5 py-2 text-sm font-medium tracking-[0.12em] text-white uppercase lg:self-start">
-                        Read More <ArrowRight className="size-4" />
-                    </button>
+                    <Link href="#">
+                        <button className="inline-flex h-11 items-center gap-2 self-center rounded-full bg-[#DC2828] px-5 py-2 text-sm font-medium tracking-[0.12em] text-white uppercase lg:self-start">
+                            Read More <ArrowRight className="size-4" />
+                        </button>
+                    </Link>
                 </div>
             </div>
         </section>
     );
 }
 
-function SectionHeader({ title, className }: { title: string; className?: string }) {
+function SectionHeader({ title, redirectionUrl, className }: { title: string; className?: string, redirectionUrl?: string }) {
+
     return (
         <div className="flex  items-center gap-4 flex-row  justify-between sm:gap-6">
             <div>
                 <div className={cn("mb-3 h-1 w-12 bg-[#DC2828]", className)} />
                 <h2 className="font-heading text-3xl font-semibold text-zinc-900 md:text-4xl">{title}</h2>
             </div>
-            <button className="inline-flex h-11 w-[165px] items-center justify-center gap-2 bg-[#DC2828] px-5 py-2 text-xs font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-red-700 sm:w-41.25">
-                View All <ArrowRight className="size-4" />
-            </button>
+            {redirectionUrl && (
+                <Link href={redirectionUrl}>
+                    <button className="inline-flex h-11 w-[165px] items-center justify-center gap-2 bg-[#DC2828] px-5 py-2 text-xs font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-red-700 sm:w-41.25">
+                        View All <ArrowRight className="size-4" />
+                    </button>
+                </Link>
+            )}
         </div>
 
     );
