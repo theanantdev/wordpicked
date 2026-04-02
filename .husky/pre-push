@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+set -e
+
+echo "🏃 Running tests before push..."
+echo "- Lint"
+pnpm run lint
+echo "- Build"
+pnpm run build
+echo "- Test"
+pnpm run test
