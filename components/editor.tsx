@@ -145,7 +145,7 @@ const Editor = () => {
         <div className="flex flex-col h-full relative bg-gradient-to-b from-white to-gray-50">
 
             {/* Stats Bar */}
-            <div className="flex flex-wrap items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-gray-50 border-b border-slate-200 gap-3">
+            {/* <div className="flex flex-wrap items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-gray-50 border-b border-slate-200 gap-3">
                 <div className="flex items-center gap-6 text-sm">
                     <div className="flex items-center gap-1.5">
                         <span className="text-gray-500 font-medium">Words:</span>
@@ -176,10 +176,10 @@ const Editor = () => {
                         </>
                     )}
                 </button>
-            </div>
+            </div> */}
 
             {/* Main Toolbar */}
-            <div className="flex items-center flex-wrap gap-2 px-4 py-3 bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+            <div className="flex items-center flex-row overflow-x-auto gap-2 px-4 py-3 bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                 {/* Text Formatting */}
                 <div className="flex items-center gap-1 p-1 bg-gray-100 ">
                     <button onMouseDown={(e) => { e.preventDefault(); handleInlineFormat('bold'); }} title="Bold (Cmd+B)" className="w-8 h-8 flex items-center justify-center  hover:bg-white text-slate-600 font-bold transition-colors hover:text-blue-600"><Bold className="w-4 h-4" /></button>
@@ -232,13 +232,12 @@ const Editor = () => {
                     </button>
                 </div>
 
-                <div className="ml-auto text-xs text-gray-500 font-medium">Markdown & HTML supported</div>
             </div>
 
             {/* Editor Canvas */}
             <div
                 id="editorjs"
-                className="prose prose-sm md:prose-base max-w-full flex-1 px-6 md:px-10 py-8 font-sans text-slate-900 focus:outline-none focus-visible:outline-none overflow-y-auto"
+                className="prose  prose-sm md:prose-base max-w-full flex-1 px-10 md:px-10 py-8 font-sans text-slate-900 focus:outline-none focus-visible:outline-none overflow-y-auto"
             ></div>
 
             {/* Global style overrides to make EditorJS look clean and match our brand */}

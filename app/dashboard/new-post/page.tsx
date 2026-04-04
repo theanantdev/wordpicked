@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const Editor = dynamic(() => import('@/components/editor'), {
     ssr: false,
-    loading: () => <div className="flex items-center justify-center h-96 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg">
+    loading: () => <div className="flex items-center justify-center h-96 bg-gradient-to-br from-gray-50 to-gray-100 ">
         <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading advanced editor...</p>
@@ -67,14 +67,14 @@ export default function NewPostPage() {
         <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 pb-16">
             {/* Success Notifications */}
             {isSaved && (
-                <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
+                <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3  shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
                     <span className="font-medium">Draft saved successfully!</span>
                 </div>
             )}
 
             {isPublished && (
-                <div className="fixed top-4 right-4 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
+                <div className="fixed top-4 right-4 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3  shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
                     <span className="font-medium">Article published successfully!</span>
                 </div>
@@ -92,10 +92,10 @@ export default function NewPostPage() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <div className="hidden sm:flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                         <button
                             onClick={handleSaveDraft}
-                            className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-white border border-slate-300 text-slate-700 font-medium text-sm sm:text-base rounded-lg hover:bg-slate-50 transition-all hover:shadow-md active:scale-95"
+                            className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-[#F7F3EC] text-slate-700 font-medium text-sm sm:text-base  hover:bg-slate-50 transition-all hover:shadow-md active:scale-95"
                         >
                             <Save className="w-4 h-4 flex-shrink-0" />
                             <span className="hidden sm:inline">Save Draft</span>
@@ -103,7 +103,7 @@ export default function NewPostPage() {
                         </button>
                         <button
                             onClick={handlePublish}
-                            className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium text-sm sm:text-base rounded-lg hover:shadow-lg hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95"
+                            className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-[#E0BC78] font-medium text-sm sm:text-base  hover:shadow-lg hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95"
                         >
                             <Send className="w-4 h-4 flex-shrink-0" />
                             <span>Publish</span>
@@ -117,7 +117,7 @@ export default function NewPostPage() {
                     {/* Left Column - Editor (3/4 width) */}
                     <div className="lg:col-span-3 space-y-4 sm:space-y-6">
                         {/* Title Section */}
-                        <div className="bg-white rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-4 sm:p-6">
+                        <div className="bg-white  border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-4 sm:p-6">
                             <label className="block text-sm font-semibold text-slate-900 mb-3">Article Title *</label>
                             <input
                                 type="text"
@@ -136,9 +136,9 @@ export default function NewPostPage() {
                         </div>
 
                         {/* Rich Text Editor */}
-                        <div className="bg-white rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col h-full min-h-96 sm:min-h-[500px]">
+                        <div className="bg-white  border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col ">
                             <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
-                                <div className="w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                <div className="w-8 sm:w-10 h-8 sm:h-10  bg-blue-100 flex items-center justify-center flex-shrink-0">
                                     <PenTool className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600" />
                                 </div>
                                 <div className="min-w-0">
@@ -156,7 +156,7 @@ export default function NewPostPage() {
                     <div className="lg:col-span-1 space-y-4 sm:space-y-6">
 
                         {/* Publishing Status Card */}
-                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-3 sm:p-4 shadow-sm">
+                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50  border border-blue-200 p-3 sm:p-4 shadow-sm">
                             <div className="flex items-start gap-2 sm:gap-3">
                                 <AlertCircle className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                                 <div className="min-w-0">
@@ -167,15 +167,15 @@ export default function NewPostPage() {
                         </div>
 
                         {/* Featured Image */}
-                        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+                        <div className=" bg-white  border border-slate-200 shadow-sm overflow-hidden">
                             <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 bg-slate-50">
                                 <ImageIcon className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 flex-shrink-0" />
                                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">Featured Image</h3>
                             </div>
                             <div className="p-3 sm:p-4">
-                                <label className="border-2 border-dashed border-slate-300 bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg p-4 sm:p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50 group">
+                                <label className="border-2 border-dashed border-slate-300 bg-gradient-to-br from-slate-50 to-slate-100  p-4 sm:p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50 group">
                                     <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                                    <div className="w-10 sm:w-12 h-10 sm:h-12 bg-slate-200 rounded-lg flex items-center justify-center mb-2 group-hover:bg-blue-200 transition-colors">
+                                    <div className="w-10 sm:w-12 h-10 sm:h-12 bg-slate-200  flex items-center justify-center mb-2 group-hover:bg-blue-200 transition-colors">
                                         <ImageIcon className="w-5 sm:w-6 h-5 sm:h-6 text-slate-600 group-hover:text-blue-600 transition-colors" />
                                     </div>
                                     <p className="text-xs sm:text-sm font-medium text-slate-900 mb-0.5">Drop image here</p>
@@ -186,7 +186,7 @@ export default function NewPostPage() {
                         </div>
 
                         {/* Category & Tags */}
-                        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="bg-white  border border-slate-200 shadow-sm overflow-hidden">
                             <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 bg-slate-50">
                                 <Tag className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 flex-shrink-0" />
                                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">Category & Tags</h3>
@@ -198,7 +198,7 @@ export default function NewPostPage() {
                                         <select
                                             value={category}
                                             onChange={(e) => setCategory(e.target.value)}
-                                            className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-3 py-2 rounded-lg text-slate-900 outline-none appearance-none cursor-pointer hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                                            className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-3 py-2  text-slate-900 outline-none appearance-none cursor-pointer hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
                                         >
                                             <option value="literature">Literature</option>
                                             <option value="films">Films</option>
@@ -212,7 +212,7 @@ export default function NewPostPage() {
 
                                 <div className="flex flex-col gap-1.5 sm:gap-2">
                                     <label className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Tags</label>
-                                    <div className="flex flex-wrap gap-1 p-2 bg-slate-50 border border-slate-300 rounded-lg transition-all focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-500">
+                                    <div className="flex flex-wrap gap-1 p-2 bg-slate-50 border border-slate-300  transition-all focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-500">
                                         {tags.map((tag, index) => (
                                             <div key={index} className="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md font-medium border border-blue-200">
                                                 <span className="truncate">{tag}</span>
@@ -246,7 +246,7 @@ export default function NewPostPage() {
                         </div>
 
                         {/* Publish Settings */}
-                        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="bg-white  border border-slate-200 shadow-sm overflow-hidden">
                             <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 bg-slate-50">
                                 <Globe className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 flex-shrink-0" />
                                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">Publish Settings</h3>
@@ -280,13 +280,13 @@ export default function NewPostPage() {
                                 </label>
 
                                 {schedule && (
-                                    <div className="flex flex-col gap-1.5 sm:gap-2 mt-1 p-2.5 sm:p-3 bg-slate-50 rounded-lg border border-slate-200 animate-in fade-in slide-in-from-top-2">
+                                    <div className="flex flex-col gap-1.5 sm:gap-2 mt-1 p-2.5 sm:p-3 bg-slate-50  border border-slate-200 animate-in fade-in slide-in-from-top-2">
                                         <label className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Publish Date</label>
                                         <input
                                             type="datetime-local"
                                             value={publishDate}
                                             onChange={(e) => setPublishDate(e.target.value)}
-                                            className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-slate-900 outline-none hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                                            className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 sm:py-2  text-slate-900 outline-none hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
                                         />
                                     </div>
                                 )}
@@ -295,10 +295,10 @@ export default function NewPostPage() {
                         </div>
 
                         {/* Advanced Options */}
-                        <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg border border-slate-200 p-3 sm:p-4 overflow-hidden">
+                        <div className="bg-gradient-to-br from-slate-50 to-gray-50  border border-slate-200 p-3 sm:p-4 overflow-hidden">
                             <button
                                 onClick={() => setShowAdvanced(!showAdvanced)}
-                                className="w-full flex items-center justify-between p-2 hover:bg-white rounded-lg transition-colors active:bg-slate-100"
+                                className="w-full flex items-center justify-between p-2 hover:bg-white  transition-colors active:bg-slate-100"
                             >
                                 <span className="font-semibold text-slate-900 text-xs sm:text-sm">⚙ Advanced Options</span>
                                 <ChevronDown className={`w-4 h-4 text-slate-600 transition-transform duration-200 ${showAdvanced ? 'rotate-180' : ''}`} />
@@ -324,7 +324,23 @@ export default function NewPostPage() {
                                 </div>
                             )}
                         </div>
-
+                        <div className="sm:hidden flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            <button
+                                onClick={handleSaveDraft}
+                                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-[#F7F3EC] text-slate-700 font-medium text-sm sm:text-base  hover:bg-slate-50 transition-all hover:shadow-md active:scale-95"
+                            >
+                                <Save className="w-4 h-4 flex-shrink-0" />
+                                <span className="hidden sm:inline">Save Draft</span>
+                                <span className="sm:hidden">Save</span>
+                            </button>
+                            <button
+                                onClick={handlePublish}
+                                className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-[#E0BC78] font-medium text-sm sm:text-base  hover:shadow-lg hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95"
+                            >
+                                <Send className="w-4 h-4 flex-shrink-0" />
+                                <span>Publish</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
