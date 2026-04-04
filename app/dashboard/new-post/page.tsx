@@ -1,5 +1,10 @@
+"use client"
 import { PenTool, Image as ImageIcon, Tag, Globe, Type, Heading1, Heading2, Heading3, Bold, Italic, Underline, Strikethrough, List, ListOrdered, Quote, Link as LinkIcon } from "lucide-react";
-
+import dynamic from 'next/dynamic';
+const Editor = dynamic(() => import('@/components/editor'), {
+    ssr: false,
+    loading: () => <p>Loading Editor...</p>
+});
 export default function NewPostPage() {
     return (
         <div className="max-w-[1240px] mx-auto w-full pb-10">
@@ -70,9 +75,10 @@ export default function NewPostPage() {
                             {/* <button className="w-7 h-7 flex items-center justify-center rounded-[2px] hover:bg-[#EDE7D9] text-[#1A1714]"><Youtube className="w-4 h-4" /></button> */}
                         </div>
 
-                        <div className="p-6 flex-1 min-h-[400px]">
-                            <span className="text-[#8C857C] text-[15px] italic">Begin writing your review…</span>
+                        <div className="flex-1 min-h-[400px]">
+                            <Editor />
                         </div>
+
                     </div>
                 </div>
 
