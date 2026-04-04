@@ -53,19 +53,19 @@ export default function SchedulerPage() {
                             }
 
                             return (
-                                <div key={i} className={`min-h-[100px] p-2 bg-white flex flex-col relative transition-colors ${!dayNum ? 'bg-[#FAFAFA]' : ''} ${isToday ? 'bg-[#FDF9F2]' : 'hover:bg-[#FAFAFA]'}`}>
+                                <div key={i} className={`min-h-[70px] sm:min-h-[100px] p-1 sm:p-2 bg-white flex flex-col relative transition-colors overflow-hidden ${!dayNum ? 'bg-[#FAFAFA]' : ''} ${isToday ? 'bg-[#FDF9F2]' : 'hover:bg-[#FAFAFA]'}`}>
                                     {isToday && <div className="absolute inset-0 border-2 border-[#1A1714] pointer-events-none rounded-[2px]" />}
 
-                                    <div className={`text-[12px] font-medium mb-1.5 ${isToday ? 'text-[#1A1714] font-bold' : 'text-[#8C857C]'}`}>
+                                    <div className={`text-[10px] sm:text-[12px] font-medium mb-1 sm:mb-1.5 ${isToday ? 'text-[#1A1714] font-bold' : 'text-[#8C857C]'}`}>
                                         {dayNum}
                                     </div>
 
                                     {type ? (
-                                        <div className={`text-[10.5px] leading-[1.2] px-2 py-1.5 rounded-[2px] font-medium border ${type === 'Film' ? 'bg-[#B5542A]/10 text-[#B5542A] border-[#B5542A]/20' : 'bg-[#243D2C]/10 text-[#243D2C] border-[#243D2C]/20'}`}>
+                                        <div className={`text-[9px] sm:text-[10.5px] leading-[1.2] px-1 sm:px-2 py-1 sm:py-1.5 rounded-[2px] font-medium border truncate ${type === 'Film' ? 'bg-[#B5542A]/10 text-[#B5542A] border-[#B5542A]/20' : 'bg-[#243D2C]/10 text-[#243D2C] border-[#243D2C]/20'}`}>
                                             {title}
                                         </div>
                                     ) : dayNum ? (
-                                        <div className="text-[10px] text-[#8C857C] italic opacity-0 hover:opacity-100 transition-opacity border border-dashed border-[#DDD7CC] w-full text-center py-1.5 rounded-[2px] cursor-pointer hover:border-[#1A1714] hover:bg-[#EDE7D9] hover:text-[#1A1714]">
+                                        <div className="text-[9px] sm:text-[10px] text-[#8C857C] italic opacity-0 hover:opacity-100 transition-opacity border border-dashed border-[#DDD7CC] w-full text-center py-1 sm:py-1.5 rounded-[2px] cursor-pointer hover:border-[#1A1714] hover:bg-[#EDE7D9] hover:text-[#1A1714] truncate">
                                             + Assign
                                         </div>
                                     ) : null}

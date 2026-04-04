@@ -1,10 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, FileText, PenLine, Users, Calendar, Settings, Bell, Search, CirclePlus } from "lucide-react";
+import { LayoutDashboard, FileText, PenLine, Users, Calendar, Settings, Bell, Search, CirclePlus, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-export function Sidebar() {
+interface SidebarProps {
+    onLinkClick?: () => void;
+}
+
+export function Sidebar({ onLinkClick }: SidebarProps) {
     const pathname = usePathname();
 
     const navItems = [
@@ -28,7 +32,18 @@ export function Sidebar() {
     ];
 
     return (
-        <aside className="hidden md:flex flex-col w-[240px] shrink-0 h-screen overflow-y-auto bg-[#1A1714] text-[#F5F0E8]">
+        <aside className="flex flex-col w-[240px] shrink-0 h-[100dvh] overflow-y-auto bg-[#1A1714] text-[#F5F0E8] shadow-xl md:shadow-none relative">
+
+            {/* Mobile Close Button */}
+            {onLinkClick && (
+                <button
+                    onClick={onLinkClick}
+                    className="md:hidden absolute top-[26px] right-4 text-[#F5F0E8]/50 hover:text-[#F5F0E8] transition-colors"
+                >
+                    <X className="w-5 h-5" />
+                </button>
+            )}
+
             {/* Brand */}
             <div className="px-6 pt-7 pb-5 border-b border-white/10">
                 <div className="font-heading text-[17px] font-bold tracking-[0.01em] text-[#F5F0E8]">
@@ -53,6 +68,7 @@ export function Sidebar() {
                                 <Link
                                     key={item.href}
                                     href={item.href}
+                                    onClick={onLinkClick}
                                     className={`flex items-center gap-2.5 px-6 py-2.5 text-[12.5px] font-medium border-l-2 transition-colors relative ${isActive ? 'text-[#F5F0E8] bg-white/5 border-[#B5542A]' : 'text-[#F5F0E8]/55 border-transparent hover:text-[#F5F0E8] hover:bg-white/5'}`}
                                 >
                                     <Icon className={`w-[15px] h-[15px] shrink-0 ${isActive ? 'opacity-100' : 'opacity-70'}`} />
