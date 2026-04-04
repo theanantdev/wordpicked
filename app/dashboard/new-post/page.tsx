@@ -195,7 +195,7 @@ export default function NewPostPage() {
                                 <div className="flex flex-col gap-1.5 sm:gap-2">
                                     <label className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Category</label>
                                     <div className="relative">
-                                        <select 
+                                        <select
                                             value={category}
                                             onChange={(e) => setCategory(e.target.value)}
                                             className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-3 py-2 rounded-lg text-slate-900 outline-none appearance-none cursor-pointer hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
@@ -216,7 +216,7 @@ export default function NewPostPage() {
                                         {tags.map((tag, index) => (
                                             <div key={index} className="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md font-medium border border-blue-200">
                                                 <span className="truncate">{tag}</span>
-                                                <button 
+                                                <button
                                                     onClick={() => handleRemoveTag(index)}
                                                     className="text-blue-600 hover:text-blue-800 font-bold ml-0.5 hover:bg-blue-200 rounded px-0.5 transition-colors"
                                                 >
@@ -224,12 +224,12 @@ export default function NewPostPage() {
                                                 </button>
                                             </div>
                                         ))}
-                                        <input 
+                                        <input
                                             type="text"
                                             value={tagInput}
                                             onChange={(e) => setTagInput(e.target.value)}
                                             onKeyPress={handleKeyPress}
-                                            className="flex-1 min-w-16 sm:min-w-24 bg-transparent border-none outline-none text-xs sm:text-sm py-0.5 placeholder:text-slate-400" 
+                                            className="flex-1 min-w-16 sm:min-w-24 bg-transparent border-none outline-none text-xs sm:text-sm py-0.5 placeholder:text-slate-400"
                                             placeholder="Add tag…"
                                         />
                                     </div>
@@ -254,7 +254,7 @@ export default function NewPostPage() {
                             <div className="p-3 sm:p-4 flex flex-col gap-3 sm:gap-4">
 
                                 <label className="flex items-center gap-2 sm:gap-3 cursor-pointer group">
-                                    <div 
+                                    <div
                                         onClick={() => setPublishNow(!publishNow)}
                                         className={`relative inline-flex items-center h-5 w-9 rounded-full transition-colors duration-200 ${publishNow ? 'bg-blue-600' : 'bg-slate-300 group-hover:bg-slate-400'}`}
                                     >
@@ -267,7 +267,7 @@ export default function NewPostPage() {
                                 </label>
 
                                 <label className="flex items-center gap-2 sm:gap-3 cursor-pointer group">
-                                    <div 
+                                    <div
                                         onClick={() => setSchedule(!schedule)}
                                         className={`relative inline-flex items-center h-5 w-9 rounded-full transition-colors duration-200 ${schedule ? 'bg-blue-600' : 'bg-slate-300 group-hover:bg-slate-400'}`}
                                     >
@@ -296,7 +296,7 @@ export default function NewPostPage() {
 
                         {/* Advanced Options */}
                         <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg border border-slate-200 p-3 sm:p-4 overflow-hidden">
-                            <button 
+                            <button
                                 onClick={() => setShowAdvanced(!showAdvanced)}
                                 className="w-full flex items-center justify-between p-2 hover:bg-white rounded-lg transition-colors active:bg-slate-100"
                             >
