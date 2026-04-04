@@ -1,6 +1,21 @@
+"use client";
+
 import { Search } from "lucide-react";
+import { FormEvent, useState } from "react";
+
+const FILTERS = ["All", "Books", "Films", "Artists"] as const;
 
 export function HeroSection() {
+    const [query, setQuery] = useState("");
+    const [activeFilter, setActiveFilter] = useState<(typeof FILTERS)[number]>("All");
+    const [lastAction, setLastAction] = useState("");
+
+    const handleSearch = (e: FormEvent) => {
+        e.preventDefault();
+        const text = query.trim() || "everything";
+        setLastAction(`Showing ${activeFilter.toLowerCase()} results for ${text}`);
+    };
+
     return (
         <section className="relative isolate overflow-hidden md:h-155 flex flex-col justify-center">
             <div
@@ -22,30 +37,72 @@ export function HeroSection() {
                 >
                     <span className="text-xs font-medium text-[#1A1A1A]">Fiction</span>
                 </div>
-                <div
-                    className="w-full max-w-[616px] sm:flex hidden border border-white/20 bg-white/23 backdrop-blur"
-                    style={{ minHeight: 54 }}
+                <form
+                    className="w-full max-w-[358px] border border-white/20 bg-white/23 backdrop-blur md:max-w-[616px]"
+                    style={{
+                        minHeight: 31.38,
+                        borderWidth: 0.464935,
+                        borderColor: "rgba(255, 255, 255, 0.12)",
+                        borderRadius: 2.32468,
+                    }}
+                    onSubmit={handleSearch}
                 >
-                    <div className=" flex h-full flex-col gap-2 p-2 md:flex-row md:items-center md:gap-0 md:py-0 md:pl-2 md:pr-0">
-                        <div className="flex flex-1 items-center gap-2">
-                            <Search className="size-6 text-[#f5f0e8] shrink-0" />
+                    <div className="flex w-full items-center">
+                        <div className="flex min-w-0 flex-1 items-center pl-[5.69px] pr-1 md:pl-2.5">
+                            <Search className="h-[13.95px] w-[13.95px] shrink-0 text-[#F5F0E8] md:h-5 md:w-5" />
                             <input
-                                className="h-10 w-full bg-transparent text-[14.2px] italic leading-4.5 text-[#f5f0e8] placeholder:text-[#f5f0e8] focus:outline-none"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                className="h-[30.22px] w-full bg-transparent pl-[4.65px] text-[8.2526px] italic leading-[10px] text-[#F5F0E8] placeholder:text-[#F5F0E8] focus:outline-none md:h-[42px] md:pl-2 md:text-[14.2px]"
                                 placeholder="Search books, films, artists..."
+                                aria-label="Search books, films, artists"
                             />
                         </div>
 
-                        <div className="flex h-10 items-center gap-2 overflow-x-auto text-sm text-[#f5f0e8] md:h-11 md:gap-0 md:text-base">
-                            <span className="inline-flex h-full px-3 items-center justify-center bg-[#c9a24e12] text-[14.2px] font-medium">All</span>
-                            <span className="inline-flex h-full px-3 items-center justify-center">Books</span>
-                            <span className="inline-flex h-full px-3 items-center justify-center">Films</span>
-                            <span className="inline-flex h-full px-3 items-center justify-center">Artists</span>
+                        <div className="h-[30.22px] items-center text-[#F5F0E8] md:flex md:h-[42px]">
+                            {FILTERS.map((filter) => (
+                                <button
+                                    key={filter}
+                                    type="button"
+                                    onClick={() => setActiveFilter(filter)}
+                                    className={`inline-flex h-full items-center justify-center px-3 text-[9.2987px] leading-[10px] capitalize transition-colors md:text-[14.2px] ${activeFilter === filter
+                                        ? "bg-[#c9a24e12] font-medium"
+                                        : "hover:bg-white/10"
+                                        }`}
+                                >
+                                    {filter}
+                                </button>
+                            ))}
                         </div>
-                        <button className="h-11 w-full bg-[#3a6648] text-lg leading-4.5 text-[#f5f0e8] uppercase md:w-30.25 shrink-0">
+
+                        <button
+                            type="submit"
+                            className="h-[30.22px] w-[70.32px] bg-[#3A6648] text-[10.461px] leading-[10px] font-normal uppercase text-[#F5F0E8] transition-colors hover:bg-[#335a3f] md:h-[42px] md:w-[121px] md:text-base"
+                        >
                             Search
                         </button>
                     </div>
-                </div>
+
+                    {/* <div className="flex h-[30.22px] items-center overflow-x-auto border-t border-white/10 text-[#F5F0E8] md:hidden">
+                        {FILTERS.map((filter) => (
+                            <button
+                                key={filter}
+                                type="button"
+                                onClick={() => setActiveFilter(filter)}
+                                className={`inline-flex h-full items-center justify-center px-3 text-[9.2987px] leading-[10px] whitespace-nowrap capitalize transition-colors ${activeFilter === filter
+                                        ? "bg-[#c9a24e12] font-medium"
+                                        : "hover:bg-white/10"
+                                    }`}
+                            >
+                                {filter}
+                            </button>
+                        ))}
+                    </div> */}
+                </form>
+
+                {lastAction ? (
+                    <p className="mt-2 text-[10px] text-[#f5f0e8]/90 md:text-xs">{lastAction}</p>
+                ) : null}
                 <h1
                     className="mt-8 max-w-[90vw] font-heading text-4xl leading-tight text-[#f2f2f2] sm:text-5xl md:mt-12 md:text-[72px] md:leading-[1.1] lg:max-w-[1051px]"
                 >
