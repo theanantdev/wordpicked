@@ -1,5 +1,4 @@
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
+import { createAdminClient } from '@/utils/supabase/admin';
 
 /**
  * Type definitions
@@ -8,18 +7,19 @@ export interface Staff {
     id: string;
     name: string;
     email: string;
+    password: string;
+    role?: string;
+    is_admin?: boolean;
     is_verified: boolean;
     is_blocked: boolean;
     created_at: string;
 }
 
 /**
- * Get Supabase server client
- * Uses existing modular client with proper cookie handling
+ * Get Supabase admin client for staff/admin lookups.
  */
-async function getSupabaseClient() {
-    const cookieStore = await cookies();
-    return createClient(cookieStore);
+function getSupabaseClient() {
+    return createAdminClient();
 }
 
 /**
@@ -108,5 +108,29 @@ export async function getBlockedStaffCount(): Promise<number> {
     } catch (error) {
         console.error('Exception counting blocked staff:', error);
         return 0;
+    }
+}
+
+/**
+ * Fetch a staff row by email
+ */
+export async function getStaffByEmail(email: string): Promise<Staff | null> {
+    try {
+        const supabase = await getSupabaseClient();
+        const { data, error } = await supabase
+            .from('staff')
+            .select('*')
+            .ilike('email', email.trim())
+            .maybeSingle();
+
+        if (error) {
+            console.error('Error fetching staff by email:', error);
+            throw new Error(error.message || 'Failed to fetch staff by email.');
+        }
+
+        return data ?? null;
+    } catch (error) {
+        console.error('Exception fetching staff by email:', error);
+        throw error instanceof Error ? error : new Error('Unexpected staff lookup failure.');
     }
 }

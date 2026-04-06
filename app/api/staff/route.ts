@@ -1,18 +1,33 @@
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
+import { createAdminClient } from '@/utils/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
+import { AUTH_SESSION_COOKIE, parseAuthSession } from '@/utils/auth-session';
 
 /**
- * Get Supabase server client using modular initialization
+ * Get Supabase admin client for staff mutations and reads
  */
-async function getSupabaseClient() {
-    const cookieStore = await cookies();
-    return createClient(cookieStore);
+function getSupabaseClient() {
+    return createAdminClient();
+}
+
+async function requireAdminSession(request: NextRequest) {
+    const session = await parseAuthSession(request.cookies.get(AUTH_SESSION_COOKIE)?.value);
+
+    if (!session || !session.isAdmin) {
+        return null;
+    }
+
+    return session;
 }
 
 // GET /api/staff - Fetch all staff
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
+        const session = await requireAdminSession(request);
+
+        if (!session) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
+        }
+
         const supabase = await getSupabaseClient();
         const { data, error } = await supabase
             .from('staff')
@@ -34,6 +49,12 @@ export async function GET() {
 // POST /api/staff - Create new staff
 export async function POST(request: NextRequest) {
     try {
+        const session = await requireAdminSession(request);
+
+        if (!session) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
+        }
+
         const body = await request.json();
         const { name, email, password } = body;
 
@@ -85,6 +106,12 @@ export async function POST(request: NextRequest) {
 // PATCH /api/staff - Update staff (block/unblock)
 export async function PATCH(request: NextRequest) {
     try {
+        const session = await requireAdminSession(request);
+
+        if (!session) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
+        }
+
         const body = await request.json();
         const { id, is_blocked } = body;
 
@@ -121,6 +148,12 @@ export async function PATCH(request: NextRequest) {
 // DELETE /api/staff?id=<id> - Delete staff
 export async function DELETE(request: NextRequest) {
     try {
+        const session = await requireAdminSession(request);
+
+        if (!session) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
+        }
+
         const url = new URL(request.url);
         const id = url.searchParams.get('id');
 

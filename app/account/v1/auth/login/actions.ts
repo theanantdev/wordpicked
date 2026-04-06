@@ -1,10 +1,11 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import { AUTH_SESSION_COOKIE, getAuthCookieOptions, serializeAuthSession } from "@/utils/auth-session";
+import { getStaffByEmail } from "@/utils/server-staff";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function loginUser(prevState: any, formData: FormData) {
+export async function loginUser(prevState: { error: string }, formData: FormData) {
     const email = formData.get("email");
     const password = formData.get("password");
 
@@ -12,21 +13,47 @@ export async function loginUser(prevState: any, formData: FormData) {
         return { error: "Email and password are required." };
     }
 
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    try {
+        const staff = await getStaffByEmail(email);
 
-    const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-    });
+        if (!staff) {
+            return { error: "No staff account found for this email." };
+        }
 
-    if (error) {
-        return { error: error.message };
+        if (staff.password !== password) {
+            return { error: "Invalid login credentials." };
+        }
+
+        if (staff.is_blocked) {
+            return { error: "Your account is blocked. Contact support." };
+        }
+
+        const role = staff.is_admin === true || staff.role === "admin" ? "admin" : "staff";
+        const cookieStore = await cookies();
+
+        cookieStore.set(
+            AUTH_SESSION_COOKIE,
+            await serializeAuthSession({
+                id: staff.id,
+                name: staff.name,
+                email: staff.email,
+                role,
+                isAdmin: role === "admin",
+            }),
+            getAuthCookieOptions(),
+        );
+
+        redirect("/admin/dashboard");
+    } catch (error) {
+        return {
+            error: error instanceof Error ? error.message : "Staff lookup failed.",
+        };
     }
+}
 
-    // Usually an admin auth check happens here. For example:
-    // const { data: { user } } = await supabase.auth.getUser()
-    // if (user.role !== 'admin') ... return { error: "Unauthorized" }
+export async function logoutUser() {
+    const cookieStore = await cookies();
+    cookieStore.delete(AUTH_SESSION_COOKIE);
 
-    redirect("/account/v1/dashboard");
+    redirect("/account/v1/auth/login");
 }
