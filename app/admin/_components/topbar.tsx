@@ -4,21 +4,24 @@ import { usePathname } from "next/navigation";
 import { Search, Bell, Plus, Menu, LogOut } from "lucide-react";
 import Link from "next/link";
 import { logoutUser } from "@/app/account/v1/auth/login/actions";
+import type { AuthSession } from "@/utils/auth-session";
 
 interface TopbarProps {
     onMenuClick?: () => void;
+    session?: AuthSession | null;
 }
 
-export function Topbar({ onMenuClick }: TopbarProps) {
+export function Topbar({ onMenuClick, session }: TopbarProps) {
     const pathname = usePathname();
+    const isAdmin = session?.isAdmin === true;
 
     // Mapping pathnames to titles
     const titleMap: Record<string, React.ReactNode> = {
-        "/dashboard": <>Dashboard <span className="italic text-[#B5542A] font-normal hidden sm:inline">Overview</span></>,
-        "/dashboard/posts": <>All Posts <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
-        "/dashboard/new-post": <>New Post <span className="italic text-[#B5542A] font-normal hidden sm:inline">Editor</span></>,
-        "/dashboard/artists": <>Artists <span className="italic text-[#B5542A] font-normal hidden sm:inline">Profiles</span></>,
-        "/dashboard/scheduler": <>Scheduler <span className="italic text-[#B5542A] font-normal hidden sm:inline">Calendar</span></>,
+        "/admin/dashboard": <>Dashboard <span className="italic text-[#B5542A] font-normal hidden sm:inline">Overview</span></>,
+        "/admin/posts": <>All Posts <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
+        "/admin/new-post": <>New Post <span className="italic text-[#B5542A] font-normal hidden sm:inline">Editor</span></>,
+        "/admin/artists": <>Artists <span className="italic text-[#B5542A] font-normal hidden sm:inline">Profiles</span></>,
+        "/admin/scheduler": <>Scheduler <span className="italic text-[#B5542A] font-normal hidden sm:inline">Calendar</span></>,
     }
 
     const title = titleMap[pathname] || <>Admin <span className="italic text-[#B5542A] font-normal hidden sm:inline">Panel</span></>;
@@ -54,10 +57,14 @@ export function Topbar({ onMenuClick }: TopbarProps) {
                     <div className="absolute top-2 right-2 w-1.75 h-1.75 bg-[#B5542A] rounded-full" />
                 </button>
 
-                <Link href="/dashboard/new-post" className="hidden sm:flex shrink-0 items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4.5 py-2.25 rounded-xs transition-colors hover:bg-[#C96840]">
+                <Link href="/admin/new-post" className="hidden sm:flex shrink-0 items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4.5 py-2.25 rounded-xs transition-colors hover:bg-[#C96840]">
                     <Plus className="w-3.25 h-3.25" />
                     New Post
                 </Link>
+
+                <div className="hidden lg:flex items-center rounded-xs border border-[#DDD7CC] bg-[#F5F0E8] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#1A1714]">
+                    {isAdmin ? "Admin" : "Staff"}
+                </div>
 
                 <form action={logoutUser}>
                     <button
