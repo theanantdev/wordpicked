@@ -1,8 +1,8 @@
-import { StatCards } from "./_components/stat-cards";
-import { RecentPosts } from "./_components/recent-posts";
-import { MostViewed } from "./_components/most-viewed";
-import { QuickActions } from "./_components/quick-actions";
-import { CategoryStats } from "./_components/category-stats";
+import { StatCards } from "../_components/stat-cards";
+import { RecentPosts } from "../_components/recent-posts";
+import { MostViewed } from "../_components/most-viewed";
+import { QuickActions } from "../_components/quick-actions";
+import { CategoryStats } from "../_components/category-stats";
 
 export default function DashboardPage() {
     return (
