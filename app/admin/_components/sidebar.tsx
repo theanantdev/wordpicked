@@ -20,8 +20,7 @@ type NavItem = {
 
 export function Sidebar({ onLinkClick, session }: SidebarProps) {
     const pathname = usePathname();
-    const isAdmin = session?.isAdmin;
-    console.log("Session in Sidebar:", session);
+    const isAdmin = session?.isAdmin === true || session?.is_admin === true;
 
     const navItems: Array<{ label: string; items: NavItem[] }> = [
         { label: "Overview", items: [{ name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard }] },

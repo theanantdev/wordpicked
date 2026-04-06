@@ -13,7 +13,7 @@ interface TopbarProps {
 
 export function Topbar({ onMenuClick, session }: TopbarProps) {
     const pathname = usePathname();
-    const isAdmin = session?.isAdmin === true;
+    const isAdmin = session?.isAdmin === true || session?.is_admin === true;
 
     // Mapping pathnames to titles
     const titleMap: Record<string, React.ReactNode> = {

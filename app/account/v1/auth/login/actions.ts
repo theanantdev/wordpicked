@@ -24,11 +24,16 @@ export async function loginUser(prevState: { error: string }, formData: FormData
             return { error: "Invalid login credentials." };
         }
 
+        const isAdmin = staff.is_admin === true || staff.role === "admin";
+
         if (staff.is_blocked) {
             return { error: "Your account is blocked. Contact support." };
         }
 
-        const role = staff.is_admin === true || staff.role === "admin" ? "admin" : "staff";
+        if (!isAdmin) {
+            return { error: "Unauthorized: admin access only." };
+        }
+
         const cookieStore = await cookies();
 
         cookieStore.set(
@@ -37,8 +42,9 @@ export async function loginUser(prevState: { error: string }, formData: FormData
                 id: staff.id,
                 name: staff.name,
                 email: staff.email,
-                role,
-                isAdmin: role === "admin",
+                role: "admin",
+                isAdmin: true,
+                is_admin: true,
             }),
             getAuthCookieOptions(),
         );

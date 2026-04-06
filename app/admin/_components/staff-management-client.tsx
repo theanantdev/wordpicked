@@ -10,6 +10,7 @@ interface Staff {
     is_verified: boolean;
     is_blocked: boolean;
     created_at: string;
+    is_admin?: boolean;
 }
 
 interface FormData {
@@ -390,70 +391,81 @@ export function StaffManagementClient({ initialStaff }: StaffManagementClientPro
                                     <div className="text-[#11412A] text-sm truncate">
                                         {staff.email}
                                     </div>
+                                    {!staff.is_admin ? <>
+                                        {/* Verified */}
+                                        <div className="hidden md:block">
+                                            <span
+                                                className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${staff.is_verified
+                                                    ? 'bg-[#11412A]/10 text-[#11412A]'
+                                                    : 'bg-[#DC2828]/10 text-[#DC2828]'
+                                                    }`}
+                                            >
+                                                {staff.is_verified ? 'Yes' : 'No'}
+                                            </span>
+                                        </div>
 
-                                    {/* Verified */}
-                                    <div className="hidden md:block">
-                                        <span
-                                            className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${staff.is_verified
-                                                ? 'bg-[#11412A]/10 text-[#11412A]'
-                                                : 'bg-[#DC2828]/10 text-[#DC2828]'
-                                                }`}
+                                        {/* Status */}
+                                        <div className="hidden md:block">
+                                            <span
+                                                className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${staff.is_blocked
+                                                    ? 'bg-[#DC2828]/10 text-[#DC2828]'
+                                                    : 'bg-[#11412A]/10 text-[#11412A]'
+                                                    }`}
+                                            >
+                                                {staff.is_blocked ? 'Blocked' : 'Active'}
+                                            </span>
+                                        </div>
+
+                                        {/* Block/Unblock Action */}
+                                        <button
+                                            onClick={() =>
+                                                toggleBlockStaff(staff.id, staff.is_blocked)
+                                            }
+                                            disabled={loading}
+                                            className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
+                                            title={
+                                                staff.is_blocked
+                                                    ? 'Click to unblock'
+                                                    : 'Click to block'
+                                            }
                                         >
-                                            {staff.is_verified ? 'Yes' : 'No'}
-                                        </span>
-                                    </div>
+                                            {staff.is_blocked ? (
+                                                <>
+                                                    <Lock className="w-4 h-4 text-[#DC2828]" />
+                                                    <span className="hidden sm:inline text-[#DC2828]">
+                                                        Blocked
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Unlock className="w-4 h-4 text-[#11412A]" />
+                                                    <span className="hidden sm:inline text-[#11412A]">
+                                                        Active
+                                                    </span>
+                                                </>
+                                            )}
+                                        </button>
 
-                                    {/* Status */}
-                                    <div className="hidden md:block">
-                                        <span
-                                            className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${staff.is_blocked
-                                                ? 'bg-[#DC2828]/10 text-[#DC2828]'
-                                                : 'bg-[#11412A]/10 text-[#11412A]'
-                                                }`}
+                                        {/* Delete Action */}
+                                        <button
+                                            onClick={() => deleteStaff(staff.id, staff.name)}
+                                            disabled={loading}
+                                            className="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-[#DC2828]/10 hover:bg-[#DC2828]/20 text-[#DC2828] transition-all disabled:opacity-50"
+                                            title="Delete staff"
                                         >
-                                            {staff.is_blocked ? 'Blocked' : 'Active'}
-                                        </span>
-                                    </div>
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
 
-                                    {/* Block/Unblock Action */}
-                                    <button
-                                        onClick={() =>
-                                            toggleBlockStaff(staff.id, staff.is_blocked)
-                                        }
-                                        disabled={loading}
-                                        className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
-                                        title={
-                                            staff.is_blocked
-                                                ? 'Click to unblock'
-                                                : 'Click to block'
-                                        }
-                                    >
-                                        {staff.is_blocked ? (
-                                            <>
-                                                <Lock className="w-4 h-4 text-[#DC2828]" />
-                                                <span className="hidden sm:inline text-[#DC2828]">
-                                                    Blocked
-                                                </span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Unlock className="w-4 h-4 text-[#11412A]" />
-                                                <span className="hidden sm:inline text-[#11412A]">
-                                                    Active
-                                                </span>
-                                            </>
-                                        )}
-                                    </button>
+                                    </> : <>
+                                        <div>
+                                            <span
+                                                className={`inline-block px-3 py-1 rounded-full text-xs font-medium bg-[#11412A]/10 text-[#11412A]`}
+                                            >
+                                                Website Owner
+                                            </span>
+                                        </div>
+                                    </>}
 
-                                    {/* Delete Action */}
-                                    <button
-                                        onClick={() => deleteStaff(staff.id, staff.name)}
-                                        disabled={loading}
-                                        className="inline-flex items-center justify-center px-3 py-2 rounded-lg bg-[#DC2828]/10 hover:bg-[#DC2828]/20 text-[#DC2828] transition-all disabled:opacity-50"
-                                        title="Delete staff"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
                                 </div>
                             ))
                         )}

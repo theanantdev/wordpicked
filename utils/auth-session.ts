@@ -1,5 +1,3 @@
-import type { CookieSerializeOptions } from "next/dist/compiled/@edge-runtime/cookies";
-
 export type StaffRole = "admin" | "staff";
 
 export interface AuthSession {
@@ -7,7 +5,8 @@ export interface AuthSession {
     name: string;
     email: string;
     role: StaffRole;
-    isAdmin: boolean;
+    isAdmin?: boolean;
+    is_admin?: boolean;
 }
 
 export const AUTH_SESSION_COOKIE = "wordpicked_auth_session";
@@ -101,10 +100,10 @@ export async function parseAuthSession(cookieValue?: string | null): Promise<Aut
     }
 }
 
-export function getAuthCookieOptions(): CookieSerializeOptions {
+export function getAuthCookieOptions() {
     return {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: "lax" as const,
         secure: process.env.NODE_ENV === "production",
         path: "/",
         maxAge: SESSION_MAX_AGE,

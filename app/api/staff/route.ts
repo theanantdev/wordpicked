@@ -12,7 +12,7 @@ function getSupabaseClient() {
 async function requireAdminSession(request: NextRequest) {
     const session = await parseAuthSession(request.cookies.get(AUTH_SESSION_COOKIE)?.value);
 
-    if (!session || !session.isAdmin) {
+    if (!session || !session.is_admin) {
         return null;
     }
 
@@ -27,7 +27,9 @@ export async function GET(request: NextRequest) {
         if (!session) {
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
         }
-
+        if (session.is_admin !== true) {
+            return NextResponse.json({ success: false, error: 'Forbidden: Insufficient permissions' }, { status: 403 });
+        }
         const supabase = await getSupabaseClient();
         const { data, error } = await supabase
             .from('staff')
@@ -53,6 +55,9 @@ export async function POST(request: NextRequest) {
 
         if (!session) {
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
+        }
+        if (session.is_admin !== true) {
+            return NextResponse.json({ success: false, error: 'Forbidden: Insufficient permissions' }, { status: 403 });
         }
 
         const body = await request.json();
@@ -111,6 +116,9 @@ export async function PATCH(request: NextRequest) {
         if (!session) {
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
         }
+        if (session.is_admin !== true) {
+            return NextResponse.json({ success: false, error: 'Forbidden: Insufficient permissions' }, { status: 403 });
+        }
 
         const body = await request.json();
         const { id, is_blocked } = body;
@@ -153,6 +161,10 @@ export async function DELETE(request: NextRequest) {
         if (!session) {
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
         }
+        if (session.is_admin !== true) {
+            return NextResponse.json({ success: false, error: 'Forbidden: Insufficient permissions' }, { status: 403 });
+        }
+
 
         const url = new URL(request.url);
         const id = url.searchParams.get('id');
