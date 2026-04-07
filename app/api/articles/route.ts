@@ -44,25 +44,25 @@ export async function POST(request: NextRequest) {
         const slug = `${slugBase}-${Date.now()}`;
         const now = new Date().toISOString();
 
+        const payload = {
+            title: title.trim(),
+            subtitle: typeof subtitle === 'string' ? subtitle.trim() : null,
+            slug,
+            category: typeof category === 'string' ? category : 'literature',
+            tags: Array.isArray(tags) ? tags : [],
+            content,
+            featured_image_url: typeof featuredImageUrl === 'string' ? featuredImageUrl : null,
+            status: status === 'published' ? 'published' : 'draft',
+            publish_at: publishAt || now,
+            author_name: session.name,
+            author_email: session.email,
+            created_at: now,
+            updated_at: now,
+        };
+
         const { data, error } = await supabase
             .from('articles')
-            .insert([
-                {
-                    title: title.trim(),
-                    subtitle: typeof subtitle === 'string' ? subtitle.trim() : null,
-                    slug,
-                    category: typeof category === 'string' ? category : 'literature',
-                    tags: Array.isArray(tags) ? tags : [],
-                    content,
-                    featured_image_url: typeof featuredImageUrl === 'string' ? featuredImageUrl : null,
-                    status: status === 'published' ? 'published' : 'draft',
-                    publish_at: publishAt || now,
-                    author_name: session.name,
-                    author_email: session.email,
-                    created_at: now,
-                    updated_at: now,
-                },
-            ])
+            .insert([payload])
             .select('*')
             .single();
 
@@ -70,9 +70,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json(
                 {
                     success: false,
-                    error:
-                        error.message ||
-                        'Failed to save article. Ensure the public.articles table exists in Supabase.',
+                    error: error.message || 'Failed to save article.',
                 },
                 { status: 500 },
             );
@@ -80,6 +78,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ success: true, data });
     } catch (error) {
+        console.error("Error in POST /api/articles:", error);
         return NextResponse.json(
             {
                 success: false,

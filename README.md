@@ -34,6 +34,41 @@ Run all quality checks locally before pushing:
 pnpm run check
 ```
 
+## Supabase Migrations
+
+This repository now includes a Supabase migration scaffold:
+
+- `supabase/config.toml`
+- `supabase/migrations/20260407000100_init_schema.sql`
+
+The initial migration creates:
+
+- `public.staff`
+- `public.articles`
+- `public.exec_sql(sql text)` helper function
+
+Common commands:
+
+```bash
+pnpm run db:start
+pnpm run db:reset
+pnpm run db:stop
+```
+
+Create a new migration:
+
+```bash
+pnpm run db:migrate:new -- add_some_change
+```
+
+Push migrations to a linked Supabase project:
+
+```bash
+pnpm run db:login
+pnpm run db:link -- --project-ref <your-project-ref>
+pnpm run db:push
+```
+
 Git hooks:
 
 - `pre-commit`: runs tests

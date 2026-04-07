@@ -1,6 +1,7 @@
 "use client"
-import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle, X } from "lucide-react";
+import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle } from "lucide-react";
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useState } from "react";
 import type { OutputData } from "@editorjs/editorjs";
 
@@ -26,11 +27,30 @@ export default function NewPostPage() {
     const [schedule, setSchedule] = useState(false);
     const [publishDate, setPublishDate] = useState("2026-04-30T09:00");
     const [showAdvanced, setShowAdvanced] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [editorContent, setEditorContent] = useState<OutputData>({ blocks: [], version: '' });
     const [featuredImageUrl, setFeaturedImageUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const createArticleRequest = async (status: 'draft' | 'published') => {
+        const response = await fetch('/api/articles', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: title.trim(),
+                subtitle: subtitle.trim(),
+                category,
+                tags,
+                content: editorContent,
+                featuredImageUrl: featuredImageUrl || null,
+                status,
+                publishAt: schedule ? publishDate : null,
+            }),
+        });
+
+        const data = await response.json();
+        return { response, data };
+    };
 
     const persistArticle = async (status: 'draft' | 'published') => {
         setErrorMessage('');
@@ -48,22 +68,7 @@ export default function NewPostPage() {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/articles', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: title.trim(),
-                    subtitle: subtitle.trim(),
-                    category,
-                    tags,
-                    content: editorContent,
-                    featuredImageUrl: featuredImageUrl || null,
-                    status,
-                    publishAt: schedule ? publishDate : null,
-                }),
-            });
-
-            const data = await response.json();
+            const { response, data } = await createArticleRequest(status);
 
             if (!response.ok || !data.success) {
                 throw new Error(data.error || 'Failed to save article.');
@@ -278,7 +283,7 @@ export default function NewPostPage() {
                                 </label>
                                 {featuredImageUrl && (
                                     <div className="mt-3 overflow-hidden rounded border border-slate-200">
-                                        <img src={featuredImageUrl} alt="Featured" className="h-32 w-full object-cover" />
+                                        <Image src={featuredImageUrl} alt="Featured" width={640} height={256} className="h-32 w-full object-cover" />
                                     </div>
                                 )}
                             </div>
