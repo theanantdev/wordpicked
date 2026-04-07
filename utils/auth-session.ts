@@ -1,3 +1,5 @@
+import { createHmac, timingSafeEqual } from 'crypto';
+
 export type StaffRole = "admin" | "staff";
 
 export interface AuthSession {
@@ -22,61 +24,26 @@ function getSessionSecret() {
     return secret;
 }
 
-function getWebCrypto() {
-    if (!globalThis.crypto?.subtle) {
-        throw new Error("Web Crypto is required for auth sessions.");
-    }
-
-    return globalThis.crypto;
-}
-
 function base64UrlEncode(value: string) {
-    const bytes = new TextEncoder().encode(value);
-    let binary = "";
-
-    for (const byte of bytes) {
-        binary += String.fromCharCode(byte);
-    }
-
-    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    return Buffer.from(value, 'utf8').toString('base64url');
 }
 
 function base64UrlDecode(value: string) {
-    const padded = value.replace(/-/g, "+").replace(/_/g, "/");
-    const normalized = padded + "=".repeat((4 - (padded.length % 4)) % 4);
-    const binary = atob(normalized);
-    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
-    return new TextDecoder().decode(bytes);
+    return Buffer.from(value, 'base64url').toString('utf8');
 }
 
-async function signPayload(payload: string) {
-    const cryptoApi = getWebCrypto();
-    const key = await cryptoApi.subtle.importKey(
-        "raw",
-        new TextEncoder().encode(getSessionSecret()),
-        { name: "HMAC", hash: "SHA-256" },
-        false,
-        ["sign"],
-    );
-    const signature = await cryptoApi.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
-    const signatureBytes = new Uint8Array(signature);
-    let binary = "";
-
-    for (const byte of signatureBytes) {
-        binary += String.fromCharCode(byte);
-    }
-
-    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+function signPayload(payload: string) {
+    return createHmac('sha256', getSessionSecret()).update(payload).digest('base64url');
 }
 
-export async function serializeAuthSession(session: AuthSession) {
+export function serializeAuthSession(session: AuthSession) {
     const payload = base64UrlEncode(JSON.stringify(session));
-    const signature = await signPayload(payload);
+    const signature = signPayload(payload);
 
     return `${payload}.${signature}`;
 }
 
-export async function parseAuthSession(cookieValue?: string | null): Promise<AuthSession | null> {
+export function parseAuthSession(cookieValue?: string | null): AuthSession | null {
     if (!cookieValue) {
         return null;
     }
@@ -87,9 +54,15 @@ export async function parseAuthSession(cookieValue?: string | null): Promise<Aut
         return null;
     }
 
-    const expectedSignature = await signPayload(payload);
+    const expectedSignature = signPayload(payload);
+    const expectedBuffer = Buffer.from(expectedSignature);
+    const actualBuffer = Buffer.from(signature);
 
-    if (expectedSignature !== signature) {
+    if (expectedBuffer.length !== actualBuffer.length) {
+        return null;
+    }
+
+    if (!timingSafeEqual(expectedBuffer, actualBuffer)) {
         return null;
     }
 
