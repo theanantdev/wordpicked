@@ -25,6 +25,16 @@ type PostListItem = {
     featured_image_url: string | null;
 };
 
+type SortOption = 'newest' | 'oldest' | 'az' | 'mostViewed';
+type FilterOption = 'all' | 'literature' | 'films' | 'artists' | 'drafts';
+
+function parsePositiveInt(value: string | null, fallback: number) {
+    if (!value) return fallback;
+    const parsed = Number.parseInt(value, 10);
+    if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+    return parsed;
+}
+
 function isAdminSession(session: ReturnType<typeof parseAuthSession>) {
     if (!session) return false;
     return (session.isAdmin === true || session.is_admin === true) && session.role === 'admin';
@@ -65,12 +75,45 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
         }
 
+        const searchParams = request.nextUrl.searchParams;
+        const search = (searchParams.get('search') || '').trim();
+        const filter = (searchParams.get('filter') || 'all') as FilterOption;
+        const sort = (searchParams.get('sort') || 'newest') as SortOption;
+        const page = parsePositiveInt(searchParams.get('page'), 1);
+        const pageSize = parsePositiveInt(searchParams.get('pageSize'), 10);
+        const safePageSize = Math.min(pageSize, 100);
+
         const supabase = createAdminClient();
-        const { data, error } = await supabase
+        let query = supabase
             .from('articles')
-            .select('id, title, subtitle, category, status, publish_at, created_at, featured_image_url')
-            .order('created_at', { ascending: false })
-            .limit(100);
+            .select('id, title, subtitle, category, status, publish_at, created_at, featured_image_url', { count: 'exact' });
+
+        if (search) {
+            const escaped = search.replaceAll(',', ' ');
+            query = query.or(`title.ilike.%${escaped}%,subtitle.ilike.%${escaped}%`);
+        }
+
+        if (filter === 'drafts') {
+            query = query.eq('status', 'draft');
+        } else if (filter === 'literature') {
+            query = query.in('category', ['literature']);
+        } else if (filter === 'films') {
+            query = query.in('category', ['film', 'films']);
+        } else if (filter === 'artists') {
+            query = query.in('category', ['artist', 'artists']);
+        }
+
+        if (sort === 'oldest') {
+            query = query.order('created_at', { ascending: true });
+        } else if (sort === 'az') {
+            query = query.order('title', { ascending: true });
+        } else {
+            query = query.order('created_at', { ascending: false });
+        }
+
+        const from = (page - 1) * safePageSize;
+        const to = from + safePageSize - 1;
+        const { data, error, count } = await query.range(from, to);
 
         if (error) {
             return NextResponse.json({ success: false, error: error.message || 'Failed to fetch posts.' }, { status: 500 });
@@ -95,6 +138,8 @@ export async function GET(request: NextRequest) {
 
         const draftsCount = posts.filter((post) => post.status === 'Draft').length;
         const publishedCount = posts.length - draftsCount;
+        const total = count || 0;
+        const totalPages = Math.max(1, Math.ceil(total / safePageSize));
 
         return NextResponse.json({
             success: true,
@@ -102,7 +147,15 @@ export async function GET(request: NextRequest) {
                 posts,
                 draftsCount,
                 publishedCount,
-                total: posts.length,
+                total,
+                page,
+                pageSize: safePageSize,
+                totalPages,
+                hasPrev: page > 1,
+                hasNext: page < totalPages,
+                search,
+                filter,
+                sort,
             },
         });
     } catch (error) {

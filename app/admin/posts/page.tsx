@@ -1,7 +1,9 @@
+"use client";
+
 import { Search, Plus } from "lucide-react";
 import Link from "next/link";
-import { cookies, headers } from "next/headers";
 import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 
 type PostListItem = {
     id: string;
@@ -22,31 +24,38 @@ type PostsApiResponse = {
         draftsCount: number;
         publishedCount: number;
         total: number;
+        page: number;
+        pageSize: number;
+        totalPages: number;
+        hasPrev: boolean;
+        hasNext: boolean;
+        search: string;
+        filter: string;
+        sort: string;
     };
     error?: string;
 };
 
-async function fetchPostsFromApi() {
-    const headerStore = await headers();
-    const cookieStore = await cookies();
-    const protocol = headerStore.get("x-forwarded-proto") ?? "http";
-    const host = headerStore.get("x-forwarded-host") ?? headerStore.get("host");
+type FilterOption = "all" | "literature" | "films" | "artists" | "drafts";
+type SortOption = "newest" | "oldest" | "az" | "mostViewed";
 
-    if (!host) {
-        return {
-            posts: [] as PostListItem[],
-            draftsCount: 0,
-            publishedCount: 0,
-            total: 0,
-            error: "Missing request host.",
-        };
-    }
+async function fetchPostsFromApi(params: {
+    page: number;
+    pageSize: number;
+    search: string;
+    filter: FilterOption;
+    sort: SortOption;
+}) {
+    const query = new URLSearchParams({
+        page: String(params.page),
+        pageSize: String(params.pageSize),
+        search: params.search,
+        filter: params.filter,
+        sort: params.sort,
+    });
 
-    const response = await fetch(`${protocol}://${host}/api/posts`, {
+    const response = await fetch(`/api/posts?${query.toString()}`, {
         method: "GET",
-        headers: {
-            cookie: cookieStore.toString(),
-        },
         cache: "no-store",
     });
 
@@ -58,6 +67,11 @@ async function fetchPostsFromApi() {
             draftsCount: 0,
             publishedCount: 0,
             total: 0,
+            page: params.page,
+            pageSize: params.pageSize,
+            totalPages: 1,
+            hasPrev: false,
+            hasNext: false,
             error: payload.error || "Failed to load posts from database.",
         };
     }
@@ -67,12 +81,73 @@ async function fetchPostsFromApi() {
         draftsCount: payload.data.draftsCount,
         publishedCount: payload.data.publishedCount,
         total: payload.data.total,
+        page: payload.data.page,
+        pageSize: payload.data.pageSize,
+        totalPages: payload.data.totalPages,
+        hasPrev: payload.data.hasPrev,
+        hasNext: payload.data.hasNext,
         error: null,
     };
 }
 
-export default async function PostsPage() {
-    const { posts, error, draftsCount, publishedCount, total } = await fetchPostsFromApi();
+export default function PostsPage() {
+    const [posts, setPosts] = useState<PostListItem[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [draftsCount, setDraftsCount] = useState(0);
+    const [publishedCount, setPublishedCount] = useState(0);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalPages, setTotalPages] = useState(1);
+    const [hasPrev, setHasPrev] = useState(false);
+    const [hasNext, setHasNext] = useState(false);
+    const [filter, setFilter] = useState<FilterOption>("all");
+    const [sort, setSort] = useState<SortOption>("newest");
+    const [searchInput, setSearchInput] = useState("");
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setPage(1);
+            setSearch(searchInput.trim());
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchInput]);
+
+    useEffect(() => {
+        let isCancelled = false;
+
+        (async () => {
+            setIsLoading(true);
+            const result = await fetchPostsFromApi({ page, pageSize, search, filter, sort });
+            if (isCancelled) return;
+
+            setPosts(result.posts);
+            setDraftsCount(result.draftsCount);
+            setPublishedCount(result.publishedCount);
+            setTotal(result.total);
+            setTotalPages(result.totalPages);
+            setHasPrev(result.hasPrev);
+            setHasNext(result.hasNext);
+            setError(result.error);
+            setIsLoading(false);
+        })();
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [page, pageSize, search, filter, sort]);
+
+    const pageButtons = useMemo(() => {
+        const current = page;
+        const max = totalPages;
+        const result: number[] = [];
+        const start = Math.max(1, current - 1);
+        const end = Math.min(max, current + 1);
+        for (let i = start; i <= end; i += 1) result.push(i);
+        return result;
+    }, [page, totalPages]);
 
     const categoryStyles: Record<string, string> = {
         "Literature": "bg-[#243D2C]/10 text-[#243D2C] border-[#243D2C]/20 border",
@@ -101,22 +176,61 @@ export default async function PostsPage() {
                 <div className="flex items-center gap-4 px-5 py-3 border-b border-[#EDE7D9] bg-[#FAFAFA] flex-wrap">
                     <div className="flex items-center gap-2 bg-white border border-[#DDD7CC] rounded-[2px] px-3 py-1.5 w-[240px]">
                         <Search className="w-3.5 h-3.5 text-[#8C857C]" />
-                        <input type="text" placeholder="Search by title or content…" className="bg-transparent border-none outline-none text-[12.5px] w-full text-[#1A1714] placeholder:text-[#8C857C]" />
+                        <input
+                            type="text"
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            placeholder="Search by title or subtitle..."
+                            className="bg-transparent border-none outline-none text-[12.5px] w-full text-[#1A1714] placeholder:text-[#8C857C]"
+                        />
                     </div>
 
                     <div className="flex bg-[#EDE7D9] p-[2px] rounded-[3px] gap-[2px]">
-                        {["All", "Literature", "Films", "Artists", "Drafts"].map((filter, i) => (
-                            <button key={filter} className={`px-3 py-1 text-[11.5px] font-medium rounded-[2px] cursor-pointer transition-colors ${i === 0 ? 'bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-[#1A1714]' : 'text-[#8C857C] hover:text-[#1A1714]'}`}>
-                                {filter}
+                        {[
+                            { label: "All", value: "all" },
+                            { label: "Literature", value: "literature" },
+                            { label: "Films", value: "films" },
+                            { label: "Artists", value: "artists" },
+                            { label: "Drafts", value: "drafts" },
+                        ].map((item) => (
+                            <button
+                                key={item.value}
+                                onClick={() => {
+                                    setPage(1);
+                                    setFilter(item.value as FilterOption);
+                                }}
+                                className={`px-3 py-1 text-[11.5px] font-medium rounded-[2px] cursor-pointer transition-colors ${filter === item.value ? 'bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-[#1A1714]' : 'text-[#8C857C] hover:text-[#1A1714]'}`}
+                            >
+                                {item.label}
                             </button>
                         ))}
                     </div>
 
-                    <select className="ml-auto bg-white border border-[#DDD7CC] text-[12px] px-3 py-1.5 rounded-[2px] text-[#1A1714] outline-none">
-                        <option>Newest First</option>
-                        <option>Oldest First</option>
-                        <option>A – Z</option>
-                        <option>Most Viewed</option>
+                    <select
+                        value={sort}
+                        onChange={(e) => {
+                            setPage(1);
+                            setSort(e.target.value as SortOption);
+                        }}
+                        className="ml-auto bg-white border border-[#DDD7CC] text-[12px] px-3 py-1.5 rounded-[2px] text-[#1A1714] outline-none"
+                    >
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="az">A - Z</option>
+                        <option value="mostViewed">Most Viewed</option>
+                    </select>
+
+                    <select
+                        value={pageSize}
+                        onChange={(e) => {
+                            setPage(1);
+                            setPageSize(Number.parseInt(e.target.value, 10));
+                        }}
+                        className="bg-white border border-[#DDD7CC] text-[12px] px-3 py-1.5 rounded-[2px] text-[#1A1714] outline-none"
+                    >
+                        <option value={10}>10 / page</option>
+                        <option value={20}>20 / page</option>
+                        <option value={50}>50 / page</option>
                     </select>
                 </div>
 
@@ -144,7 +258,7 @@ export default async function PostsPage() {
                             {!error && posts.length === 0 && (
                                 <tr>
                                     <td colSpan={6} className="py-8 px-5 text-center text-[12px] text-[#8C857C]">
-                                        No posts found.
+                                        {isLoading ? 'Loading posts...' : 'No posts found.'}
                                     </td>
                                 </tr>
                             )}
@@ -206,13 +320,33 @@ export default async function PostsPage() {
 
                 {/* Pagination */}
                 <div className="bg-[#FAFAFA] border-t border-[#EDE7D9] px-5 py-3 flex items-center justify-between">
-                    <span className="text-[11.5px] text-[#8C857C]">Showing {posts.length > 0 ? "1" : "0"}–{posts.length} of {total} posts</span>
+                    <span className="text-[11.5px] text-[#8C857C]">
+                        Showing {total === 0 ? 0 : (page - 1) * pageSize + 1}-{Math.min(page * pageSize, total)} of {total} posts
+                    </span>
                     <div className="flex items-center gap-1">
-                        <button className="w-7 h-7 flex items-center justify-center border border-[#DDD7CC] bg-white text-[#8C857C] hover:text-[#1A1714] rounded-[2px]">‹</button>
-                        <button className="w-7 h-7 flex items-center justify-center border border-[#1A1714] bg-[#1A1714] text-white font-medium rounded-[2px]">1</button>
-                        <button className="w-7 h-7 flex items-center justify-center border border-[#DDD7CC] bg-white text-[#1A1714] hover:bg-[#EDE7D9] rounded-[2px]">2</button>
-                        <button className="w-7 h-7 flex items-center justify-center border border-[#DDD7CC] bg-white text-[#1A1714] hover:bg-[#EDE7D9] rounded-[2px]">3</button>
-                        <button className="w-7 h-7 flex items-center justify-center border border-[#DDD7CC] bg-white text-[#8C857C] hover:text-[#1A1714] rounded-[2px]">›</button>
+                        <button
+                            onClick={() => hasPrev && setPage((p) => Math.max(1, p - 1))}
+                            disabled={!hasPrev}
+                            className="w-7 h-7 flex items-center justify-center border border-[#DDD7CC] bg-white text-[#8C857C] hover:text-[#1A1714] rounded-[2px] disabled:opacity-40"
+                        >
+                            ‹
+                        </button>
+                        {pageButtons.map((pageNumber) => (
+                            <button
+                                key={pageNumber}
+                                onClick={() => setPage(pageNumber)}
+                                className={`w-7 h-7 flex items-center justify-center border font-medium rounded-[2px] ${pageNumber === page ? 'border-[#1A1714] bg-[#1A1714] text-white' : 'border-[#DDD7CC] bg-white text-[#1A1714] hover:bg-[#EDE7D9]'}`}
+                            >
+                                {pageNumber}
+                            </button>
+                        ))}
+                        <button
+                            onClick={() => hasNext && setPage((p) => p + 1)}
+                            disabled={!hasNext}
+                            className="w-7 h-7 flex items-center justify-center border border-[#DDD7CC] bg-white text-[#8C857C] hover:text-[#1A1714] rounded-[2px] disabled:opacity-40"
+                        >
+                            ›
+                        </button>
                     </div>
                 </div>
 
