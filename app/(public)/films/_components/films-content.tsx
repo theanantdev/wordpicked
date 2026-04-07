@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
@@ -8,9 +8,9 @@ import Link from "next/link";
 type Category = "ALL" | "FICTION" | "NON-FICTION" | "POETRY";
 type SortOption = "LATEST" | "OLDEST" | "TITLE_A_Z";
 
-interface Article {
+type Article = {
     id: string;
-    category: "FICTION" | "NON-FICTION" | "POETRY"; // Map back to our exact tab values
+    category: "FICTION" | "NON-FICTION" | "POETRY";
     readTime: string;
     releaseDate: string;
     title: string;
@@ -18,97 +18,130 @@ interface Article {
     description: string;
     imageUrl: string;
     slug: string;
-}
+};
 
-const ARTICLES: Article[] = [
-    {
-        id: "1",
-        category: "FICTION",
-        readTime: "12 MIN READ",
-        releaseDate: "2026-03-28",
-        title: "The Silent Resonance of Modern Echoes",
-        author: "By Julianna Vance",
-        description: "An examination of silence as a narrative tool in contemporary prose, focusing on the weight of...",
-        imageUrl: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?q=80&w=600&auto=format&fit=crop",
-        slug: "the-silent-resonance-of-modern-echoes"
-    },
-    {
-        id: "2",
-        category: "NON-FICTION",
-        readTime: "08 MIN READ",
-        releaseDate: "2026-03-27",
-        title: "Ink & Ideology: The History of Printing",
-        author: "By Marcus Thorne",
-        description: "How the mechanical press didn't just reproduce words, but fundamentally restructured the human...",
-        imageUrl: "https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=600&auto=format&fit=crop",
-        slug: "ink-ideology-the-history-of-printing"
-    },
-    {
-        id: "3",
-        category: "POETRY",
-        readTime: "05 MIN READ",
-        releaseDate: "2026-03-26",
-        title: "The Geometry of Verse in the Digital Age",
-        author: "By Elena Rossi",
-        description: "Exploring the visual architecture of concrete poetry and how screen-based reading changes our spati...",
-        imageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=600&auto=format&fit=crop",
-        slug: "the-geometry-of-verse-in-the-digital-age"
-    },
-    {
-        id: "4",
-        category: "FICTION",
-        readTime: "15 MIN READ",
-        releaseDate: "2026-03-25",
-        title: "Shadows of the Protaganist",
-        author: "By David Chen",
-        description: "A deep dive into the psychological complexity of unreliable narrators in 21st-century psychological...",
-        imageUrl: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop",
-        slug: "shadows-of-the-protaganist"
-    },
-    {
-        id: "5",
-        category: "NON-FICTION",
-        readTime: "10 MIN READ",
-        releaseDate: "2026-03-24",
-        title: "The Architecture of an Argument",
-        author: "By Sarah Jenkins",
-        description: "Decoding the structural foundations of iconic essays and how they manipulate reader logic...",
-        imageUrl: "https://images.unsplash.com/photo-1575881875475-31023242e3f9?q=80&w=600&auto=format&fit=crop",
-        slug: "the-architecture-of-an-argument"
-    },
-    {
-        id: "6",
-        category: "POETRY",
-        readTime: "07 MIN READ",
-        releaseDate: "2026-03-23",
-        title: "Landscape as Metaphor",
-        author: "By Thomas O'Brien",
-        description: "Tracing the evolution of nature imagery from Romanticism to the industrial-coded pastoral poe...",
-        imageUrl: "https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=600&auto=format&fit=crop",
-        slug: "landscape-as-metaphor"
+type ApiResponse = {
+    success: boolean;
+    data?: {
+        items: Article[];
+        total: number;
+        page: number;
+        pageSize: number;
+        totalPages: number;
+        hasPrev: boolean;
+        hasNext: boolean;
+    };
+    error?: string;
+};
+
+async function fetchFilms(params: {
+    page: number;
+    pageSize: number;
+    search: string;
+    category: Category;
+    sort: SortOption;
+}) {
+    const query = new URLSearchParams({
+        page: String(params.page),
+        pageSize: String(params.pageSize),
+        search: params.search,
+        category: params.category,
+        sort: params.sort,
+    });
+
+    const response = await fetch(`/api/public/films?${query.toString()}`, {
+        method: "GET",
+        cache: "no-store",
+    });
+
+    const payload = (await response.json()) as ApiResponse;
+
+    if (!response.ok || !payload.success || !payload.data) {
+        return {
+            items: [] as Article[],
+            total: 0,
+            page: 1,
+            pageSize: params.pageSize,
+            totalPages: 1,
+            hasPrev: false,
+            hasNext: false,
+            error: payload.error || "Failed to load films.",
+        };
     }
-];
+
+    return {
+        items: payload.data.items,
+        total: payload.data.total,
+        page: payload.data.page,
+        pageSize: payload.data.pageSize,
+        totalPages: payload.data.totalPages,
+        hasPrev: payload.data.hasPrev,
+        hasNext: payload.data.hasNext,
+        error: null,
+    };
+}
 
 export function FilmsContent() {
     const [activeTab, setActiveTab] = useState<Category>("ALL");
     const [isSortOpen, setIsSortOpen] = useState(false);
     const [activeSort, setActiveSort] = useState<SortOption>("LATEST");
+    const [searchInput, setSearchInput] = useState("");
+    const [search, setSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [items, setItems] = useState<Article[]>([]);
+    const [total, setTotal] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const [hasPrev, setHasPrev] = useState(false);
+    const [hasNext, setHasNext] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const filteredArticles = ARTICLES.filter(
-        article => activeTab === "ALL" || article.category === activeTab
-    );
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setPage(1);
+            setSearch(searchInput.trim());
+        }, 300);
 
-    const sortedArticles = [...filteredArticles].sort((a, b) => {
-        if (activeSort === "LATEST") {
-            return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime();
-        }
+        return () => clearTimeout(timer);
+    }, [searchInput]);
 
-        if (activeSort === "OLDEST") {
-            return new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime();
-        }
+    useEffect(() => {
+        let cancelled = false;
 
-        return a.title.localeCompare(b.title);
-    });
+        (async () => {
+            setLoading(true);
+            const result = await fetchFilms({
+                page,
+                pageSize,
+                search,
+                category: activeTab,
+                sort: activeSort,
+            });
+
+            if (cancelled) return;
+
+            setItems(result.items);
+            setTotal(result.total);
+            setTotalPages(result.totalPages);
+            setHasPrev(result.hasPrev);
+            setHasNext(result.hasNext);
+            setError(result.error);
+            setLoading(false);
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [page, pageSize, search, activeTab, activeSort]);
+
+    const pageButtons = useMemo(() => {
+        const start = Math.max(1, page - 1);
+        const end = Math.min(totalPages, page + 1);
+        const values: number[] = [];
+        for (let i = start; i <= end; i += 1) values.push(i);
+        return values;
+    }, [page, totalPages]);
 
     const sortLabelMap: Record<SortOption, string> = {
         LATEST: "Latest Release",
@@ -121,11 +154,22 @@ export function FilmsContent() {
             {/* Tab and Sort Bar */}
             <div className="z-20 max-w-[1200px] w-full bg-[#F5F0E8] py-4 sm:py-5 -mt-15">
                 <div className="mx-auto flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 px-4 sm:px-6 md:px-8">
+                    <input
+                        type="text"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        placeholder="Search title, author, subtitle..."
+                        className="w-full sm:w-70 bg-white border border-[#E4E4E7] px-3 py-2 text-sm text-[#18181B] outline-none"
+                    />
+
                     <div className="flex flex-row items-center gap-2 sm:gap-2.5 overflow-x-auto">
                         {(["ALL", "FICTION", "NON-FICTION", "POETRY"] as Category[]).map(tab => (
                             <button
                                 key={tab}
-                                onClick={() => setActiveTab(tab)}
+                                onClick={() => {
+                                    setPage(1);
+                                    setActiveTab(tab);
+                                }}
                                 className={`flex h-7.25 justify-center items-center px-3 sm:px-4.5 py-2.5 font-heading font-medium tracking-[1px] sm:tracking-[2px] text-xs sm:text-[14px] uppercase transition-colors whitespace-nowrap ${activeTab === tab
                                     ? "bg-[#DC2828] text-white"
                                     : "bg-white text-[#52525B] hover:text-[#18181B]"
@@ -158,6 +202,7 @@ export function FilmsContent() {
                                         key={option}
                                         type="button"
                                         onClick={() => {
+                                            setPage(1);
                                             setActiveSort(option);
                                             setIsSortOpen(false);
                                         }}
@@ -172,16 +217,29 @@ export function FilmsContent() {
                             </div>
                         )}
                     </div>
+
+                    <select
+                        value={pageSize}
+                        onChange={(e) => {
+                            setPage(1);
+                            setPageSize(Number.parseInt(e.target.value, 10));
+                        }}
+                        className="bg-white border border-[#E4E4E7] px-3 py-2 text-sm text-[#18181B] outline-none"
+                    >
+                        <option value={10}>10 / page</option>
+                        <option value={20}>20 / page</option>
+                        <option value={30}>30 / page</option>
+                    </select>
                 </div>
             </div>
 
             {/* Grid */}
             <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 sm:gap-12 lg:gap-15 px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
                 <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-x-8 md:gap-y-12">
-                    {sortedArticles.map(article => (
-                        <Link href={`/films/${article.slug}`} key={article.id} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
+                    {items.map(article => (
+                        <Link key={article.id} href={`/films/${article.slug}`} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
                             {/* Image */}
-                            <div className="relative w-full aspect-3/4">
+                            <div className="relative w-full aspect-[3/4]">
                                 <Image
                                     src={article.imageUrl}
                                     alt={article.title}
@@ -189,50 +247,75 @@ export function FilmsContent() {
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-500 rounded-t-sm"
                                 />
-                                {/* Vintage overlay effect similar to user's figma reference */}
+                                {/* Vintage overlay effect */}
                                 <div className="absolute inset-0 bg-white/10 mix-blend-saturation pointer-events-none" />
                             </div>
 
                             {/* Content */}
                             <div className="flex flex-col gap-2.5 sm:gap-3 md:gap-4 p-4 sm:p-5 md:p-6">
                                 <div className="flex flex-row items-center gap-2.5 sm:gap-3">
-                                    <span className="font-sans font-black text-[9px] sm:text-[10.4px] leading-3.5 sm:leading-4 tracking-[1.8px] sm:tracking-[2.08px] text-[#E50914] uppercase">
+                                    <span className="font-sans font-black text-[9px] sm:text-[10.4px] leading-[14px] sm:leading-[16px] tracking-[1.8px] sm:tracking-[2.08px] text-[#E50914] uppercase">
                                         {article.category}
                                     </span>
                                     <div className="w-0.5 sm:w-1 h-0.5 sm:h-1 bg-[#E4E4E7] rounded-full" />
-                                    <span className="font-sans font-bold text-[9px] sm:text-[10.4px] leading-3.5 sm:leading-4 tracking-[1.8px] sm:tracking-[2.08px] text-[#A1A1AA] uppercase">
+                                    <span className="font-sans font-bold text-[9px] sm:text-[10.4px] leading-[14px] sm:leading-[16px] tracking-[1.8px] sm:tracking-[2.08px] text-[#A1A1AA] uppercase">
                                         {article.readTime}
                                     </span>
                                 </div>
 
-                                <h2 className="font-heading h-auto sm:h-16 md:h-16.5 text-xl sm:text-2xl md:text-[28px] leading-5.75 sm:leading-7 md:leading-8.25 font-bold tracking-tight text-[#18181B] line-clamp-2 transition-colors group-hover:text-[#DC2828]">
+                                <h2 className="font-heading h-auto sm:h-16 md:h-[66px] text-xl sm:text-2xl md:text-[28px] leading-[23px] sm:leading-[28px] md:leading-[33px] font-bold tracking-tight text-[#18181B] line-clamp-2 transition-colors group-hover:text-[#DC2828]">
                                     {article.title}
                                 </h2>
 
-                                <p className="font-heading text-sm sm:text-base md:text-[16px] leading-5 sm:leading-5.75 md:leading-6 italic text-[#71717A]">
+                                <p className="font-heading text-sm sm:text-base md:text-[16px] leading-[20px] sm:leading-[23px] md:leading-[24px] italic text-[#71717A]">
                                     {article.author}
                                 </p>
 
-                                <p className="font-sans h-auto sm:h-10 md:h-11.5 text-xs sm:text-sm md:text-[14px] leading-4.5 sm:leading-5 md:leading-5.75 text-[#52525B] line-clamp-2">
+                                <p className="font-sans h-auto sm:h-10 md:h-[46px] text-xs sm:text-sm md:text-[14px] leading-[18px] sm:leading-[20px] md:leading-[23px] text-[#52525B] line-clamp-2">
                                     {article.description}
                                 </p>
                             </div>
                         </Link>
                     ))}
-                    {/* Empty state if all items are filtered out */}
-                    {filteredArticles.length === 0 && (
+                    {(loading || (!loading && !error && items.length === 0) || error) && (
                         <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 sm:py-16 md:py-20 text-gray-500">
-                            No articles found in this category.
+                            {loading ? "Loading films..." : error ? error : "No films found."}
                         </div>
                     )}
                 </div>
 
-                {filteredArticles.length > 0 && (
-                    <button className="flex items-center justify-center bg-[#b02020] px-6 sm:px-8 md:px-12 py-3.5 sm:py-4 md:py-5 text-white shadow-lg transition-colors w-full sm:w-auto">
-                        <span className="relative z-10 font-sans text-xs sm:text-sm md:text-[14px] leading-3.5 sm:leading-4 md:leading-4.25 font-bold tracking-[1.8px] sm:tracking-[2px] md:tracking-[2.24px] uppercase">
-                            Load More Reviews
+                {total > 0 && (
+                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <span className="text-sm text-[#71717A]">
+                            Showing {total === 0 ? 0 : (page - 1) * pageSize + 1}-{Math.min(page * pageSize, total)} of {total}
                         </span>
-                    </button>
+
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={() => hasPrev && setPage((p) => Math.max(1, p - 1))}
+                                disabled={!hasPrev}
+                                className="w-8 h-8 border border-[#E4E4E7] bg-white disabled:opacity-40"
+                            >
+                                ‹
+                            </button>
+                            {pageButtons.map((value) => (
+                                <button
+                                    key={value}
+                                    onClick={() => setPage(value)}
+                                    className={`w-8 h-8 border ${value === page ? 'bg-[#18181B] text-white border-[#18181B]' : 'bg-white border-[#E4E4E7] text-[#18181B]'}`}
+                                >
+                                    {value}
+                                </button>
+                            ))}
+                            <button
+                                onClick={() => hasNext && setPage((p) => p + 1)}
+                                disabled={!hasNext}
+                                className="w-8 h-8 border border-[#E4E4E7] bg-white disabled:opacity-40"
+                            >
+                                ›
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
         </section>
