@@ -20,7 +20,7 @@ export function FilmHero({
             {/* Background Image */}
             <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url('${coverImageUrl}')` }}
+                style={{ backgroundImage: `url('${'/pick-of-the-day/hero.png'}')` }}
             />
             {/* Gradient Overlay */}
             <div
@@ -30,7 +30,7 @@ export function FilmHero({
 
             <div className="relative z-10 w-full h-full max-w-[1440px] flex flex-col justify-end px-6 md:px-12 lg:px-[98px] pb-[40px] md:pb-[60px] mx-auto">
 
-                <span className="font-sans font-medium text-[14px] md:text-[18px] leading-[16px] tracking-[2.4px] uppercase text-white mb-6">
+                <span className="font-sans mt-10 font-medium text-[14px] md:text-[18px] leading-[16px] tracking-[2.4px] uppercase text-white mb-6">
                     {categoryLabel}
                 </span>
 
