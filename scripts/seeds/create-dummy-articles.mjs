@@ -120,14 +120,66 @@ const IMAGE_POOL = [
   'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=1200&q=80',
 ];
 
+const OPENING_PARAGRAPHS = [
+  'Every meaningful work begins with a period of uncertainty. Before structure appears, there is only observation, fragments of thought, and a question that refuses to disappear. This essay follows that question from first draft to finished form.',
+  'Writers often describe the opening movement of an article as a negotiation between intuition and clarity. You know what you feel, but translating that feeling into language demands patience, revision, and a willingness to remove what is merely decorative.',
+  'A strong article does not announce its conclusions too early. It builds an argument with detail, contradiction, and evidence, allowing the reader to participate in the process rather than simply consume a verdict.',
+];
+
+const CRAFT_PARAGRAPHS = [
+  'One recurring pattern among experienced editors is deliberate pacing: short paragraphs for orientation, longer paragraphs for synthesis, and carefully placed transitions that prevent conceptual whiplash. This rhythm keeps complex ideas readable without making them simplistic.',
+  'Interviews from the past decade reveal a practical truth: most drafts improve not through grand reinvention, but through local decisions. A verb becomes more precise, a vague sentence gains context, an anecdote is moved to where it can actually carry weight.',
+  'Research quality determines argument quality. When references are thin, writing leans on performance. When references are deep, writing can be quieter and still persuasive because each claim is grounded in a traceable chain of reasoning.',
+  'Style becomes credible when it serves thought. Decorative language can impress for a paragraph, but only structure sustains attention over a full article. Good prose is not merely beautiful; it is load-bearing.',
+  'Readers rarely remember every sentence, but they remember architecture: the hinge where the argument turns, the image that recurs with new meaning, and the final section where separate threads converge into a coherent stance.',
+];
+
+const CATEGORY_SECTIONS = {
+  literature: {
+    headingA: 'Narrative Tempo and the Pressure of Voice',
+    headingB: 'Revision as an Ethical Practice',
+    quote:
+      'A finished text is not the record of certainty; it is the record of disciplined doubt.',
+    list: [
+      'Track recurring motifs across early and late drafts',
+      'Verify tone consistency between sections',
+      'Remove summary where analysis can do the work',
+      'Preserve ambiguity only when it increases meaning',
+    ],
+  },
+  films: {
+    headingA: 'Framing, Duration, and Emotional Geography',
+    headingB: 'Editing as the Argument of the Film',
+    quote:
+      'In cinema, structure is not what follows emotion; structure is what produces emotion.',
+    list: [
+      'Map visual motifs scene by scene',
+      'Identify where pacing shifts alter interpretation',
+      'Compare script intention with final cut choices',
+      'Document sound design decisions that redirect attention',
+    ],
+  },
+  artists: {
+    headingA: 'Studio Rituals and Material Constraints',
+    headingB: 'Public Reception Versus Private Process',
+    quote:
+      'Technique matures when repetition becomes a method of inquiry, not habit.',
+    list: [
+      'Record iteration cycles for key works',
+      'Link material choices to conceptual outcomes',
+      'Separate market narrative from studio reality',
+      'Trace how failure informs later execution',
+    ],
+  },
+};
+
 function buildEditorContent(title, category) {
-  const intro = `In this article, we explore ${title.toLowerCase()} through close observation, interviews, and historical context.`;
-  const body =
-    category === 'films'
-      ? 'Directors repeatedly describe editing as the place where a film discovers its final argument. This piece traces that argument from script to screen.'
-      : category === 'artists'
-        ? 'Studio routines often look repetitive from the outside, but each cycle refines intention. Small decisions accumulate into a distinct visual language.'
-        : 'Reading habits shape writing outcomes. By slowing down attention and revisiting structure, authors uncover more deliberate narrative choices.';
+  const section = CATEGORY_SECTIONS[category];
+  const introLine = `In this article, we explore ${title.toLowerCase()} through close observation, interviews, and historical context.`;
+  const opening = pick(OPENING_PARAGRAPHS);
+  const craftA = pick(CRAFT_PARAGRAPHS);
+  const craftB = pick(CRAFT_PARAGRAPHS.filter((line) => line !== craftA));
+  const craftC = pick(CRAFT_PARAGRAPHS.filter((line) => line !== craftA && line !== craftB));
 
   return {
     time: Date.now(),
@@ -142,32 +194,67 @@ function buildEditorContent(title, category) {
       {
         type: 'paragraph',
         data: {
-          text: intro,
+          text: introLine,
         },
       },
       {
         type: 'paragraph',
         data: {
-          text: body,
+          text: opening,
+        },
+      },
+      {
+        type: 'header',
+        data: {
+          text: section.headingA,
+          level: 3,
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: craftA,
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: craftB,
         },
       },
       {
         type: 'quote',
         data: {
-          text: 'Good work is usually the result of disciplined repetition, not sudden inspiration.',
-          caption: 'Editorial note',
+          text: section.quote,
+          caption: 'Field note',
           alignment: 'left',
+        },
+      },
+      {
+        type: 'header',
+        data: {
+          text: section.headingB,
+          level: 3,
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: craftC,
         },
       },
       {
         type: 'list',
         data: {
           style: 'unordered',
-          items: [
-            'Context and references',
-            'Detailed process notes',
-            'Practical takeaways for creators',
-          ],
+          items: section.list,
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text:
+            'The final lesson is practical: clarity is cumulative. Better inputs, better questions, and better revisions compound over time, turning an initial idea into a durable piece of writing that can survive rereading.',
         },
       },
     ],
