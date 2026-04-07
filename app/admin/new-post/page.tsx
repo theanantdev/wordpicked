@@ -2,10 +2,11 @@
 import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle, X } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { useState } from "react";
+import type { OutputData } from "@editorjs/editorjs";
 
 const Editor = dynamic(() => import('@/components/editor'), {
     ssr: false,
-    loading: () => <div className="flex items-center justify-center h-96 bg-gradient-to-br from-gray-50 to-gray-100 ">
+    loading: () => <div className="flex items-center justify-center h-96 bg-linear-to-br from-gray-50 to-gray-100 ">
         <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading advanced editor...</p>
@@ -26,16 +27,65 @@ export default function NewPostPage() {
     const [publishDate, setPublishDate] = useState("2026-04-30T09:00");
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [editorContent, setEditorContent] = useState<OutputData>({ blocks: [], version: '' });
+    const [featuredImageUrl, setFeaturedImageUrl] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSaveDraft = () => {
-        setIsSaved(true);
-        setTimeout(() => setIsSaved(false), 2000);
+    const persistArticle = async (status: 'draft' | 'published') => {
+        setErrorMessage('');
+
+        if (!title.trim()) {
+            setErrorMessage('Article title is required.');
+            return;
+        }
+
+        if (!editorContent.blocks?.length) {
+            setErrorMessage('Article content is required.');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch('/api/articles', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: title.trim(),
+                    subtitle: subtitle.trim(),
+                    category,
+                    tags,
+                    content: editorContent,
+                    featuredImageUrl: featuredImageUrl || null,
+                    status,
+                    publishAt: schedule ? publishDate : null,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'Failed to save article.');
+            }
+
+            if (status === 'draft') {
+                setIsSaved(true);
+                setTimeout(() => setIsSaved(false), 2000);
+            } else {
+                setIsPublished(true);
+                setTimeout(() => setIsPublished(false), 2000);
+            }
+        } catch (error) {
+            setErrorMessage(error instanceof Error ? error.message : 'Failed to save article.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    const handlePublish = () => {
-        setIsPublished(true);
-        setTimeout(() => setIsPublished(false), 2000);
-    };
+    const handleSaveDraft = async () => persistArticle('draft');
+
+    const handlePublish = async () => persistArticle('published');
 
     const handleAddTag = () => {
         if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -58,35 +108,77 @@ export default function NewPostPage() {
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            console.log("Image selected:", file.name);
-            // UI feedback only
+            (async () => {
+                try {
+                    setErrorMessage('');
+                    const signRes = await fetch('/api/cloudinary/signature', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                    const signData = await signRes.json();
+
+                    if (!signRes.ok || !signData.success) {
+                        throw new Error(signData.error || 'Failed to create upload signature.');
+                    }
+
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('api_key', signData.apiKey);
+                    formData.append('timestamp', String(signData.timestamp));
+                    formData.append('signature', signData.signature);
+                    if (signData.folder) {
+                        formData.append('folder', signData.folder);
+                    }
+
+                    const uploadRes = await fetch(signData.uploadUrl, {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    const uploadData = await uploadRes.json();
+
+                    if (!uploadRes.ok || !uploadData.secure_url) {
+                        throw new Error(uploadData.error?.message || 'Failed to upload image.');
+                    }
+
+                    setFeaturedImageUrl(uploadData.secure_url);
+                } catch (error) {
+                    setErrorMessage(error instanceof Error ? error.message : 'Featured image upload failed.');
+                }
+            })();
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 pb-16">
+        <div className="min-h-screen bg-linear-to-b from-white to-gray-50 pb-16">
             {/* Success Notifications */}
             {isSaved && (
                 <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3  shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 shrink-0" />
                     <span className="font-medium">Draft saved successfully!</span>
                 </div>
             )}
 
             {isPublished && (
                 <div className="fixed top-4 right-4 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3  shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+                    <CheckCircle2 className="w-5 h-5 shrink-0" />
                     <span className="font-medium">Article published successfully!</span>
                 </div>
             )}
 
-            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            {errorMessage && (
+                <div className="fixed top-4 left-4 right-4 sm:right-auto sm:w-fit bg-red-50 border border-red-200 text-red-800 px-4 py-3 shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
+                    <AlertCircle className="w-5 h-5 shrink-0" />
+                    <span className="font-medium">{errorMessage}</span>
+                </div>
+            )}
+
+            <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                 {/* Header with Actions */}
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6 sm:mb-8">
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2 break-words">Create New Article</h1>
+                        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2 wrap-break-word">Create New Article</h1>
                         <p className="text-slate-600 flex items-center gap-1 text-sm sm:text-base flex-wrap">
-                            <PenTool className="w-4 h-4 flex-shrink-0" />
+                            <PenTool className="w-4 h-4 shrink-0" />
                             <span>Write, save, and publish your amazing story</span>
                         </p>
                     </div>
@@ -95,17 +187,19 @@ export default function NewPostPage() {
                     <div className="hidden sm:flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                         <button
                             onClick={handleSaveDraft}
+                            disabled={isSubmitting}
                             className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-[#F7F3EC] text-slate-700 font-medium text-sm sm:text-base  hover:bg-slate-50 transition-all hover:shadow-md active:scale-95"
                         >
-                            <Save className="w-4 h-4 flex-shrink-0" />
+                            <Save className="w-4 h-4 shrink-0" />
                             <span className="hidden sm:inline">Save Draft</span>
                             <span className="sm:hidden">Save</span>
                         </button>
                         <button
                             onClick={handlePublish}
+                            disabled={isSubmitting}
                             className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-[#E0BC78] font-medium text-sm sm:text-base  hover:shadow-lg hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95"
                         >
-                            <Send className="w-4 h-4 flex-shrink-0" />
+                            <Send className="w-4 h-4 shrink-0" />
                             <span>Publish</span>
                         </button>
                     </div>
@@ -137,8 +231,8 @@ export default function NewPostPage() {
 
                         {/* Rich Text Editor */}
                         <div className="bg-white  border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col ">
-                            <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
-                                <div className="w-8 sm:w-10 h-8 sm:h-10  bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 bg-linear-to-r from-slate-50 to-white">
+                                <div className="w-8 sm:w-10 h-8 sm:h-10  bg-blue-100 flex items-center justify-center shrink-0">
                                     <PenTool className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600" />
                                 </div>
                                 <div className="min-w-0">
@@ -148,7 +242,7 @@ export default function NewPostPage() {
                             </div>
 
                             {/* Editor Component */}
-                            <Editor />
+                            <Editor onContentChange={setEditorContent} />
                         </div>
                     </div>
 
@@ -156,9 +250,9 @@ export default function NewPostPage() {
                     <div className="lg:col-span-1 space-y-4 sm:space-y-6">
 
                         {/* Publishing Status Card */}
-                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50  border border-blue-200 p-3 sm:p-4 shadow-sm">
+                        <div className="bg-linear-to-br from-blue-50 to-indigo-50  border border-blue-200 p-3 sm:p-4 shadow-sm">
                             <div className="flex items-start gap-2 sm:gap-3">
-                                <AlertCircle className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                                <AlertCircle className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600 shrink-0 mt-0.5" />
                                 <div className="min-w-0">
                                     <p className="font-semibold text-blue-900 text-xs sm:text-sm mb-0.5 sm:mb-1">Not Published</p>
                                     <p className="text-xs text-blue-700">Your article is in draft mode. Click &quot;Publish&quot; to make it live.</p>
@@ -169,11 +263,11 @@ export default function NewPostPage() {
                         {/* Featured Image */}
                         <div className=" bg-white  border border-slate-200 shadow-sm overflow-hidden">
                             <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 bg-slate-50">
-                                <ImageIcon className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 flex-shrink-0" />
+                                <ImageIcon className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 shrink-0" />
                                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">Featured Image</h3>
                             </div>
                             <div className="p-3 sm:p-4">
-                                <label className="border-2 border-dashed border-slate-300 bg-gradient-to-br from-slate-50 to-slate-100  p-4 sm:p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50 group">
+                                <label className="border-2 border-dashed border-slate-300 bg-linear-to-br from-slate-50 to-slate-100  p-4 sm:p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50 group">
                                     <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                                     <div className="w-10 sm:w-12 h-10 sm:h-12 bg-slate-200  flex items-center justify-center mb-2 group-hover:bg-blue-200 transition-colors">
                                         <ImageIcon className="w-5 sm:w-6 h-5 sm:h-6 text-slate-600 group-hover:text-blue-600 transition-colors" />
@@ -182,13 +276,18 @@ export default function NewPostPage() {
                                     <p className="text-xs text-slate-500 mb-2">or click to browse</p>
                                     <div className="text-xs text-slate-600 bg-white px-2 sm:px-2.5 py-0.5 sm:py-1 rounded border border-slate-200">1200 × 630px</div>
                                 </label>
+                                {featuredImageUrl && (
+                                    <div className="mt-3 overflow-hidden rounded border border-slate-200">
+                                        <img src={featuredImageUrl} alt="Featured" className="h-32 w-full object-cover" />
+                                    </div>
+                                )}
                             </div>
                         </div>
 
                         {/* Category & Tags */}
                         <div className="bg-white  border border-slate-200 shadow-sm overflow-hidden">
                             <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 bg-slate-50">
-                                <Tag className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 flex-shrink-0" />
+                                <Tag className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 shrink-0" />
                                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">Category & Tags</h3>
                             </div>
                             <div className="p-3 sm:p-4 flex flex-col gap-3 sm:gap-4">
@@ -214,7 +313,7 @@ export default function NewPostPage() {
                                     <label className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Tags</label>
                                     <div className="flex flex-wrap gap-1 p-2 bg-slate-50 border border-slate-300  transition-all focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-500">
                                         {tags.map((tag, index) => (
-                                            <div key={index} className="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md font-medium border border-blue-200">
+                                            <div key={index} className="inline-flex items-center gap-1 bg-linear-to-r from-blue-100 to-blue-50 text-blue-700 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md font-medium border border-blue-200">
                                                 <span className="truncate">{tag}</span>
                                                 <button
                                                     onClick={() => handleRemoveTag(index)}
@@ -248,7 +347,7 @@ export default function NewPostPage() {
                         {/* Publish Settings */}
                         <div className="bg-white  border border-slate-200 shadow-sm overflow-hidden">
                             <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-slate-200 bg-slate-50">
-                                <Globe className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 flex-shrink-0" />
+                                <Globe className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-slate-600 shrink-0" />
                                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">Publish Settings</h3>
                             </div>
                             <div className="p-3 sm:p-4 flex flex-col gap-3 sm:gap-4">
@@ -295,7 +394,7 @@ export default function NewPostPage() {
                         </div>
 
                         {/* Advanced Options */}
-                        <div className="bg-gradient-to-br from-slate-50 to-gray-50  border border-slate-200 p-3 sm:p-4 overflow-hidden">
+                        <div className="bg-linear-to-br from-slate-50 to-gray-50  border border-slate-200 p-3 sm:p-4 overflow-hidden">
                             <button
                                 onClick={() => setShowAdvanced(!showAdvanced)}
                                 className="w-full flex items-center justify-between p-2 hover:bg-white  transition-colors active:bg-slate-100"
@@ -327,17 +426,19 @@ export default function NewPostPage() {
                         <div className="sm:hidden flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                             <button
                                 onClick={handleSaveDraft}
+                                disabled={isSubmitting}
                                 className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-[#F7F3EC] text-slate-700 font-medium text-sm sm:text-base  hover:bg-slate-50 transition-all hover:shadow-md active:scale-95"
                             >
-                                <Save className="w-4 h-4 flex-shrink-0" />
+                                <Save className="w-4 h-4 shrink-0" />
                                 <span className="hidden sm:inline">Save Draft</span>
                                 <span className="sm:hidden">Save</span>
                             </button>
                             <button
                                 onClick={handlePublish}
+                                disabled={isSubmitting}
                                 className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-[#E0BC78] font-medium text-sm sm:text-base  hover:shadow-lg hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95"
                             >
-                                <Send className="w-4 h-4 flex-shrink-0" />
+                                <Send className="w-4 h-4 shrink-0" />
                                 <span>Publish</span>
                             </button>
                         </div>

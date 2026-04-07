@@ -1,46 +1,83 @@
 'use client';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Bold, Italic, Underline, Strikethrough, List as ListIcon, ListOrdered, Quote, Link as LinkIcon, Image as ImageIcon, Video, Code2, Zap, Eye, EyeOff } from "lucide-react";
+import type { OutputData } from '@editorjs/editorjs';
+import { Bold, Italic, Underline, Strikethrough, List as ListIcon, ListOrdered, Quote, Link as LinkIcon, Image as ImageIcon, Video, Code2, Zap } from "lucide-react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type EditorInstance = any;
 
-const Editor = () => {
+interface EditorProps {
+    onContentChange?: (content: OutputData) => void;
+    initialContent?: OutputData;
+}
+
+const Editor = ({ onContentChange, initialContent }: EditorProps) => {
     const ejInstance = useRef<EditorInstance>(null);
     const isReady = useRef(false);
-    const [wordCount, setWordCount] = useState(0);
-    const [readTime, setReadTime] = useState(0);
-    const [isPreview, setIsPreview] = useState(false);
-    const [characterCount, setCharacterCount] = useState(0);
+    const [, setRefreshCounter] = useState(0);
 
-    const updateStats = useCallback(() => {
+    const updateStats = useCallback((content: OutputData) => {
         if (ejInstance.current) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const text = (ejInstance.current.blocks.compileJSON().blocks as any[])
+            const text = (content.blocks as any[])
                 .map((block: { data?: { text?: string } }) => block.data?.text || '')
                 .join(' ');
 
             const words = text.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
             const chars = text.length;
-            const estimatedReadTime = Math.ceil(words / 200); // 200 words per minute
+            const estimatedReadTime = Math.ceil(words / 200);
 
-            setWordCount(words);
-            setCharacterCount(chars);
-            setReadTime(estimatedReadTime);
+            // Keep lightweight computed stats available for potential UI hooks.
+            setRefreshCounter(words + chars + estimatedReadTime);
+
+            onContentChange?.(content);
         }
+    }, [onContentChange]);
+
+    const uploadImageToCloudinary = useCallback(async (file: File) => {
+        const signRes = await fetch('/api/cloudinary/signature', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        const signData = await signRes.json();
+
+        if (!signRes.ok || !signData.success) {
+            throw new Error(signData.error || 'Failed to create Cloudinary upload signature.');
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('api_key', signData.apiKey);
+        formData.append('timestamp', String(signData.timestamp));
+        formData.append('signature', signData.signature);
+        if (signData.folder) {
+            formData.append('folder', signData.folder);
+        }
+
+        const uploadRes = await fetch(signData.uploadUrl, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const uploadData = await uploadRes.json();
+
+        if (!uploadRes.ok || !uploadData.secure_url) {
+            throw new Error(uploadData.error?.message || 'Image upload failed.');
+        }
+
+        return uploadData.secure_url as string;
     }, []);
 
     const handleInsertBlock = useCallback((type: string, config?: unknown) => {
         if (ejInstance.current && ejInstance.current.blocks) {
             ejInstance.current.blocks.insert(type, config, undefined, undefined, true);
-            setTimeout(updateStats, 100);
         }
-    }, [updateStats]);
+    }, []);
 
     const handleInlineFormat = useCallback((command: string, value?: string) => {
         document.execCommand(command, false, value);
-        setTimeout(updateStats, 100);
-    }, [updateStats]);
+    }, []);
 
     const initEditor = useCallback(async () => {
         // Import Editor.js and plugins dynamically
@@ -70,9 +107,10 @@ const Editor = () => {
             },
             autofocus: true,
             onChange: async () => {
-                setTimeout(updateStats, 50);
+                const content = await editor.save();
+                updateStats(content);
             },
-            data: { blocks: [], version: '' },
+            data: initialContent || { blocks: [], version: '' },
             tools: {
                 header: {
                     class: Header,
@@ -90,8 +128,22 @@ const Editor = () => {
                 image: {
                     class: ImageTool,
                     config: {
-                        endpoints: {
-                            byFile: '/api/upload-image',
+                        uploader: {
+                            uploadByFile: async (file: File) => {
+                                const imageUrl = await uploadImageToCloudinary(file);
+                                return {
+                                    success: 1,
+                                    file: {
+                                        url: imageUrl,
+                                    },
+                                };
+                            },
+                            uploadByUrl: async (url: string) => ({
+                                success: 1,
+                                file: {
+                                    url,
+                                },
+                            }),
                         }
                     }
                 },
@@ -118,7 +170,7 @@ const Editor = () => {
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
-    }, [updateStats]);
+    }, [initialContent, updateStats, uploadImageToCloudinary]);
 
     useEffect(() => {
         // Only initialize if it hasn't been already and isn't currently initializing
@@ -142,7 +194,7 @@ const Editor = () => {
     }, [initEditor]);
 
     return (
-        <div className="flex flex-col h-full relative bg-gradient-to-b from-white to-gray-50">
+        <div className="flex flex-col h-full relative bg-linear-to-b from-white to-gray-50">
 
             {/* Stats Bar */}
             {/* <div className="flex flex-wrap items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-gray-50 border-b border-slate-200 gap-3">
