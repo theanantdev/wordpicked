@@ -15,6 +15,7 @@
     "db:push": "npx supabase db push",
     "db:pull": "npx supabase db pull",
     "db:migrate:new": "npx supabase migration new",
+    "db:seed:dummy-articles": "node ./scripts/seeds/create-dummy-articles.mjs",
     "db:login": "npx supabase login",
     "db:link": "npx supabase link",
     "prepare": "husky",
