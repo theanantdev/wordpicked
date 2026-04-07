@@ -85,21 +85,21 @@ export function Topbar({ onMenuClick, session }: TopbarProps) {
                     {isCreateMenuOpen && (
                         <div className="absolute right-0 mt-2 w-46 bg-white border border-[#DDD7CC] shadow-lg rounded-xs overflow-hidden z-50">
                             <Link
-                                href="/admin/new-literature?category=literature"
+                                href="/admin/literature/add?category=literature"
                                 onClick={() => setIsCreateMenuOpen(false)}
                                 className="block px-4 py-2.5 text-[12px] font-medium text-[#1A1714] hover:bg-[#F5F0E8]"
                             >
                                 Add Literature
                             </Link>
                             <Link
-                                href="/admin/new-literature?category=films"
+                                href="/admin/films/add?category=films"
                                 onClick={() => setIsCreateMenuOpen(false)}
                                 className="block px-4 py-2.5 text-[12px] font-medium text-[#1A1714] hover:bg-[#F5F0E8]"
                             >
                                 Add Films
                             </Link>
                             <Link
-                                href="/admin/new-literature?category=artists"
+                                href="/admin/artists/add?category=artists"
                                 onClick={() => setIsCreateMenuOpen(false)}
                                 className="block px-4 py-2.5 text-[12px] font-medium text-[#1A1714] hover:bg-[#F5F0E8]"
                             >
