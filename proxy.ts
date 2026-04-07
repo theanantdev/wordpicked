@@ -16,7 +16,9 @@ export async function proxy(request: NextRequest) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
-        return NextResponse.redirect(new URL("/account/v1/auth/login", request.url));
+        const response = NextResponse.redirect(new URL("/account/v1/auth/login", request.url));
+        response.cookies.delete(AUTH_SESSION_COOKIE);
+        return response;
     }
 
     const isAdminSession = session.isAdmin === true || session.is_admin === true;
@@ -26,7 +28,9 @@ export async function proxy(request: NextRequest) {
             return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
         }
 
-        return NextResponse.next();
+        const response = NextResponse.redirect(new URL("/account/v1/auth/login", request.url));
+        response.cookies.delete(AUTH_SESSION_COOKIE);
+        return response;
     }
 
     return NextResponse.next();

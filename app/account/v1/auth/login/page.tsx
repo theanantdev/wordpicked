@@ -13,7 +13,9 @@ export default async function AdminLoginPage() {
     const cookieStore = await cookies();
     const session = await parseAuthSession(cookieStore.get(AUTH_SESSION_COOKIE)?.value);
 
-    const isAdminSession = session?.isAdmin === true || session?.is_admin === true;
+    const isAdminSession =
+        (session?.isAdmin === true || session?.is_admin === true) &&
+        session?.role === "admin";
 
     if (isAdminSession) {
         redirect("/admin/dashboard");
