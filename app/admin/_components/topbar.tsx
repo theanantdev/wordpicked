@@ -35,9 +35,8 @@ export function Topbar({ onMenuClick, session }: TopbarProps) {
     const titleMap: Record<string, React.ReactNode> = {
         "/admin/dashboard": <>Dashboard <span className="italic text-[#B5542A] font-normal hidden sm:inline">Overview</span></>,
         "/admin/literature": <>Literature <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
-        "/admin/new-literature": <>New Literature <span className="italic text-[#B5542A] font-normal hidden sm:inline">Editor</span></>,
+        "/admin/films": <>Films <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
         "/admin/artists": <>Artists <span className="italic text-[#B5542A] font-normal hidden sm:inline">Profiles</span></>,
-        "/admin/scheduler": <>Scheduler <span className="italic text-[#B5542A] font-normal hidden sm:inline">Calendar</span></>,
     }
 
     const title = titleMap[pathname] || <>Admin <span className="italic text-[#B5542A] font-normal hidden sm:inline">Panel</span></>;
