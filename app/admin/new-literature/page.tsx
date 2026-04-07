@@ -2,7 +2,8 @@
 import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle } from "lucide-react";
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from 'next/navigation';
 import type { OutputData } from "@editorjs/editorjs";
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -16,6 +17,7 @@ const Editor = dynamic(() => import('@/components/editor'), {
 });
 
 export default function NewPostPage() {
+    const searchParams = useSearchParams();
     const [isSaved, setIsSaved] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
     const [title, setTitle] = useState("");
@@ -31,6 +33,13 @@ export default function NewPostPage() {
     const [featuredImageUrl, setFeaturedImageUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        const incomingCategory = (searchParams.get('category') || '').toLowerCase();
+        if (incomingCategory === 'literature' || incomingCategory === 'films' || incomingCategory === 'artists') {
+            setCategory(incomingCategory);
+        }
+    }, [searchParams]);
 
     const createArticleRequest = async (status: 'draft' | 'published') => {
         const response = await fetch('/api/articles', {

@@ -27,8 +27,8 @@ export function Sidebar({ onLinkClick, session }: SidebarProps) {
         {
             label: "Content",
             items: [
-                { name: "All Posts", href: "/admin/posts", icon: FileText, badge: "47" },
-                { name: "New Post", href: "/admin/new-post", icon: PenLine },
+                { name: "Literature", href: "/admin/literature", icon: FileText },
+                { name: "Films", href: "/admin/films", icon: PenLine },
                 { name: "Artists", href: "/admin/artists", icon: Users },
                 { name: "Pick Scheduler", href: "/admin/scheduler", icon: Calendar, badge: "3" },
             ]
@@ -39,7 +39,7 @@ export function Sidebar({ onLinkClick, session }: SidebarProps) {
         navItems.push({
             label: "Management",
             items: [
-                { name: "Users", href: "/admin/users", icon: Users, badge: "12" },
+                { name: "Users", href: "/admin/users", icon: Users },
                 { name: "Google Ads", href: "/admin/ads", icon: Settings },
                 { name: "Settings", href: "/admin/settings", icon: Settings },
             ],

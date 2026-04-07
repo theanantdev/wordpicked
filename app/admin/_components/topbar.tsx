@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Search, Bell, Plus, Menu, LogOut } from "lucide-react";
 import Link from "next/link";
@@ -14,12 +15,27 @@ interface TopbarProps {
 export function Topbar({ onMenuClick, session }: TopbarProps) {
     const pathname = usePathname();
     const isAdmin = session?.isAdmin === true || session?.is_admin === true;
+    const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
+    const createMenuRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        function handleOutsideClick(event: MouseEvent) {
+            if (!createMenuRef.current) return;
+            const target = event.target as Node;
+            if (!createMenuRef.current.contains(target)) {
+                setIsCreateMenuOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleOutsideClick);
+        return () => document.removeEventListener("mousedown", handleOutsideClick);
+    }, []);
 
     // Mapping pathnames to titles
     const titleMap: Record<string, React.ReactNode> = {
         "/admin/dashboard": <>Dashboard <span className="italic text-[#B5542A] font-normal hidden sm:inline">Overview</span></>,
-        "/admin/posts": <>All Posts <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
-        "/admin/new-post": <>New Post <span className="italic text-[#B5542A] font-normal hidden sm:inline">Editor</span></>,
+        "/admin/literature": <>Literature <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
+        "/admin/new-literature": <>New Literature <span className="italic text-[#B5542A] font-normal hidden sm:inline">Editor</span></>,
         "/admin/artists": <>Artists <span className="italic text-[#B5542A] font-normal hidden sm:inline">Profiles</span></>,
         "/admin/scheduler": <>Scheduler <span className="italic text-[#B5542A] font-normal hidden sm:inline">Calendar</span></>,
     }
@@ -57,10 +73,42 @@ export function Topbar({ onMenuClick, session }: TopbarProps) {
                     <div className="absolute top-2 right-2 w-1.75 h-1.75 bg-[#B5542A] rounded-full" />
                 </button>
 
-                <Link href="/admin/new-post" className="hidden sm:flex shrink-0 items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4.5 py-2.25 rounded-xs transition-colors hover:bg-[#C96840]">
-                    <Plus className="w-3.25 h-3.25" />
-                    New Post
-                </Link>
+                <div ref={createMenuRef} className="relative hidden sm:block">
+                    <button
+                        type="button"
+                        onClick={() => setIsCreateMenuOpen((prev) => !prev)}
+                        className="flex shrink-0 items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4.5 py-2.25 rounded-xs transition-colors hover:bg-[#C96840]"
+                    >
+                        <Plus className="w-3.25 h-3.25" />
+
+                    </button>
+
+                    {isCreateMenuOpen && (
+                        <div className="absolute right-0 mt-2 w-46 bg-white border border-[#DDD7CC] shadow-lg rounded-xs overflow-hidden z-50">
+                            <Link
+                                href="/admin/new-literature?category=literature"
+                                onClick={() => setIsCreateMenuOpen(false)}
+                                className="block px-4 py-2.5 text-[12px] font-medium text-[#1A1714] hover:bg-[#F5F0E8]"
+                            >
+                                Add Literature
+                            </Link>
+                            <Link
+                                href="/admin/new-literature?category=films"
+                                onClick={() => setIsCreateMenuOpen(false)}
+                                className="block px-4 py-2.5 text-[12px] font-medium text-[#1A1714] hover:bg-[#F5F0E8]"
+                            >
+                                Add Films
+                            </Link>
+                            <Link
+                                href="/admin/new-literature?category=artists"
+                                onClick={() => setIsCreateMenuOpen(false)}
+                                className="block px-4 py-2.5 text-[12px] font-medium text-[#1A1714] hover:bg-[#F5F0E8]"
+                            >
+                                Add Artists
+                            </Link>
+                        </div>
+                    )}
+                </div>
 
                 <div className="hidden lg:flex items-center rounded-xs border border-[#DDD7CC] bg-[#F5F0E8] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#1A1714]">
                     {isAdmin ? "Admin" : "Staff"}

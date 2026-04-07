@@ -160,12 +160,12 @@ export default function PostsPage() {
             {/* Header */}
             <div className="flex justify-between items-end mb-5">
                 <div>
-                    <h2 className="font-heading font-bold text-[22px] text-[#1A1714]">All Posts</h2>
-                    <div className="text-[12.5px] text-[#8C857C] mt-1">{posts.length} posts · {draftsCount} drafts · {publishedCount} published</div>
+                    <h2 className="font-heading font-bold text-[22px] text-[#1A1714]">All Literature</h2>
+                    <div className="text-[12.5px] text-[#8C857C] mt-1">{posts.length} pieces · {draftsCount} drafts · {publishedCount} published</div>
                 </div>
-                <Link href="/dashboard/new-post" className="flex items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4 py-2 rounded-[2px] transition-colors hover:bg-[#C96840]">
+                <Link href="/admin/new-literature" className="flex items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4 py-2 rounded-[2px] transition-colors hover:bg-[#C96840]">
                     <Plus className="w-[14px] h-[14px]" />
-                    New Post
+                    New Literature
                 </Link>
             </div>
 
