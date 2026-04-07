@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
             title,
             subtitle,
             category,
+            subcategory,
             tags,
             content,
             featuredImageUrl,
@@ -44,12 +45,24 @@ export async function POST(request: NextRequest) {
         const slug = `${slugBase}-${Date.now()}`;
         const now = new Date().toISOString();
 
+        const mergedTags = Array.from(
+            new Set(
+                [subcategory, ...(Array.isArray(tags) ? tags : [])]
+                    .filter((tag) => typeof tag === 'string')
+                    .map((tag: string) => tag.trim())
+                    .filter(Boolean),
+            ),
+        );
+
+        const normalizedSubcategory = typeof subcategory === 'string' ? subcategory.trim() : '';
+
         const payload = {
             title: title.trim(),
             subtitle: typeof subtitle === 'string' ? subtitle.trim() : null,
             slug,
             category: typeof category === 'string' ? category : 'literature',
-            tags: Array.isArray(tags) ? tags : [],
+            subcategory: normalizedSubcategory || null,
+            tags: mergedTags,
             content,
             featured_image_url: typeof featuredImageUrl === 'string' ? featuredImageUrl : null,
             status: status === 'published' ? 'published' : 'draft',

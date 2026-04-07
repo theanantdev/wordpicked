@@ -64,39 +64,65 @@ function daysAgoIso(daysAgo) {
   return date.toISOString();
 }
 
-const TITLES = [
-  'The Silence Between Notes in Modern Cinema',
-  'How Young Poets Are Rewriting City Memory',
-  'Inside the Studio Practice of a Reluctant Painter',
-  'Why Slow Reading Feels Radical Again',
-  'The New Grammar of Independent Films',
-  'A Portrait of Risk in Contemporary Fiction',
-  'When Archive Becomes Performance',
-  'What Makes a Debut Novel Endure',
-  'The Return of Intimate Storytelling',
-  'How Sound Design Shapes Emotional Time',
-  'On Translation, Distance, and Desire',
-  'The Craft of Writing After Midnight',
-  'A New Generation of Festival Filmmakers',
-  'Why We Keep Returning to Short Stories',
-  'Painting with Light in Small Theaters',
-  'The Future of Literary Journalism',
-  'Where Biography Meets Imagination',
-  'The Politics of Tenderness in Art',
-  'Building Worlds with Minimal Dialogue',
-  'The Discipline Behind Poetic Precision',
-];
-
-const SUBTITLE_FRAGMENTS = [
-  'An in-depth look at process, patience, and ambition.',
-  'Conversations from writers, editors, and directors.',
-  'A field report from the edge of contemporary culture.',
-  'Notes on form, memory, and creative restraint.',
-  'A grounded guide to the new creative landscape.',
-  'What this shift means for artists and audiences alike.',
-  'The practical craft behind the finished work.',
-  'A close reading of style, rhythm, and voice.',
-];
+const CATEGORY_CONFIG = {
+  literature: {
+    subcategories: ['Poetry', 'Novels', 'Essays', 'Short Stories', 'Criticism'],
+    titles: [
+      'Why Contemporary Novels Are Returning to Silence',
+      'The New Public Life of Poetry Readings',
+      'What Makes an Essay Feel Urgent in 2026',
+      'Short Fiction and the Architecture of Surprise',
+      'Rereading Classics Through Translation Notes',
+      'Narrative Voice and the Ethics of Distance',
+      'How Literary Magazines Are Shaping New Writers',
+      'The Future of Longform Literary Criticism',
+    ],
+    subtitles: [
+      'A close reading of craft choices and narrative precision.',
+      'From editorial process to reader response in the current moment.',
+      'How form, voice, and revision shape memorable writing.',
+    ],
+    tags: ['Books', 'Reading', 'Writing', 'Literary Craft', 'Review'],
+  },
+  films: {
+    subcategories: ['Reviews', 'Trailers', 'Interviews', 'Box Office', 'OTT Releases'],
+    titles: [
+      'Inside the Editing Rhythm of Neo-Noir Cinema',
+      'How Blockbusters Use Silence Before Impact',
+      'A Director-Led Shift in Mid-Budget Storytelling',
+      'Streaming Premieres and the New Opening Weekend',
+      'The Return of Character-First Action Films',
+      'Why Cinematography Is Driving Conversation Again',
+      'Festival Breakouts That Became Audience Favorites',
+      'When Screenplay Structure Defies Genre Rules',
+    ],
+    subtitles: [
+      'A practical film breakdown with production context and audience impact.',
+      'Review notes from direction, acting, and visual storytelling perspectives.',
+      'From trailer cues to release strategy: what made this film work.',
+    ],
+    tags: ['Cinema', 'Film Review', 'Direction', 'Screenplay', 'Trailer'],
+  },
+  artists: {
+    subcategories: ['Profiles', 'Exhibitions', 'Interviews', 'Techniques', 'Awards'],
+    titles: [
+      'The Studio Routine Behind Monumental Canvases',
+      'How Young Sculptors Are Using Industrial Waste',
+      'Inside a Year-Long Exhibition Preparation Cycle',
+      'The Craft Language of Contemporary Printmakers',
+      'Why Material Constraints Improve Artistic Clarity',
+      'Portraiture Trends Across New Gallery Circuits',
+      'Awards Season and the Business of Visibility',
+      'Artist Interviews on Process, Failure, and Scale',
+    ],
+    subtitles: [
+      'Documenting process notes, material choices, and exhibition context.',
+      'A profile centered on method, medium, and artistic evolution.',
+      'Interviews and studio observations from current visual culture.',
+    ],
+    tags: ['Art', 'Studio', 'Exhibition', 'Interview', 'Practice'],
+  },
+};
 
 const AUTHORS = [
   { name: 'Anant Kumar', email: 'anant@example.com' },
@@ -104,12 +130,6 @@ const AUTHORS = [
   { name: 'Rahul Das', email: 'rahul@example.com' },
   { name: 'Tanya Roy', email: 'tanya@example.com' },
 ];
-
-const CATEGORY_TAGS = {
-  literature: ['Fiction', 'Books', 'Essay', 'Narrative', 'Review'],
-  films: ['Cinema', 'Direction', 'Screenplay', 'Visuals', 'Festival'],
-  artists: ['Studio', 'Exhibition', 'Interview', 'Process', 'Practice'],
-};
 
 const IMAGE_POOL = [
   'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80',
@@ -119,6 +139,59 @@ const IMAGE_POOL = [
   'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=1200&q=80',
   'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=1200&q=80',
 ];
+
+const FILM_DIRECTORS = [
+  'Aarav Sen',
+  'Maya Kapoor',
+  'Nikhil Rao',
+  'Rhea Dutta',
+  'Kabir Mehta',
+  'Leena Roy',
+];
+
+const FILM_CAST = [
+  'Ishaan Verma',
+  'Sara Thomas',
+  'Vikram Sethi',
+  'Naina Qureshi',
+  'Dev Malhotra',
+  'Aditi Bose',
+  'Arjun Nair',
+  'Kriti Paul',
+];
+
+const OTT_PLATFORMS = ['Netflix', 'Prime Video', 'JioHotstar', 'Apple TV+', 'Sony LIV'];
+
+const TRAILER_URLS = [
+  'https://www.youtube.com/watch?v=8ugaeA-nMTc',
+  'https://www.youtube.com/watch?v=TcMBFSGVi1c',
+  'https://www.youtube.com/watch?v=6ZfuNTqbHE8',
+  'https://www.youtube.com/watch?v=EXeTwQWrcwY',
+  'https://www.youtube.com/watch?v=5PSNL1qE6VY',
+  'https://www.youtube.com/watch?v=zSWdZVtXT7E',
+];
+
+const LITERATURE_GENRES = ['Literary Fiction', 'Speculative', 'Historical', 'Memoir', 'Essay'];
+const ART_MEDIUMS = ['Oil on canvas', 'Mixed media', 'Bronze sculpture', 'Digital collage', 'Acrylic'];
+
+function sampleUnique(array, count) {
+  const copy = [...array];
+  const picked = [];
+
+  while (copy.length > 0 && picked.length < count) {
+    const index = randomInt(0, copy.length - 1);
+    picked.push(copy[index]);
+    copy.splice(index, 1);
+  }
+
+  return picked;
+}
+
+function randomDateIso(startYear = 2018, endYear = 2026) {
+  const start = new Date(`${startYear}-01-01T00:00:00.000Z`).getTime();
+  const end = new Date(`${endYear}-12-31T23:59:59.000Z`).getTime();
+  return new Date(randomInt(start, end)).toISOString();
+}
 
 const OPENING_PARAGRAPHS = [
   'Every meaningful work begins with a period of uncertainty. Before structure appears, there is only observation, fragments of thought, and a question that refuses to disappear. This essay follows that question from first draft to finished form.',
@@ -173,7 +246,208 @@ const CATEGORY_SECTIONS = {
   },
 };
 
-function buildEditorContent(title, category) {
+function buildLiteratureContent(title, subcategory) {
+  const genre = pick(LITERATURE_GENRES);
+  const pages = randomInt(160, 520);
+  const readingTime = randomInt(8, 22);
+
+  return {
+    time: Date.now(),
+    blocks: [
+      {
+        type: 'header',
+        data: { text: title, level: 2 },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: `This ${subcategory.toLowerCase()} feature examines how contemporary authors are reshaping ${genre.toLowerCase()} with sharper structure and stronger editorial discipline.`,
+        },
+      },
+      {
+        type: 'list',
+        data: {
+          style: 'unordered',
+          items: [
+            `Primary genre: ${genre}`,
+            `Estimated length: ${pages} pages`,
+            `Average reading time: ${readingTime} hours`,
+            `Subcategory focus: ${subcategory}`,
+          ],
+        },
+      },
+      {
+        type: 'quote',
+        data: {
+          text: 'Great writing is rarely loud; it is precise enough to be remembered.',
+          caption: 'Editorial notebook',
+          alignment: 'left',
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: 'The strongest sections combine concrete scene detail with conceptual clarity. Instead of over-explaining, the article lets close observation carry interpretation and trusts readers to complete the final step.',
+        },
+      },
+    ],
+    version: '2.31.0',
+  };
+}
+
+function buildFilmContent(title, subcategory) {
+  const director = pick(FILM_DIRECTORS);
+  const cast = sampleUnique(FILM_CAST, 3);
+  const releaseDate = randomDateIso(2023, 2026).slice(0, 10);
+  const runtime = randomInt(96, 172);
+  const platform = pick(OTT_PLATFORMS);
+  const trailer = pick(TRAILER_URLS);
+  const budgetCr = randomInt(25, 240);
+  const boxOfficeCr = randomInt(40, 520);
+  const language = pick(['Hindi', 'English', 'Tamil', 'Telugu', 'Malayalam']);
+  const genre = pick(['Drama', 'Thriller', 'Action', 'Sci-Fi', 'Mystery', 'Romance']);
+  const rating = (Math.random() * 2 + 3).toFixed(1);
+  const cinematographer = pick(['Ira Nair', 'Karan Bhatt', 'Megha Suri', 'Dev Iyer', 'Ritu Arora']);
+  const musicDirector = pick(['Ayan Bose', 'Mithun Roy', 'Sahil Khan', 'Aarti Menon', 'Raghav Sen']);
+
+  return {
+    time: Date.now(),
+    blocks: [
+      {
+        type: 'header',
+        data: { text: title, level: 2 },
+      },
+      {
+        type: 'embed',
+        data: {
+          service: 'youtube',
+          source: trailer,
+          embed: trailer,
+          width: 640,
+          height: 360,
+          caption: 'Official trailer',
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: `A ${subcategory.toLowerCase()}-focused film write-up covering direction, acting rhythm, and release strategy with audience context.`,
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: `Set in a rapidly changing urban landscape, this ${genre.toLowerCase()} title follows a protagonist forced to choose between personal loyalty and public consequence. The script keeps tension high through moral conflict rather than spectacle alone.`,
+        },
+      },
+      {
+        type: 'header',
+        data: { text: 'Film Details', level: 3 },
+      },
+      {
+        type: 'list',
+        data: {
+          style: 'unordered',
+          items: [
+            `Release date: ${releaseDate}`,
+            `Director: ${director}`,
+            `Cast: ${cast.join(', ')}`,
+            `Runtime: ${runtime} minutes`,
+            `Language: ${language}`,
+            `Genre: ${genre}`,
+            `OTT platform: ${platform}`,
+            `Subcategory: ${subcategory}`,
+            `Public rating: ${rating}/5`,
+          ],
+        },
+      },
+      {
+        type: 'header',
+        data: { text: 'Production Credits', level: 3 },
+      },
+      {
+        type: 'list',
+        data: {
+          style: 'unordered',
+          items: [
+            `Director: ${director}`,
+            `Cinematographer: ${cinematographer}`,
+            `Music: ${musicDirector}`,
+            `Estimated budget: Rs. ${budgetCr} Cr`,
+            `Worldwide gross: Rs. ${boxOfficeCr} Cr`,
+          ],
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: 'The film balances spectacle with character motive. Its strongest movement appears in the second act where visual framing narrows and the emotional stakes become intimate without slowing pace.',
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: 'Audience reception has been strongest for performances and pacing. Critically, the movie is being discussed for its editing discipline, tonal consistency, and a final act that resolves emotional arcs without sacrificing narrative momentum.',
+        },
+      },
+    ],
+    version: '2.31.0',
+  };
+}
+
+function buildArtistContent(title, subcategory) {
+  const medium = pick(ART_MEDIUMS);
+  const exhibitionYear = randomInt(2021, 2026);
+  const city = pick(['Mumbai', 'Delhi', 'Bengaluru', 'Kolkata', 'Chennai', 'Hyderabad']);
+
+  return {
+    time: Date.now(),
+    blocks: [
+      {
+        type: 'header',
+        data: { text: title, level: 2 },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: `This ${subcategory.toLowerCase()} profile documents an artist workflow from sketchbook to exhibition wall, with specific notes on method and revision.`,
+        },
+      },
+      {
+        type: 'list',
+        data: {
+          style: 'unordered',
+          items: [
+            `Primary medium: ${medium}`,
+            `Major exhibition year: ${exhibitionYear}`,
+            `Recent exhibition city: ${city}`,
+            `Subcategory focus: ${subcategory}`,
+          ],
+        },
+      },
+      {
+        type: 'quote',
+        data: {
+          text: 'Material is never neutral; every surface decision changes meaning.',
+          caption: 'Studio interview excerpt',
+          alignment: 'left',
+        },
+      },
+      {
+        type: 'paragraph',
+        data: {
+          text: 'A consistent thread in the artist practice is disciplined iteration. Early failures are archived, revisited, and transformed into formal decisions that eventually define the final body of work.',
+        },
+      },
+    ],
+    version: '2.31.0',
+  };
+}
+
+function buildEditorContent(title, category, subcategory) {
+  if (category === 'films') return buildFilmContent(title, subcategory);
+  if (category === 'artists') return buildArtistContent(title, subcategory);
+
   const section = CATEGORY_SECTIONS[category];
   const introLine = `In this article, we explore ${title.toLowerCase()} through close observation, interviews, and historical context.`;
   const opening = pick(OPENING_PARAGRAPHS);
@@ -194,7 +468,7 @@ function buildEditorContent(title, category) {
       {
         type: 'paragraph',
         data: {
-          text: introLine,
+          text: `${introLine} Subcategory focus: ${subcategory}.`,
         },
       },
       {
@@ -262,21 +536,26 @@ function buildEditorContent(title, category) {
   };
 }
 
-function createArticle(index) {
-  const titleBase = pick(TITLES);
+function createArticle(index, category) {
+  const config = CATEGORY_CONFIG[category];
+  const subcategory = pick(config.subcategories);
+  const titleBase = pick(config.titles);
   const title = `${titleBase} #${index + 1}`;
-  const category = pick(['literature', 'films', 'artists']);
   const author = pick(AUTHORS);
   const now = daysAgoIso(randomInt(0, 90));
   const isPublished = Math.random() > 0.35;
+  const categoryTags = sampleUnique(config.tags, 2);
+
+  const tags = Array.from(new Set([subcategory, ...categoryTags]));
 
   return {
     title,
-    subtitle: pick(SUBTITLE_FRAGMENTS),
+    subtitle: pick(config.subtitles),
     slug: `${slugify(title)}-${Date.now()}-${index}`,
     category,
-    tags: [pick(CATEGORY_TAGS[category]), pick(CATEGORY_TAGS[category])],
-    content: buildEditorContent(title, category),
+    subcategory,
+    tags,
+    content: buildEditorContent(title, category, subcategory),
     featured_image_url: pick(IMAGE_POOL),
     status: isPublished ? 'published' : 'draft',
     publish_at: isPublished ? now : null,
@@ -287,13 +566,61 @@ function createArticle(index) {
   };
 }
 
+async function ensureArticlesTable(supabase) {
+  const ddl = `
+    create table if not exists public.articles (
+      id uuid primary key default gen_random_uuid(),
+      title text not null,
+      subtitle text,
+      slug text not null unique,
+      category text not null default 'literature',
+      subcategory text not null,
+      tags text[] not null default '{}',
+      content jsonb not null,
+      featured_image_url text,
+      status text not null default 'draft' check (status in ('draft', 'published')),
+      publish_at timestamptz,
+      author_name text,
+      author_email text,
+      created_at timestamptz not null default now(),
+      updated_at timestamptz not null default now()
+    );
+
+    create index if not exists idx_articles_status on public.articles(status);
+    create index if not exists idx_articles_publish_at on public.articles(publish_at);
+    create index if not exists idx_articles_category on public.articles(category);
+  `;
+
+  const { error } = await supabase.rpc('exec_sql', { sql: ddl });
+  if (error) {
+    throw new Error(`Failed ensuring articles table: ${error.message}`);
+  }
+
+  const { error: reloadError } = await supabase.rpc('exec_sql', {
+    sql: "select pg_notify('pgrst', 'reload schema');",
+  });
+
+  if (reloadError) {
+    throw new Error(`Failed to reload schema cache: ${reloadError.message}`);
+  }
+}
+
 async function main() {
   const { supabaseUrl, serviceRoleKey } = ensureEnv();
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const payload = Array.from({ length: 50 }, (_, index) => createArticle(index));
+  await ensureArticlesTable(supabase);
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  const categories = [
+    ...Array(20).fill('literature'),
+    ...Array(20).fill('films'),
+    ...Array(20).fill('artists'),
+  ];
+
+  const payload = categories.map((category, index) => createArticle(index, category));
 
   const { data, error } = await supabase.from('articles').insert(payload).select('id');
 

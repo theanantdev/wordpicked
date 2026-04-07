@@ -1,7 +1,7 @@
 create extension if not exists "pgcrypto";
 
 create table if not exists public.staff (
-    id uuid primary key default gen_random_uuid(),
+    id uuid primary key default gen_random_uuid (),
     name text not null,
     email text not null unique,
     password text not null,
@@ -19,6 +19,7 @@ create table if not exists public.articles (
     subtitle text,
     slug text not null unique,
     category text not null default 'literature',
+    subcategory text not null,
     tags text[] not null default '{}',
     content jsonb not null,
     featured_image_url text,
@@ -41,22 +42,28 @@ end;
 $$;
 
 drop trigger if exists trg_staff_updated_at on public.staff;
+
 create trigger trg_staff_updated_at
 before update on public.staff
 for each row execute function public.set_updated_at();
 
 drop trigger if exists trg_articles_updated_at on public.articles;
+
 create trigger trg_articles_updated_at
 before update on public.articles
 for each row execute function public.set_updated_at();
 
-create index if not exists idx_staff_email on public.staff(email);
-create index if not exists idx_staff_is_blocked on public.staff(is_blocked);
-create index if not exists idx_staff_role on public.staff(role);
+create index if not exists idx_staff_email on public.staff (email);
 
-create index if not exists idx_articles_status on public.articles(status);
-create index if not exists idx_articles_publish_at on public.articles(publish_at);
-create index if not exists idx_articles_category on public.articles(category);
+create index if not exists idx_staff_is_blocked on public.staff (is_blocked);
+
+create index if not exists idx_staff_role on public.staff (role);
+
+create index if not exists idx_articles_status on public.articles (status);
+
+create index if not exists idx_articles_publish_at on public.articles (publish_at);
+
+create index if not exists idx_articles_category on public.articles (category);
 
 create or replace function public.exec_sql(sql text)
 returns void
@@ -68,4 +75,4 @@ begin
 end;
 $$;
 
-grant execute on function public.exec_sql(text) to service_role;
+grant execute on function public.exec_sql (text) to service_role;

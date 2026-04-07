@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation';
 import type { OutputData } from "@editorjs/editorjs";
 
+const SUBCATEGORY_OPTIONS: Record<string, string[]> = {
+    literature: ["Poetry", "Novels", "Essays", "Short Stories", "Criticism"],
+    films: ["Reviews", "Trailers", "Interviews", "Box Office", "OTT Releases"],
+    artists: ["Profiles", "Exhibitions", "Interviews", "Techniques", "Awards"],
+};
+
 const Editor = dynamic(() => import('@/components/editor'), {
     ssr: false,
     loading: () => <div className="flex items-center justify-center h-96 bg-linear-to-br from-gray-50 to-gray-100 ">
@@ -23,6 +29,7 @@ export default function NewPostPage() {
     const [title, setTitle] = useState("");
     const [subtitle, setSubtitle] = useState("");
     const [category, setCategory] = useState("films");
+    const [subcategory, setSubcategory] = useState(SUBCATEGORY_OPTIONS.films[0]);
     const [tags, setTags] = useState(["Film", "Review"]);
     const [tagInput, setTagInput] = useState("");
     const [publishNow, setPublishNow] = useState(false);
@@ -41,6 +48,18 @@ export default function NewPostPage() {
         }
     }, [searchParams]);
 
+    useEffect(() => {
+        const options = SUBCATEGORY_OPTIONS[category] || [];
+        if (!options.length) {
+            setSubcategory('');
+            return;
+        }
+
+        if (!options.includes(subcategory)) {
+            setSubcategory(options[0]);
+        }
+    }, [category, subcategory]);
+
     const createArticleRequest = async (status: 'draft' | 'published') => {
         const response = await fetch('/api/articles', {
             method: 'POST',
@@ -49,7 +68,8 @@ export default function NewPostPage() {
                 title: title.trim(),
                 subtitle: subtitle.trim(),
                 category,
-                tags,
+                subcategory,
+                tags: Array.from(new Set([subcategory, ...tags].filter(Boolean))),
                 content: editorContent,
                 featuredImageUrl: featuredImageUrl || null,
                 status,
@@ -316,8 +336,22 @@ export default function NewPostPage() {
                                             <option value="literature">Literature</option>
                                             <option value="films">Films</option>
                                             <option value="artists">Artists</option>
-                                            <option value="technology">Technology</option>
-                                            <option value="culture">Culture</option>
+                                        </select>
+                                        <ChevronDown className="w-3.5 sm:w-4 h-3.5 sm:h-4 absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-1.5 sm:gap-2">
+                                    <label className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Subcategory</label>
+                                    <div className="relative">
+                                        <select
+                                            value={subcategory}
+                                            onChange={(e) => setSubcategory(e.target.value)}
+                                            className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-3 py-2 text-slate-900 outline-none appearance-none cursor-pointer hover:border-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                                        >
+                                            {(SUBCATEGORY_OPTIONS[category] || []).map((option) => (
+                                                <option key={option} value={option}>{option}</option>
+                                            ))}
                                         </select>
                                         <ChevronDown className="w-3.5 sm:w-4 h-3.5 sm:h-4 absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                                     </div>

@@ -1,8 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export function FilmRelated() {
-    const RELATED_FILMS = [
+type FilmRelatedItem = {
+    tag: string;
+    title: string;
+    img: string;
+    href: string;
+};
+
+type FilmRelatedProps = {
+    items?: FilmRelatedItem[];
+};
+
+export function FilmRelated({ items = [] }: FilmRelatedProps) {
+    const RELATED_FILMS = items.length > 0 ? items : [
         {
             id: "1",
             tag: "NOIR",
@@ -40,11 +51,11 @@ export function FilmRelated() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
-                {RELATED_FILMS.map(film => (
-                    <div key={film.id} className="flex flex-col gap-[28px] group cursor-pointer w-full group">
+                {RELATED_FILMS.map((film, index) => (
+                    <div key={(film as FilmRelatedItem).href || `related-${index}`} className="flex flex-col gap-[28px] group cursor-pointer w-full group">
                         <div className="relative w-full aspect-[4/5] max-h-[446px] bg-[#F5F5F5] border border-[rgba(0,0,0,0.05)] overflow-hidden rounded-[2px]">
                             <Image
-                                src={film.image}
+                                src={(film as FilmRelatedItem).img || (film as { image?: string }).image || "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=800&auto=format&fit=crop"}
                                 alt={film.title}
                                 fill
                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -61,14 +72,14 @@ export function FilmRelated() {
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-2">
+                        <Link href={(film as FilmRelatedItem).href || "/films"} className="flex flex-col gap-2">
                             <h3 className="font-heading font-bold text-[20px] md:text-[24px] text-[#1A1A1A] leading-[28px] group-hover:text-[#E50914] transition-colors line-clamp-2">
                                 {film.title}
                             </h3>
                             <p className="font-sans font-normal text-[14px] md:text-[15px] leading-[20px] text-[rgba(26,26,26,0.6)] line-clamp-3">
-                                {film.description}
+                                {(film as { description?: string }).description || "Read the full film feature."}
                             </p>
-                        </div>
+                        </Link>
                     </div>
                 ))}
             </div>

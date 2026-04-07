@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import type { ReactNode } from "react";
 
 type ContentBlock = {
     type?: string;
@@ -6,6 +7,9 @@ type ContentBlock = {
         text?: string;
         caption?: string;
         items?: string[];
+        source?: string;
+        embed?: string;
+        service?: string;
     };
 };
 
@@ -14,8 +18,139 @@ type ArticleBodyProps = {
     tags: string[];
 };
 
+const URL_REGEX = /(https?:\/\/[^\s<>")\]]+)/g;
+
+function extractUrls(text: string) {
+    const matches = text.match(URL_REGEX) || [];
+    return Array.from(new Set(matches));
+}
+
+function parseYouTubeId(url: string) {
+    try {
+        const parsed = new URL(url);
+        const host = parsed.hostname.toLowerCase();
+
+        if (host.includes("youtube.com")) {
+            return parsed.searchParams.get("v");
+        }
+
+        if (host.includes("youtu.be")) {
+            return parsed.pathname.replace("/", "") || null;
+        }
+    } catch {
+        return null;
+    }
+
+    return null;
+}
+
+function parseVimeoId(url: string) {
+    try {
+        const parsed = new URL(url);
+        if (!parsed.hostname.toLowerCase().includes("vimeo.com")) return null;
+        const segments = parsed.pathname.split("/").filter(Boolean);
+        return segments[segments.length - 1] || null;
+    } catch {
+        return null;
+    }
+}
+
+function toEmbedConfig(url: string) {
+    const youtubeId = parseYouTubeId(url);
+    if (youtubeId) {
+        return {
+            type: "iframe" as const,
+            src: `https://www.youtube.com/embed/${youtubeId}`,
+            title: "YouTube video",
+        };
+    }
+
+    const vimeoId = parseVimeoId(url);
+    if (vimeoId) {
+        return {
+            type: "iframe" as const,
+            src: `https://player.vimeo.com/video/${vimeoId}`,
+            title: "Vimeo video",
+        };
+    }
+
+    if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) {
+        return {
+            type: "video" as const,
+            src: url,
+            title: "Video file",
+        };
+    }
+
+    return null;
+}
+
+function renderTextWithLinks(text: string): ReactNode {
+    if (!text) return "";
+
+    const parts = text.split(URL_REGEX);
+    return parts.map((part, index) => {
+        if (/^https?:\/\//i.test(part)) {
+            return (
+                <a
+                    key={`link-${index}`}
+                    href={part}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#11412A] underline break-all"
+                >
+                    {part}
+                </a>
+            );
+        }
+
+        return <span key={`text-${index}`}>{part}</span>;
+    });
+}
+
+function LinkPreview({ url }: { url: string }) {
+    const embed = toEmbedConfig(url);
+
+    return (
+        <div className="mt-4 border border-[#DCD6CC] bg-white p-3 sm:p-4">
+            {embed?.type === "iframe" && (
+                <div className="mt-3 aspect-video w-full overflow-hidden border border-[#DCD6CC] bg-black">
+                    <iframe
+                        src={embed.src}
+                        title={embed.title}
+                        className="h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    />
+                </div>
+            )}
+
+            {embed?.type === "video" && (
+                <video className="mt-3 w-full border border-[#DCD6CC]" controls preload="metadata">
+                    <source src={embed.src} />
+                    Your browser does not support the video tag.
+                </video>
+            )}
+        </div>
+    );
+}
+
 export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
     const safeBlocks = blocks.length > 0 ? blocks : [{ type: "paragraph", data: { text: "Article content is currently unavailable." } }];
+    const renderedPreviewUrls = new Set<string>();
+
+    const renderUniquePreviews = (urls: string[], keyPrefix: string) => {
+        return urls
+            .filter((url) => {
+                if (renderedPreviewUrls.has(url)) {
+                    return false;
+                }
+
+                renderedPreviewUrls.add(url);
+                return true;
+            })
+            .map((url) => <LinkPreview key={`${keyPrefix}-${url}`} url={url} />);
+    };
 
     return (
         <div className="flex flex-col gap-10 w-full pt-8 lg:pr-[40px]">
@@ -35,24 +170,41 @@ export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
             <div className="font-sans font-light text-[18px] leading-[29px] text-[#1C1C18] flex flex-col gap-8">
                 {safeBlocks.map((block, index) => {
                     const text = block.data?.text || "";
+                    const urls = extractUrls(text);
+
+                    if (block.type === "embed") {
+                        const embedUrl = block.data?.source || block.data?.embed || "";
+                        if (embedUrl) {
+                            return <div key={`embed-${index}`}>{renderUniquePreviews([embedUrl], `embed-${index}`)}</div>;
+                        }
+                    }
 
                     if (block.type === "quote") {
                         return (
-                            <blockquote key={`quote-${index}`} className="my-6 py-6 px-8 bg-[#11412A]/5 border-l-[3px] border-[#2B5940]">
-                                <p className="font-heading italic text-[22px] md:text-[24px] leading-[32px] text-[#11412A] m-0">
-                                    {text || block.data?.caption || "-"}
-                                </p>
-                            </blockquote>
+                            <div key={`quote-${index}`}>
+                                <blockquote className="my-6 py-6 px-8 bg-[#11412A]/5 border-l-[3px] border-[#2B5940]">
+                                    <p className="font-heading italic text-[22px] md:text-[24px] leading-[32px] text-[#11412A] m-0">
+                                        {renderTextWithLinks(text || block.data?.caption || "-")}
+                                    </p>
+                                </blockquote>
+                                {renderUniquePreviews(urls, `quote-preview-${index}`)}
+                            </div>
                         );
                     }
 
                     if (block.type === "list") {
+                        const listItems = block.data?.items || [];
+                        const listUrls = Array.from(new Set(listItems.flatMap((item) => extractUrls(item))));
+
                         return (
-                            <ul key={`list-${index}`} className="list-disc pl-6 space-y-2">
-                                {(block.data?.items || []).map((item, itemIndex) => (
-                                    <li key={`item-${index}-${itemIndex}`}>{item}</li>
-                                ))}
-                            </ul>
+                            <div key={`list-${index}`}>
+                                <ul className="list-disc pl-6 space-y-2">
+                                    {listItems.map((item, itemIndex) => (
+                                        <li key={`item-${index}-${itemIndex}`}>{renderTextWithLinks(item)}</li>
+                                    ))}
+                                </ul>
+                                {renderUniquePreviews(listUrls, `list-preview-${index}`)}
+                            </div>
                         );
                     }
 
@@ -66,13 +218,21 @@ export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
 
                     if (index === 0) {
                         return (
-                            <p key={`p-${index}`} className="first-letter:float-left first-letter:text-[90px] first-letter:leading-[75px] first-letter:mr-4 first-letter:text-[#1C1C18]/40 first-letter:font-light">
-                                {text}
-                            </p>
+                            <div key={`p-${index}`}>
+                                <p className="first-letter:float-left first-letter:text-[90px] first-letter:leading-[75px] first-letter:mr-4 first-letter:text-[#1C1C18]/40 first-letter:font-light">
+                                    {renderTextWithLinks(text)}
+                                </p>
+                                {renderUniquePreviews(urls, `first-preview-${index}`)}
+                            </div>
                         );
                     }
 
-                    return <p key={`p-${index}`}>{text}</p>;
+                    return (
+                        <div key={`p-${index}`}>
+                            <p>{renderTextWithLinks(text)}</p>
+                            {renderUniquePreviews(urls, `preview-${index}`)}
+                        </div>
+                    );
                 })}
 
                 <div className="w-full h-[195px] my-4 bg-[#EBE8E1] border border-[#C1C9C1]/30 flex flex-col gap-2 items-center justify-center relative">
