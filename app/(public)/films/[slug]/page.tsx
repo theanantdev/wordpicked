@@ -2,6 +2,7 @@ import { FilmHero } from "../_components/film-hero";
 import { FilmTrailer } from "../_components/film-trailer";
 import { FilmContent } from "../_components/film-content";
 import { FilmRelated } from "../_components/film-related";
+import { CommentsSection } from "@/app/(public)/_components/comments-section";
 import { headers } from "next/headers";
 
 type PageProps = {
@@ -136,6 +137,16 @@ export default async function FilmEditorialPage({ params }: PageProps) {
             <FilmTrailer trailerUrl={trailerUrl} />
             <FilmContent blocks={data.article.blocks} tags={data.article.tags} />
             <FilmRelated items={data.related} />
+
+            {/* Comments */}
+            <div className="max-w-[1240px] mx-auto px-6 md:px-[60px] lg:px-[80px] pb-[80px]">
+                <CommentsSection
+                    articleId={data.article.id}
+                    articleSlug={data.article.slug}
+                    articleTitle={data.article.title}
+                    articleType="films"
+                />
+            </div>
         </main>
     );
 }
