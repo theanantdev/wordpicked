@@ -144,7 +144,6 @@ export default function AboutPage() {
                                     fill
                                     sizes="(max-width: 640px) 180px, (max-width: 768px) 220px, 260px"
                                     className="object-contain"
-                                    style={{ width: 'auto', height: 'auto' }}
                                 />
                             </div>
                         </div>
