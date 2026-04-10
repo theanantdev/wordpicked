@@ -29,20 +29,27 @@ export function SiteHeader() {
                 </Link>
 
                 {/* Desktop Navigation */}
-                <nav className="hidden items-center gap-8 md:flex">
-                    {navLinks.map((link) => {
-                        const isActive = pathname === link.href;
-                        return (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className={`text-sm font-medium tracking-[0.5px] transition-colors hover:text-[#e0bc78] ${isActive ? "text-[#e0bc78]" : "text-[#f5f0e8]"}`}
-                            >
-                                {link.name}
-                            </Link>
-                        );
-                    })}
-                </nav>
+                <div className="flex items-center gap-10 justify-between">
+                    <div className="flex items-center gap-2 border border-white px-2 py-1">
+                        <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-white" />
+                        <Search className="size-[18px] text-white" strokeWidth={2} />
+                    </div>
+
+                    <nav className="hidden items-center gap-8 md:flex">
+                        {navLinks.map((link) => {
+                            const isActive = pathname === link.href;
+                            return (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    className={`text-sm font-medium tracking-[0.5px] font-heading transition-colors hover:text-[#e0bc78] ${isActive ? "text-[#e0bc78]" : "text-[#f5f0e8]"}`}
+                                >
+                                    {link.name}
+                                </Link>
+                            );
+                        })}
+                    </nav>
+                </div>
 
                 {/* Mobile Menu Toggle */}
                 <div className="md:hidden">
@@ -52,7 +59,7 @@ export function SiteHeader() {
                 </div>
 
                 {/* Desktop Actions */}
-                <div className="hidden items-center gap-4 md:flex">
+                {/* <div className="hidden items-center gap-4 md:flex">
                     <button className="text-white hover:text-[#e0bc78] transition-colors">
                         <Search className="size-[18px]" strokeWidth={2} />
                     </button>
@@ -62,8 +69,8 @@ export function SiteHeader() {
                     </Link>
                     <Link href="/register" className="bg-[#e0bc78] px-5 py-2.5 text-[11px] font-bold tracking-[0.12em] text-[#141210] uppercase rounded-[2px] hover:bg-white transition-colors">
                         Join Free
-                    </Link>
-                </div>
+                    </Link> 
+                </div>*/}
             </div>
 
             {/* Mobile Dropdown Menu Formatted to Spec */}
@@ -82,7 +89,7 @@ export function SiteHeader() {
                     </div>
 
                     {/* Centered Links exactly 18px apart */}
-                    <nav className="flex flex-col items-center gap-[18px] mt-[16px]">
+                    <nav className="flex flex-col items-start gap-[18px] mt-[16px]">
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href;
                             return (
