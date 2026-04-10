@@ -14,14 +14,14 @@ const initialState: ActionState = {};
 export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
     const [artists, setArtists] = useState<Artist[]>(initialArtists);
     const [state, formAction, isPending] = useActionState<ActionState, FormData>(createArtistAction, initialState);
-    
+
     // Cloudinary state
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
-    
+
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setUploadError(null);
-        
+
         const form = e.currentTarget;
         const formData = new FormData(form);
 
@@ -54,7 +54,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                 // Get Signature
                 const sigRes = await fetch('/api/cloudinary/signature', { method: 'POST' });
                 const sigData = await sigRes.json();
-                
+
                 if (!sigData.success) {
                     throw new Error(sigData.error || 'Failed to get signature');
                 }
@@ -71,9 +71,9 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                     method: 'POST',
                     body: cloudinaryData,
                 });
-                
+
                 const uploadResult = await uploadRes.json();
-                
+
                 if (uploadResult.secure_url) {
                     formData.append('image_url', uploadResult.secure_url);
                 } else {
@@ -104,7 +104,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                     <h2 className="font-heading font-bold text-[22px] text-[#1A1714]">Artist Profiles</h2>
                     <div className="text-[12.5px] text-[#8C857C] mt-1">{artists.length} active profiles</div>
                 </div>
-                <button 
+                <button
                     onClick={() => setIsFormOpen(!isFormOpen)}
                     className="flex items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4 py-2 rounded-[2px] transition-colors hover:bg-[#C96840]"
                 >
@@ -112,7 +112,155 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                     {isFormOpen ? "Close Form" : "Add Artist"}
                 </button>
             </div>
+            {/* Add Artist Form Placeholder Box */}
+            {isFormOpen && (
+                <div className="bg-white border text-left border-[#DDD7CC] rounded-[4px] shadow-[0_2px_4px_rgba(26,23,20,0.02)] overflow-hidden max-w-[800px] mb-10">
+                    <form onSubmit={handleSubmit}>
+                        <div className="px-6 py-4 border-b border-[#EDE7D9] flex justify-between items-center bg-[#FAFAFA]">
+                            <div className="font-heading font-bold text-[16px] text-[#1A1714]">Add New Artist Profile</div>
+                            <span className="text-[11px] text-[#8C857C]">Takes less than 2 minutes</span>
+                        </div>
 
+                        {state.error && (
+                            <div className="px-6 py-3 bg-red-50 border-b border-red-100 text-red-600 text-sm">
+                                {state.error}
+                            </div>
+                        )}
+                        {uploadError && (
+                            <div className="px-6 py-3 bg-red-50 border-b border-red-100 text-red-600 text-sm">
+                                {uploadError}
+                            </div>
+                        )}
+                        {state.success && (
+                            <div className="px-6 py-3 bg-green-50 border-b border-green-100 text-green-600 text-sm">
+                                Artist profile successfully created! Refreshing list...
+                            </div>
+                        )}
+
+                        <div className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Full Name *</label>
+                                    <input name="full_name" required type="text" placeholder="Artist's full name" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Art Form *</label>
+                                    <input name="art_form" required type="text" placeholder="Writer, Filmmaker, Poet..." className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Profile Image</label>
+                                    <div className="flex items-start gap-4">
+                                        {imagePreview ? (
+                                            <div className="relative w-16 h-16 rounded-[2px] overflow-hidden border border-[#DDD7CC]">
+                                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { setImageFile(null); setImagePreview(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                                                    className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
+                                                >
+                                                    <Trash2 className="w-4 h-4 text-white" />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="w-16 h-16 rounded-[2px] bg-[#FAFAFA] border border-[#DDD7CC] flex items-center justify-center text-[#8C857C]">
+                                                <ImageIcon className="w-5 h-5" />
+                                            </div>
+                                        )}
+                                        <div className="flex-1">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleFileChange}
+                                                ref={fileInputRef}
+                                                className="hidden"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => fileInputRef.current?.click()}
+                                                className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-3 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors"
+                                            >
+                                                Upload Image
+                                            </button>
+                                            <div className="text-[10px] text-[#8C857C] mt-1.5">Recommended: 800x1000px, under 2MB</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex w-full items-center pl-2 pt-2">
+                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                        <div className="relative flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                name="is_featured"
+                                                value="true"
+                                                className="peer h-4 w-4 cursor-pointer appearance-none rounded-[2px] border border-[#DDD7CC] checked:border-[#A8812A] checked:bg-[#A8812A] hover:border-[#1A1714]"
+                                            />
+                                            <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <span className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714] group-hover:text-[#A8812A] transition-colors">Featured Artist</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1.5 mb-4">
+                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Quote</label>
+                                <textarea name="quote" placeholder="Signature quote..." className="w-full min-h-[60px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
+                            </div>
+
+                            <div className="flex flex-col gap-1.5 mb-4">
+                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Biography</label>
+                                <textarea name="biography" placeholder="Short biography for profile page…" className="w-full min-h-[80px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Instagram</label>
+                                    <input name="instagram" type="text" placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Twitter / X</label>
+                                    <input name="twitter" type="text" placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                </div>
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Website</label>
+                                    <input name="website" type="url" placeholder="https://…" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2.5">
+                                <button
+                                    disabled={isPending || isUploadingImage}
+                                    type="submit"
+                                    className="bg-[#B5542A] disabled:opacity-70 disabled:cursor-not-allowed text-white text-[11px] font-medium tracking-[0.08em] uppercase px-5 py-2.5 rounded-[2px] transition-colors hover:bg-[#C96840] flex items-center justify-center gap-2 min-w-[150px]"
+                                >
+                                    {isPending || isUploadingImage ? (
+                                        <>
+                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        "Save Artist Profile"
+                                    )}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsFormOpen(false)}
+                                    className="bg-white border border-[#DDD7CC] text-[#1A1714] text-[11px] font-medium tracking-[0.08em] uppercase px-5 py-2.5 rounded-[2px] transition-colors hover:bg-[#EDE7D9]"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            )}
             {/* Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
                 {artists.map((artist) => (
@@ -140,7 +288,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                         <div className="text-[13.5px] leading-[1.6] text-[#1A1714] mb-5 flex-1 line-clamp-3">
                             {artist.biography || "No biography provided."}
                         </div>
-                        
+
                         {artist.quote && (
                             <blockquote className="text-[12px] italic text-[#8C857C] border-l-2 border-[#8C857C]/30 pl-3 mb-4 leading-relaxed line-clamp-2">
                                 "{artist.quote}"
@@ -167,7 +315,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                         </div>
                     </div>
                 ))}
-                
+
                 {artists.length === 0 && (
                     <div className="col-span-full py-10 text-center text-[13px] text-[#8C857C]">
                         No artists found. Add one below.
@@ -175,155 +323,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                 )}
             </div>
 
-            {/* Add Artist Form Placeholder Box */}
-            {isFormOpen && (
-                <div className="bg-white border text-left border-[#DDD7CC] rounded-[4px] shadow-[0_2px_4px_rgba(26,23,20,0.02)] overflow-hidden max-w-[800px] mb-10">
-                    <form onSubmit={handleSubmit}>
-                        <div className="px-6 py-4 border-b border-[#EDE7D9] flex justify-between items-center bg-[#FAFAFA]">
-                            <div className="font-heading font-bold text-[16px] text-[#1A1714]">Add New Artist Profile</div>
-                            <span className="text-[11px] text-[#8C857C]">Takes less than 2 minutes</span>
-                        </div>
-                    
-                    {state.error && (
-                        <div className="px-6 py-3 bg-red-50 border-b border-red-100 text-red-600 text-sm">
-                            {state.error}
-                        </div>
-                    )}
-                    {uploadError && (
-                        <div className="px-6 py-3 bg-red-50 border-b border-red-100 text-red-600 text-sm">
-                            {uploadError}
-                        </div>
-                    )}
-                    {state.success && (
-                        <div className="px-6 py-3 bg-green-50 border-b border-green-100 text-green-600 text-sm">
-                            Artist profile successfully created! Refreshing list...
-                        </div>
-                    )}
 
-                    <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Full Name *</label>
-                                <input name="full_name" required type="text" placeholder="Artist's full name" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Art Form *</label>
-                                <input name="art_form" required type="text" placeholder="Writer, Filmmaker, Poet..." className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Profile Image</label>
-                                <div className="flex items-start gap-4">
-                                    {imagePreview ? (
-                                        <div className="relative w-16 h-16 rounded-[2px] overflow-hidden border border-[#DDD7CC]">
-                                            <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                                            <button 
-                                                type="button" 
-                                                onClick={() => { setImageFile(null); setImagePreview(null); if(fileInputRef.current) fileInputRef.current.value = ""; }}
-                                                className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"
-                                            >
-                                                <Trash2 className="w-4 h-4 text-white" />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className="w-16 h-16 rounded-[2px] bg-[#FAFAFA] border border-[#DDD7CC] flex items-center justify-center text-[#8C857C]">
-                                            <ImageIcon className="w-5 h-5" />
-                                        </div>
-                                    )}
-                                    <div className="flex-1">
-                                        <input 
-                                            type="file" 
-                                            accept="image/*"
-                                            onChange={handleFileChange}
-                                            ref={fileInputRef}
-                                            className="hidden"
-                                        />
-                                        <button 
-                                            type="button"
-                                            onClick={() => fileInputRef.current?.click()}
-                                            className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-3 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors"
-                                        >
-                                            Upload Image
-                                        </button>
-                                        <div className="text-[10px] text-[#8C857C] mt-1.5">Recommended: 800x1000px, under 2MB</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="flex w-full items-center pl-2 pt-2">
-                                <label className="flex items-center gap-3 cursor-pointer group">
-                                    <div className="relative flex items-center">
-                                        <input 
-                                            type="checkbox" 
-                                            name="is_featured"
-                                            value="true"
-                                            className="peer h-4 w-4 cursor-pointer appearance-none rounded-[2px] border border-[#DDD7CC] checked:border-[#A8812A] checked:bg-[#A8812A] hover:border-[#1A1714]" 
-                                        />
-                                        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <span className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714] group-hover:text-[#A8812A] transition-colors">Featured Artist</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-1.5 mb-4">
-                            <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Quote</label>
-                            <textarea name="quote" placeholder="Signature quote..." className="w-full min-h-[60px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
-                        </div>
-
-                        <div className="flex flex-col gap-1.5 mb-4">
-                            <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Biography</label>
-                            <textarea name="biography" placeholder="Short biography for profile page…" className="w-full min-h-[80px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Instagram</label>
-                                <input name="instagram" type="text" placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Twitter / X</label>
-                                <input name="twitter" type="text" placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
-                            </div>
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Website</label>
-                                <input name="website" type="url" placeholder="https://…" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
-                            </div>
-                        </div>
-
-                        <div className="flex gap-2.5">
-                            <button 
-                                disabled={isPending || isUploadingImage}
-                                type="submit" 
-                                className="bg-[#B5542A] disabled:opacity-70 disabled:cursor-not-allowed text-white text-[11px] font-medium tracking-[0.08em] uppercase px-5 py-2.5 rounded-[2px] transition-colors hover:bg-[#C96840] flex items-center justify-center gap-2 min-w-[150px]"
-                            >
-                                {isPending || isUploadingImage ? (
-                                    <>
-                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                        Saving...
-                                    </>
-                                ) : (
-                                    "Save Artist Profile"
-                                )}
-                            </button>
-                            <button 
-                                type="button" 
-                                onClick={() => setIsFormOpen(false)}
-                                className="bg-white border border-[#DDD7CC] text-[#1A1714] text-[11px] font-medium tracking-[0.08em] uppercase px-5 py-2.5 rounded-[2px] transition-colors hover:bg-[#EDE7D9]"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            )}
         </div>
     );
 }
