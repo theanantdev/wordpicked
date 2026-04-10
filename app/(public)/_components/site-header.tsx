@@ -1,10 +1,11 @@
 "use client";
 
-import { Menu, Search, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { GlobalSearch } from "./global-search";
 
 export function SiteHeader() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,15 +26,12 @@ export function SiteHeader() {
 
                 {/* Desktop Logo */}
                 <Link href="/" className="font-heading text-[26px] font-semibold text-[#f5f0e8] tracking-[0.26px]">
-                    <Image src="/logo.png" alt="Logo" width={100} height={100} />
+                    <Image src="/logo.png" alt="Logo" width={80} height={80} />
                 </Link>
 
                 {/* Desktop Navigation */}
-                <div className="flex items-center gap-10 justify-between">
-                    <div className="flex items-center gap-2 border border-white px-2 py-1">
-                        <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-white" />
-                        <Search className="size-[18px] text-white" strokeWidth={2} />
-                    </div>
+                <div className="flex items-center gap-6 justify-between">
+                    <GlobalSearch />
 
                     <nav className="hidden items-center gap-8 md:flex">
                         {navLinks.map((link) => {
