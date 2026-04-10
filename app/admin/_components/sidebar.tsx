@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, FileText, PenLine, Users, Settings, X, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, FileText, PenLine, Users, Settings, X, Star, type LucideIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { logoutUser } from "@/app/account/v1/auth/login/actions";
 import type { AuthSession } from "@/utils/auth-session";
@@ -30,6 +30,7 @@ export function Sidebar({ onLinkClick, session }: SidebarProps) {
                 { name: "Literature", href: "/admin/literature", icon: FileText },
                 { name: "Films", href: "/admin/films", icon: PenLine },
                 { name: "Artists", href: "/admin/artists", icon: Users },
+                { name: "Pick of the Day", href: "/admin/pick-of-the-day", icon: Star },
             ]
         },
     ];

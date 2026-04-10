@@ -579,6 +579,7 @@ async function ensureArticlesTable(supabase) {
       tags text[] not null default '{}',
       content jsonb not null,
       featured_image_url text,
+      is_pick_of_the_day boolean default false,
       status text not null default 'draft' check (status in ('draft', 'published')),
       publish_at timestamptz,
       author_name text,

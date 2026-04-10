@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
             tags,
             content,
             featuredImageUrl,
+            isPickOfTheDay,
             status,
             publishAt,
         } = body;
@@ -65,6 +66,7 @@ export async function POST(request: NextRequest) {
             tags: mergedTags,
             content,
             featured_image_url: typeof featuredImageUrl === 'string' ? featuredImageUrl : null,
+            is_pick_of_the_day: isPickOfTheDay === true,
             status: status === 'published' ? 'published' : 'draft',
             publish_at: publishAt || now,
             author_name: session.name,

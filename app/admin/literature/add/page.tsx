@@ -36,6 +36,7 @@ export default function NewPostPage() {
     const [schedule, setSchedule] = useState(false);
     const [publishDate, setPublishDate] = useState("2026-04-30T09:00");
     const [showAdvanced, setShowAdvanced] = useState(false);
+    const [isPickOfTheDay, setIsPickOfTheDay] = useState(false);
     const [editorContent, setEditorContent] = useState<OutputData>({ blocks: [], version: '' });
     const [featuredImageUrl, setFeaturedImageUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -72,6 +73,7 @@ export default function NewPostPage() {
                 tags: Array.from(new Set([subcategory, ...tags].filter(Boolean))),
                 content: editorContent,
                 featuredImageUrl: featuredImageUrl || null,
+                isPickOfTheDay,
                 status,
                 publishAt: schedule ? publishDate : null,
             }),
@@ -437,6 +439,21 @@ export default function NewPostPage() {
                                         />
                                     </div>
                                 )}
+
+                                <div className="pt-2 border-t border-slate-200">
+                                    <label className="flex items-center gap-2 sm:gap-3 cursor-pointer group">
+                                        <div
+                                            onClick={() => setIsPickOfTheDay(!isPickOfTheDay)}
+                                            className={`relative inline-flex items-center h-5 w-9 rounded-full transition-colors duration-200 ${isPickOfTheDay ? 'bg-amber-500' : 'bg-slate-300 group-hover:bg-slate-400'}`}
+                                        >
+                                            <span className={`inline-block w-4 h-4 bg-white rounded-full transform transition-transform duration-200 shadow-sm ${isPickOfTheDay ? 'translate-x-4.5' : 'translate-x-0.5'}`} />
+                                        </div>
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="text-xs sm:text-sm font-semibold text-slate-900">⭐ Pick of the Day</span>
+                                            <span className="text-xs text-slate-500">Feature on the Pick of the Day page</span>
+                                        </div>
+                                    </label>
+                                </div>
 
                             </div>
                         </div>
