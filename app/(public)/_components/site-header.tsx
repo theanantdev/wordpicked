@@ -4,6 +4,7 @@ import { Menu, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export function SiteHeader() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +25,7 @@ export function SiteHeader() {
 
                 {/* Desktop Logo */}
                 <Link href="/" className="font-heading text-[26px] font-semibold text-[#f5f0e8] tracking-[0.26px]">
-                    The <span className="italic text-[#E0BC78]">Word</span>picked
+                    <Image src="/logo.png" alt="Logo" width={100} height={100} />
                 </Link>
 
                 {/* Desktop Navigation */}
