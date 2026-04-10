@@ -1,18 +1,42 @@
 import { createAdminClient } from '@/utils/supabase/admin';
 
+type HomeArticle = {
+    id: string;
+    title: string;
+    subtitle: string | null;
+    slug: string;
+    tags: string[] | null;
+    author_name: string | null;
+    publish_at: string | null;
+    created_at: string;
+    featured_image_url: string | null;
+    category: string;
+    view_count?: number | null;
+};
+
+type HomeArtist = {
+    id: string;
+    full_name: string;
+    art_form: string;
+    biography: string | null;
+    image_url: string | null;
+    views: number;
+    created_at: string;
+};
+
 export type HomeData = {
-    pickOfDay: any;
+    pickOfDay: HomeArticle | null;
     literature: {
-        recent: any[];
-        popular: any[];
+        recent: HomeArticle[];
+        popular: HomeArticle[];
     };
     films: {
-        recent: any[];
-        popular: any[];
+        recent: HomeArticle[];
+        popular: HomeArticle[];
     };
     artists: {
-        recent: any[];
-        popular: any[];
+        recent: HomeArtist[];
+        popular: HomeArtist[];
     };
 };
 

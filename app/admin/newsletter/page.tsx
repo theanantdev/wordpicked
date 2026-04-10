@@ -25,7 +25,7 @@ export default function NewsletterPage() {
             } else {
                 setError(data.error);
             }
-        } catch (err) {
+        } catch {
             setError("Failed to fetch subscribers.");
         } finally {
             setLoading(false);
@@ -51,7 +51,7 @@ export default function NewsletterPage() {
             } else {
                 alert(data.error);
             }
-        } catch (err) {
+        } catch {
             alert("Failed to delete subscriber.");
         }
     };

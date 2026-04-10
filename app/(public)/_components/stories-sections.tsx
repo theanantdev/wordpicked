@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SectionHeader } from "./section-header";
 import { StoryCard } from "./story-card";
 import { TabFilter } from "./tab-filter";
 import { StoryCardSkeleton } from "./home-skeletons";

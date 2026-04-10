@@ -32,7 +32,7 @@ export function NewsletterSection() {
                 setStatus("error");
                 setMessage(data.error || "Something went wrong. Please try again.");
             }
-        } catch (err) {
+        } catch {
             setStatus("error");
             setMessage("Failed to connect to the server.");
         }
