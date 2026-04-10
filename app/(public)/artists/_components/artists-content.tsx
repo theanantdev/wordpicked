@@ -2,110 +2,59 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { Artist } from "@/utils/server-artists";
 
 type FilterTab = "ALL" | "WRITERS" | "FILMMAKERS" | "MUSICIANS" | "VISUAL ARTISTS" | "PHOTOGRAPHERS";
 
-const WRITERS = [
-    {
-        id: "1",
-        tag: "POET · NOVELIST",
-        interviews: "2 INTERVIEWS",
-        category: "WRITER",
-        name: "Ocean Vuong",
-        description: "Author of On Earth We're Briefly Gorgeous. T.S. Eliot Prize winner. On language, grief, and th...",
-        handle: "@oceanvuong",
-        gradient: "from-[#120E08]/80 via-[#2A1C0A]/70 to-[#1A1208]/90",
-        image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=400&auto=format&fit=crop"
-    },
-    {
-        id: "2",
-        tag: "NOVELIST",
-        interviews: "1 INTERVIEW",
-        category: "SCRIPT WRITER",
-        name: "Hanya Yanagihara",
-        description: "Author of A Little Life and To Paradise. On suffering, beauty, and the ethics of writing...",
-        handle: "@hanyayanagihara",
-        gradient: "from-[#0E0814]/80 via-[#1E1030]/70 to-[#0E0810]/90",
-        image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop"
-    },
-    {
-        id: "3",
-        tag: "WRITER · PHOTOGRAPHER",
-        interviews: "2 INTERVIEWS",
-        category: "WRITER",
-        name: "Teju Cole",
-        description: "Author of Open City and Blind Spot. On seeing, being seen, and what photography teaches us...",
-        handle: "@tejucole",
-        gradient: "from-[#08100E]/80 via-[#0E2A1E]/70 to-[#081410]/90",
-        image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop"
-    },
-    {
-        id: "4",
-        tag: "FILMMAKER",
-        interviews: "1 INTERVIEW",
-        category: "FILMMAKER",
-        name: "Celine Song",
-        description: "Director of Past Lives. On longing, distance, and the cinematic grammar of the heart acros...",
-        handle: "@celinesong",
-        gradient: "from-[#100808]/80 via-[#280E10]/70 to-[#120808]/90",
-        image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop"
-    }
-];
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?q=80&w=800&auto=format&fit=crop";
 
-const OTHER_ARTISTS = [
-    {
-        id: "5",
-        category: "FILMMAKER",
-        name: "RaMell Ross",
-        description: "Director of Nickel Boys. On first-person perspective, radical form, and witness...",
-        image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=150&auto=format&fit=crop"
-    },
-    {
-        id: "6",
-        category: "WRITER · ACTRESS",
-        name: "Tavi Gevinson",
-        description: "Founder of Rookie magazine. On growing up in public and the strange education of taste...",
-        image: "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?q=80&w=150&auto=format&fit=crop"
-    },
-    {
-        id: "7",
-        category: "VISUAL ARTIST",
-        name: "Kara Walker",
-        description: "Visual artist known for her silhouette works exploring race, gender, and history. On it...",
-        image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop"
-    }
-];
-
-export function ArtistsContent() {
+export function ArtistsContent({ artists }: { artists: Artist[] }) {
     const [activeTab, setActiveTab] = useState<FilterTab>("ALL");
 
-    const matchesTab = (tab: FilterTab, category: string) => {
-        if (tab === "ALL") {
-            return true;
-        }
-
-        if (tab === "WRITERS") {
-            return category.includes("WRITER");
-        }
-
-        if (tab === "FILMMAKERS") {
-            return category.includes("FILMMAKER");
-        }
-
-        if (tab === "MUSICIANS") {
-            return category.includes("MUSICIAN");
-        }
-
-        if (tab === "VISUAL ARTISTS") {
-            return category.includes("VISUAL ARTIST");
-        }
-
-        return category.includes("PHOTOGRAPHER");
+    // Standardize category extraction based on art_form string for tabs mapping
+    const matchesTab = (tab: FilterTab, artForm: string) => {
+        const form = artForm.toUpperCase();
+        if (tab === "ALL") return true;
+        if (tab === "WRITERS") return form.includes("WRITER") || form.includes("NOVEL") || form.includes("POET") || form.includes("ESSAY");
+        if (tab === "FILMMAKERS") return form.includes("FILM") || form.includes("DIRECTOR");
+        if (tab === "MUSICIANS") return form.includes("MUSIC") || form.includes("COMPOSER");
+        if (tab === "VISUAL ARTISTS") return form.includes("VISUAL") || form.includes("PAINT") || form.includes("SCULPT") || form.includes("ARTIST");
+        if (tab === "PHOTOGRAPHERS") return form.includes("PHOTO");
+        return false;
     };
 
-    const visibleWriters = WRITERS.filter((writer) => matchesTab(activeTab, writer.category));
-    const visibleOtherArtists = OTHER_ARTISTS.filter((artist) => matchesTab(activeTab, artist.category));
-    const visibleArtistCount = visibleWriters.length + visibleOtherArtists.length;
+    // Derived properties to fit the previous UI exactly
+    const getUIMappedArtist = (artist: Artist) => {
+        const isWriter = matchesTab("WRITERS", artist.art_form);
+        const derivedCategory = artist.art_form.split(/[\s·,-]+/)[0].toUpperCase();
+
+        let handle = "@" + artist.full_name.split(" ").join("").toLowerCase();
+        if (artist.instagram && artist.instagram.includes(".com/")) {
+            handle = "@" + artist.instagram.split("/").filter(Boolean).pop();
+        } else if (artist.twitter && artist.twitter.includes(".com/")) {
+            handle = "@" + artist.twitter.split("/").filter(Boolean).pop();
+        }
+
+        return {
+            ...artist,
+            uiCategory: derivedCategory,
+            uiTag: artist.art_form.toUpperCase(),
+            uiDescription: artist.biography || "No description provided.",
+            uiHandle: handle,
+            uiPostsStr: artist.posts === 1 ? "1 POST" : `${artist.posts} POSTS`,
+            uiImage: artist.image_url || FALLBACK_IMAGE,
+            isWriter
+        };
+    };
+
+    const mappedArtists = artists.map(getUIMappedArtist);
+
+    const visibleArtists = mappedArtists.filter((a) => matchesTab(activeTab, a.art_form));
+
+    // Split into exact previous sections
+    const visibleWriters = visibleArtists.filter(a => a.isWriter);
+    const visibleOtherArtists = visibleArtists.filter(a => !a.isWriter);
+    const visibleArtistCount = visibleArtists.length;
 
     return (
         <section className="w-full flex flex-col items-center bg-[#FDF9F2] pb-20">
@@ -156,25 +105,25 @@ export function ArtistsContent() {
                                     {/* Image Section */}
                                     <div className="relative w-full aspect-4/5 overflow-hidden">
                                         <Image
-                                            src={writer.image}
-                                            alt={writer.name}
+                                            src={writer.uiImage}
+                                            alt={writer.full_name}
                                             fill
                                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                             className="object-cover object-center transition-transform duration-800 group-hover:scale-105"
                                         />
-                                        <div className={`absolute inset-0 bg-linear-to-br ${writer.gradient} mix-blend-multiply opacity-80`} />
+                                        {/* <div className={`absolute inset-0 bg-linear-to-br ${writer.gradient} mix-blend-multiply opacity-80`} /> */}
 
                                         {/* Top Left Tag */}
                                         <div className="absolute top-3 left-3 px-2 py-1 bg-[#1A1714]/55 border border-white/10 backdrop-blur-[2px] rounded-[1px]">
                                             <span className="font-sans font-normal text-[9px] md:text-[10px] leading-tight tracking-[1.08px] text-[#F5F0E8]/90 uppercase">
-                                                {writer.tag}
+                                                {writer.uiTag}
                                             </span>
                                         </div>
 
                                         {/* Top Right Label */}
                                         <div className="absolute top-4 right-4">
                                             <span className="font-heading text-[8px] md:text-[9px] uppercase tracking-[0.9px] text-[#F5F0E8]/50">
-                                                {writer.interviews}
+                                                {writer.uiPostsStr}
                                             </span>
                                         </div>
                                     </div>
@@ -185,16 +134,16 @@ export function ArtistsContent() {
                                             <div className="flex w-full items-center gap-2.5">
                                                 <div className="h-px w-4 bg-[#B5542A]" />
                                                 <span className="font-sans text-[11px] md:text-[12px] uppercase tracking-[1.14px] text-[#B5542A] truncate">
-                                                    {writer.category}
+                                                    {writer.uiCategory}
                                                 </span>
                                             </div>
 
                                             <h3 className="font-heading font-bold text-[18px] md:text-[20px] text-[#1A1714] mt-1 group-hover:text-[#B5542A] transition-colors">
-                                                {writer.name}
+                                                {writer.full_name}
                                             </h3>
 
                                             <p className="font-sans font-light text-[12px] leading-[1.6] text-[#8C857C] mt-2 line-clamp-3">
-                                                {writer.description}
+                                                {writer.uiDescription}
                                             </p>
                                         </div>
 
@@ -207,7 +156,7 @@ export function ArtistsContent() {
 
                                             </p>
                                             <span className="font-sans font-medium text-[11px] md:text-[12px] uppercase tracking-[0.76px] text-[#B0A89E]">
-                                                {writer.handle}
+                                                {writer.uiHandle}
                                             </span>
                                         </div>
                                     </div>
@@ -234,8 +183,8 @@ export function ArtistsContent() {
                                 <div key={artist.id} className="group flex flex-row items-center gap-5 border border-[#E7E5E4] bg-white p-5 cursor-pointer transition-shadow hover:shadow-sm">
                                     <div className="relative h-18 w-18 shrink-0 overflow-hidden rounded-[3px]">
                                         <Image
-                                            src={artist.image}
-                                            alt={artist.name}
+                                            src={artist.uiImage}
+                                            alt={artist.full_name}
                                             fill
                                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                                         />
@@ -246,14 +195,14 @@ export function ArtistsContent() {
                                         <div className="flex items-center gap-1.75">
                                             <div className="h-px w-3.5 bg-[#B5542A]" />
                                             <span className="font-sans text-[10px] md:text-[11px] leading-tight uppercase tracking-[1px] text-[#B5542A] truncate">
-                                                {artist.category}
+                                                {artist.uiCategory}
                                             </span>
                                         </div>
                                         <h4 className="font-heading font-bold text-[16px] md:text-[17px] text-[#1A1714] group-hover:text-[#B5542A] transition-colors truncate">
-                                            {artist.name}
+                                            {artist.full_name}
                                         </h4>
                                         <p className="font-sans font-light text-[12px] md:text-[13px] leading-[1.35] text-[#8C857C] line-clamp-2">
-                                            {artist.description}
+                                            {artist.uiDescription}
                                         </p>
                                     </div>
                                 </div>

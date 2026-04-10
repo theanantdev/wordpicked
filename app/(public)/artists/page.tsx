@@ -1,13 +1,20 @@
 import { ArtistsHero } from "./_components/artists-hero"
 import { FeaturedArtist } from "./_components/featured-artist"
 import { ArtistsContent } from "./_components/artists-content"
+import { getArtists } from "@/utils/server-artists"
 
-export default function ArtistsPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function ArtistsPage() {
+    const artists = await getArtists();
+    const featuredArtist = artists.find(a => a.is_featured) || artists[0];
+    // console.log(featuredArtist)
+
     return (
         <main className="bg-[#FDF9F2] min-h-screen">
             <ArtistsHero />
-            <FeaturedArtist />
-            <ArtistsContent />
+            {featuredArtist && <FeaturedArtist artist={featuredArtist} />}
+            <ArtistsContent artists={artists} />
         </main>
     )
 }
