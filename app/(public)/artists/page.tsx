@@ -3,7 +3,7 @@ import { FeaturedArtist } from "./_components/featured-artist"
 import { ArtistsContent } from "./_components/artists-content"
 import { getArtists } from "@/utils/server-artists"
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300; // 5 minutes — balance freshness & performance
 
 export default async function ArtistsPage() {
     const artists = await getArtists();

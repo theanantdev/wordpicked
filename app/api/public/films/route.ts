@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 
+export const revalidate = 300; // 5 minutes Next.js route cache
+
+
 type Category = 'FICTION' | 'NON-FICTION' | 'POETRY';
 type SortOption = 'LATEST' | 'OLDEST' | 'TITLE_A_Z';
 
@@ -132,7 +135,7 @@ export async function GET(request: NextRequest) {
         const to = from + pageSize;
         const pageItems = filteredByCategory.slice(from, to);
 
-        return NextResponse.json({
+        const response = NextResponse.json({
             success: true,
             data: {
                 items: pageItems,
@@ -147,6 +150,8 @@ export async function GET(request: NextRequest) {
                 sort,
             },
         });
+        response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+        return response;
     } catch (error) {
         return NextResponse.json(
             { success: false, error: error instanceof Error ? error.message : 'Failed to fetch films.' },

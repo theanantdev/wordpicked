@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/utils/supabase/admin';
 
+export const revalidate = 3600; // 1 hour — article content rarely changes
+
+
 type ContentBlock = {
     type?: string;
     data?: {
@@ -81,7 +84,7 @@ export async function GET(request: NextRequest) {
 
         const blocks = (((article.content as { blocks?: ContentBlock[] }) || {}).blocks || []) as ContentBlock[];
 
-        return NextResponse.json({
+        const response = NextResponse.json({
             success: true,
             data: {
                 article: {
@@ -101,6 +104,8 @@ export async function GET(request: NextRequest) {
                 related,
             },
         });
+        response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=7200');
+        return response;
     } catch (error) {
         return NextResponse.json(
             { success: false, error: error instanceof Error ? error.message : 'Failed to fetch article.' },

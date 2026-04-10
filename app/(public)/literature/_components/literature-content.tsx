@@ -277,10 +277,31 @@ export function LiteratureContent() {
                             </div>
                         </Link>
                     ))}
-                    {(loading || (!loading && !error && items.length === 0) || error) && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 sm:py-16 md:py-20 text-gray-500">
-                            {loading ? "Loading articles..." : error ? error : "No articles found."}
+                    {loading && Array.from({ length: 9 }).map((_, i) => (
+                        <div key={i} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm overflow-hidden">
+                            {/* Image skeleton */}
+                            <div className="w-full aspect-3/4 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                            {/* Content skeleton */}
+                            <div className="flex flex-col gap-3 p-4 sm:p-5 md:p-6">
+                                <div className="flex items-center gap-2">
+                                    <div className="h-2.5 w-14 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                                    <div className="h-2.5 w-14 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                                </div>
+                                <div className="h-6 w-full bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                                <div className="h-6 w-3/4 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                                <div className="h-4 w-1/2 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                                <div className="h-4 w-full bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                                <div className="h-4 w-5/6 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                            </div>
                         </div>
+                    ))}
+                    {!loading && !error && items.length === 0 && (
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 sm:py-16 md:py-20 text-gray-500">
+                            No articles found.
+                        </div>
+                    )}
+                    {!loading && error && (
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 text-red-500">{error}</div>
                     )}
                 </div>
 

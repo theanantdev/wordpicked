@@ -4,6 +4,8 @@ import { FeaturedPickCard, type PickArticle } from "./_components/featured-pick-
 import { PicksGrid } from "./_components/picks-grid";
 import type { Metadata } from "next";
 
+export const revalidate = 300; // 5 minutes
+
 export const metadata: Metadata = {
     title: "Pick of the Day",
     description: "One book or film our editors think you should read or watch today — curated daily, archived forever.",
