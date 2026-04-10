@@ -1,10 +1,12 @@
 import { Dot } from "lucide-react";
 import type { StoryCardItem } from "./content-data";
 import Image from "next/image";
-export function StoryCard({ tag, title, summary, author, date, image }: StoryCardItem) {
+import Link from "next/link";
+export function StoryCard({ tag, title, summary, author, date, image, slug }: StoryCardItem) {
     return (
-        <article className="overflow-hidden border border-zinc-200 bg-[#fdf9f2]">
-
+        <Link
+            href={`/literature/${slug}`}
+            className="overflow-hidden border border-zinc-200 bg-[#fdf9f2]">
             <Image src={image} alt={title} width={400} height={300} className=" object-cover" />
 
             <div className="space-y-3 p-5">
@@ -15,6 +17,6 @@ export function StoryCard({ tag, title, summary, author, date, image }: StoryCar
                     {author} <Dot /> {date}
                 </p>
             </div>
-        </article>
+        </Link>
     );
 }

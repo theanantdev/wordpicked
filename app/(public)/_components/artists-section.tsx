@@ -46,14 +46,14 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
         return (
             <div className="grid gap-12 md:grid-cols-2 xl:grid-cols-3">
                 {artists.slice(0, 3).map((artist) => (
-                    <Link key={artist.id} href={`/artists/${artist.id}`}>
+                    <div key={artist.id} >
                         <article className="text-center group">
                             <div className="relative mx-auto aspect-square w-full max-w-[320px] overflow-hidden rounded-[2px] shadow-sm">
-                                <Image 
-                                    src={artist.image_url || "/home/hero.jpg"} 
-                                    alt={artist.full_name} 
-                                    fill 
-                                    className="object-cover transition-transform duration-500 group-hover:scale-110" 
+                                <Image
+                                    src={artist.image_url || "/home/hero.jpg"}
+                                    alt={artist.full_name}
+                                    fill
+                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-black/10 opacity-0 transition-opacity group-hover:opacity-100" />
                             </div>
@@ -63,7 +63,7 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
                                 {artist.biography}
                             </p>
                         </article>
-                    </Link>
+                    </div>
                 ))}
             </div>
         );

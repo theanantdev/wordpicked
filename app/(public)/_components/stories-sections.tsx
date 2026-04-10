@@ -64,7 +64,8 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
                         summary={article.subtitle}
                         author={article.author_name}
                         date={new Date(article.publish_at || article.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                        image={article.featured_image_url || "/home/hero.jpg"} tone={""} />
+                        image={article.featured_image_url || "/home/hero.jpg"} tone={""}
+                        slug={article.slug} />
                 ))}
             </div>
         );

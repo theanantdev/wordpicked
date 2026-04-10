@@ -6,6 +6,7 @@ export type StoryCardItem = {
     author: string;
     date: string;
     tone: string;
+    slug: string;
 };
 
 export type ArtistItem = {
@@ -19,6 +20,7 @@ export const literatureCards: StoryCardItem[] = [
     {
         tag: "Fiction",
         title: "The Weight of Silence: A Meditation on Absence",
+        slug: "the-weight-of-silence-a-meditation-on-absence",
         image: "/home/Literature/image.png",
         summary:
             "In her latest novel, Elena Morrow crafts a devastating portrait of grief that lingers long after the final page.",
@@ -29,6 +31,7 @@ export const literatureCards: StoryCardItem[] = [
     {
         tag: "Poetry",
         title: "Beneath the Surface: Poetry of the Mundane",
+        slug: "beneath-the-surface-poetry-of-the-mundane",
         image: "/home/Literature/image1.png",
         summary:
             "A collection that finds extraordinary beauty in everyday moments, containing our perception of what poetry can be.",
@@ -39,6 +42,7 @@ export const literatureCards: StoryCardItem[] = [
     {
         tag: "Fiction",
         title: "Cartography of Longing: Maps We Draw in the Dark",
+        slug: "cartography-of-longing-maps-we-draw-in-the-dark",
         image: "/home/Literature/image2.png",
         summary:
             "A sprawling, ambitious novel that charts the geography of desire across five continents and four decades.",
@@ -52,6 +56,7 @@ export const filmCards: StoryCardItem[] = [
     {
         tag: "Drama",
         title: "Echoes in the Dark: Reimagining Film Noir",
+        slug: "echoes-in-the-dark-reimagining-film-noir",
         image: "/home/Films/image.png",
 
         summary:
@@ -63,6 +68,7 @@ export const filmCards: StoryCardItem[] = [
     {
         tag: "Documentary",
         title: "The Last Projection: Cinema's Analog Farewell",
+        slug: "the-last-projection-cinemas-analog-farewell",
         image: "/home/Films/image1.png",
         summary:
             "A documentary that mourns and celebrates the ghosts of celluloid projection in a relentlessly digital world.",
@@ -73,6 +79,7 @@ export const filmCards: StoryCardItem[] = [
     {
         tag: "Experimental",
         title: "Still Life with Shadows",
+        slug: "still-life-with-shadows",
         image: "/home/Films/image2.png",
 
         summary:

@@ -1,4 +1,43 @@
+"use client";
+
+import { useState } from "react";
+
 export function NewsletterSection() {
+    const [email, setEmail] = useState("");
+    const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+    const [message, setMessage] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email.trim() || !email.includes("@")) {
+            setStatus("error");
+            setMessage("Please enter a valid email address.");
+            return;
+        }
+
+        setStatus("loading");
+        try {
+            const response = await fetch("/api/public/newsletter/subscribe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email.trim() }),
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                setStatus("success");
+                setMessage(data.message || "Thank you for subscribing!");
+                setEmail("");
+            } else {
+                setStatus("error");
+                setMessage(data.error || "Something went wrong. Please try again.");
+            }
+        } catch (err) {
+            setStatus("error");
+            setMessage("Failed to connect to the server.");
+        }
+    };
+
     return (
         <section className="bg-[#ebe8e1] py-24">
             <div className="mx-auto flex w-full max-w-4xl flex-col items-center gap-8 px-4 text-center">
@@ -12,15 +51,35 @@ export function NewsletterSection() {
                     <br className="hidden md:block" />
                     when everyone else has left. It is the final word on what truly matters.&rdquo;
                 </blockquote>
-                <form className="flex w-full h-30 max-w-xl flex-col gap-3 sm:flex-row">
-                    <input
-                        className="h-12 flex-1 bg-[#fdf9f2] px-4 text-sm text-zinc-700 placeholder:text-zinc-500 focus:outline-none"
-                        placeholder="Enter your email for our weekly dispatch"
-                    />
-                    <button className="h-12 bg-[#11412a] px-8 text-xs tracking-[0.14em] text-white uppercase">Subscribe</button>
-                </form>
+
+                <div className="w-full max-w-xl">
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
+                        <input
+                            className="h-12 flex-1 bg-[#fdf9f2] px-4 text-sm text-zinc-700 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50"
+                            placeholder="Enter your email for our weekly dispatch"
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={status === "loading"}
+                        />
+                        <button
+                            type="submit"
+                            disabled={status === "loading"}
+                            className="h-12 bg-[#11412a] px-8 text-xs tracking-[0.14em] text-white uppercase transition hover:bg-[#0a2f1e] disabled:opacity-50"
+                        >
+                            {status === "loading" ? "Subscribing..." : "Subscribe"}
+                        </button>
+                    </form>
+
+                    {status === "success" && (
+                        <p className="mt-3 text-sm text-[#11412a] font-medium">{message}</p>
+                    )}
+                    {status === "error" && (
+                        <p className="mt-3 text-sm text-[#DC2828] font-medium">{message}</p>
+                    )}
+                </div>
             </div>
         </section>
     );
 }
-
