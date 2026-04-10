@@ -1,6 +1,9 @@
-import Image from "next/image";
-import { Bookmark, Heart, Share2, Star } from "lucide-react";
+"use client"
 
+import Image from "next/image";
+import { Bookmark, Heart, Star } from "lucide-react";
+import { ShareButton } from "./share-button";
+import { usePathname } from "next/navigation";
 type ArticleHeroProps = {
     categoryLabel: string;
     title: string;
@@ -11,7 +14,9 @@ type ArticleHeroProps = {
 };
 
 export function ArticleHero({ categoryLabel, title, subtitle, authorName, publishDate, coverImageUrl }: ArticleHeroProps) {
+    const pathname = usePathname();
     return (
+
         <section className="w-full bg-[#FDF9F2] pt-[40px] md:pt-[60px] lg:pt-[92px] pb-[40px] md:pb-[60px] relative mt-16 md:mt-2">
             <div className="max-w-[1240px] mx-auto px-6 md:px-[60px] lg:px-[80px] grid grid-cols-1 md:grid-cols-[55%_45%] lg:grid-cols-[60%_40%] gap-10 md:gap-8 items-center relative z-10">
                 <div className="flex flex-col items-start gap-8 lg:gap-10">
@@ -66,9 +71,7 @@ export function ArticleHero({ categoryLabel, title, subtitle, authorName, publis
                                 <button className="w-[40px] h-[40px] flex items-center justify-center rounded-sm hover:bg-black/5 transition-colors">
                                     <Heart className="w-5 h-5 text-[#181821]" />
                                 </button>
-                                <button className="w-[40px] h-[40px] flex items-center justify-center rounded-sm hover:bg-black/5 transition-colors">
-                                    <Share2 className="w-5 h-5 text-[#181821]" />
-                                </button>
+                                <ShareButton title={title} text={subtitle} url={pathname} />
                             </div>
                         </div>
                     </div>
