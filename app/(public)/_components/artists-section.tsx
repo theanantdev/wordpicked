@@ -16,12 +16,14 @@ type Artist = {
     views: number;
 };
 
-export function ArtistsSection() {
-    const [data, setData] = useState<{ recent: Artist[], popular: Artist[] } | null>(null);
-    const [loading, setLoading] = useState(true);
+export function ArtistsSection({ initialData }: { initialData?: { recent: Artist[], popular: Artist[] } }) {
+    const [data, setData] = useState<{ recent: Artist[], popular: Artist[] } | null>(initialData || null);
+    const [loading, setLoading] = useState(!initialData);
     const [tab, setTab] = useState<"recent" | "popular">("recent");
 
     useEffect(() => {
+        if (initialData) return;
+
         fetch("/api/public/home")
             .then(res => res.json())
             .then(payload => {
@@ -31,7 +33,7 @@ export function ArtistsSection() {
                 setLoading(false);
             })
             .catch(() => setLoading(false));
-    }, []);
+    }, [initialData]);
 
     const renderGrid = (artists: Artist[]) => {
         if (loading) {

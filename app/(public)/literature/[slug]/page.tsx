@@ -54,7 +54,7 @@ async function fetchArticleBySlug(slug: string) {
 
     const response = await fetch(
         `${protocol}://${host}/api/public/literature/article?slug=${encodeURIComponent(slug)}`,
-        { method: "GET", cache: "no-store" },
+        { method: "GET", next: { revalidate: 3600 } },
     );
 
     const payload = (await response.json()) as ArticleApiResponse;

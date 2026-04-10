@@ -18,12 +18,14 @@ type Article = {
     view_count: number;
 };
 
-export function CinemaSection() {
-    const [data, setData] = useState<{ recent: Article[], popular: Article[] } | null>(null);
-    const [loading, setLoading] = useState(true);
+export function CinemaSection({ initialData }: { initialData?: { recent: Article[], popular: Article[] } }) {
+    const [data, setData] = useState<{ recent: Article[], popular: Article[] } | null>(initialData || null);
+    const [loading, setLoading] = useState(!initialData);
     const [tab, setTab] = useState<"recent" | "popular">("recent");
 
     useEffect(() => {
+        if (initialData) return;
+
         fetch("/api/public/home")
             .then(res => res.json())
             .then(payload => {
@@ -33,7 +35,7 @@ export function CinemaSection() {
                 setLoading(false);
             })
             .catch(() => setLoading(false));
-    }, []);
+    }, [initialData]);
 
     const renderGrid = (articles: Article[]) => {
         if (loading) {

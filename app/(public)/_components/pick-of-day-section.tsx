@@ -15,14 +15,17 @@ type Article = {
     category: string;
     publish_at: string;
     created_at: string;
+    view_count: number;
     featured_image_url: string;
 };
 
-export function PickOfDaySection() {
-    const [data, setData] = useState<Article | null>(null);
-    const [loading, setLoading] = useState(true);
+export function PickOfDaySection({ initialData }: { initialData?: Article | null }) {
+    const [data, setData] = useState<Article | null>(initialData || null);
+    const [loading, setLoading] = useState(!initialData);
 
     useEffect(() => {
+        if (initialData) return;
+
         fetch("/api/public/home")
             .then(res => res.json())
             .then(payload => {
@@ -32,7 +35,7 @@ export function PickOfDaySection() {
                 setLoading(false);
             })
             .catch(() => setLoading(false));
-    }, []);
+    }, [initialData]);
 
     if (loading) {
         return (

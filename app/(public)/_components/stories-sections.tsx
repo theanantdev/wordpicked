@@ -24,14 +24,16 @@ type CategoryData = {
     popular: Article[];
 };
 
-export function StoriesSections() {
-    const [litData, setLitData] = useState<CategoryData | null>(null);
-    const [filmsData, setFilmsData] = useState<CategoryData | null>(null);
-    const [loading, setLoading] = useState(true);
+export function StoriesSections({ initialLiterature, initialFilms }: { initialLiterature?: CategoryData, initialFilms?: CategoryData }) {
+    const [litData, setLitData] = useState<CategoryData | null>(initialLiterature || null);
+    const [filmsData, setFilmsData] = useState<CategoryData | null>(initialFilms || null);
+    const [loading, setLoading] = useState(!initialLiterature);
     const [litTab, setLitTab] = useState<"recent" | "popular">("recent");
     const [filmsTab, setFilmsTab] = useState<"recent" | "popular">("recent");
 
     useEffect(() => {
+        if (initialLiterature && initialFilms) return;
+
         fetch("/api/public/home")
             .then(res => res.json())
             .then(payload => {
@@ -42,7 +44,7 @@ export function StoriesSections() {
                 setLoading(false);
             })
             .catch(() => setLoading(false));
-    }, []);
+    }, [initialLiterature, initialFilms]);
 
     const renderGrid = (articles: Article[], isLoading: boolean) => {
         if (isLoading) {
