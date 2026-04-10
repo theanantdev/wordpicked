@@ -20,7 +20,7 @@ export function FilmHero({
             {/* Background Image */}
             <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url('${'/pick-of-the-day/hero.png'}')` }}
+                style={{ backgroundImage: `url('${coverImageUrl}')` }}
             />
             {/* Gradient Overlay */}
             <div

@@ -447,6 +447,7 @@ function buildArtistContent(title, subcategory) {
 function buildEditorContent(title, category, subcategory) {
   if (category === 'films') return buildFilmContent(title, subcategory);
   if (category === 'artists') return buildArtistContent(title, subcategory);
+  if (category === 'literature') return buildLiteratureContent(title, subcategory);
 
   const section = CATEGORY_SECTIONS[category];
   const introLine = `In this article, we explore ${title.toLowerCase()} through close observation, interviews, and historical context.`;

@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: PageProps): Promise<import("n
                 images: [data.article.coverImageUrl],
             },
         };
-    } catch (e) {
+    } catch {
         return {
             title: "Article Not Found",
             description: "The requested article could not be found.",

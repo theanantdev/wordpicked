@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: PageProps): Promise<import("n
                 title: data.article.title,
                 description: data.article.subtitle,
                 images: [{ url: data.article.coverImageUrl }],
-                type: "video.movie",
+                type: "article",
                 authors: [data.article.authorName],
                 publishedTime: data.article.publishDate,
                 tags: data.article.tags,
@@ -109,7 +109,7 @@ export async function generateMetadata({ params }: PageProps): Promise<import("n
                 images: [data.article.coverImageUrl],
             },
         };
-    } catch (e) {
+    } catch {
         return {
             title: "Film Not Found",
             description: "The requested film could not be found.",

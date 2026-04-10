@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, FileText, PenLine, Users, Calendar, Settings, X, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, FileText, PenLine, Users, Settings, X, type LucideIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { logoutUser } from "@/app/account/v1/auth/login/actions";
 import type { AuthSession } from "@/utils/auth-session";
