@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState, useRef } from "react";
+import Image from "next/image";
 import { Plus, Trash2, Image as ImageIcon, Loader2 } from "lucide-react";
 import { Artist } from "@/utils/server-artists";
 import { createArtistAction, deleteArtistAction, ActionState } from "../actions";
@@ -155,7 +156,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                                     <div className="flex items-start gap-4">
                                         {imagePreview ? (
                                             <div className="relative w-16 h-16 rounded-[2px] overflow-hidden border border-[#DDD7CC]">
-                                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                                <Image src={imagePreview} alt="Preview" fill unoptimized className="object-cover" />
                                                 <button
                                                     type="button"
                                                     onClick={() => { setImageFile(null); setImagePreview(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
@@ -268,7 +269,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
 
                         <div className="flex items-center gap-4 mb-4">
                             {artist.image_url ? (
-                                <img src={artist.image_url} alt={artist.full_name} className="w-12 h-12 rounded-[2px] object-cover shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" />
+                                <Image src={artist.image_url} alt={artist.full_name} width={48} height={48} className="rounded-[2px] object-cover shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]" />
                             ) : (
                                 <div className={`w-12 h-12 rounded-[2px] flex items-center justify-center font-heading font-bold text-[18px] text-[rgba(255,255,255,0.9)] bg-gradient-to-br ${artist.gradient} shadow-[inset_0_0_0_1px_rgba(255,255,255,0.1)]`}>
                                     {artist.full_name.substring(0, 2).toUpperCase()}
@@ -291,7 +292,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
 
                         {artist.quote && (
                             <blockquote className="text-[12px] italic text-[#8C857C] border-l-2 border-[#8C857C]/30 pl-3 mb-4 leading-relaxed line-clamp-2">
-                                "{artist.quote}"
+                                &quot;{artist.quote}&quot;
                             </blockquote>
                         )}
 

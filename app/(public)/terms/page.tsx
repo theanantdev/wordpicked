@@ -18,7 +18,7 @@ export default function TermsPage() {
                     <div className="prose prose-lg prose-zinc max-w-none font-sans text-zinc-700 space-y-6">
                         <h2 className="font-playfair text-2xl text-[#141210] mt-10 mb-4">1. Agreement to Terms</h2>
                         <p>
-                            By viewing or using Wordpicked ("Website", "we", "us", or "our"), you agree to abide by these Terms of Service. If you disagree with any part of the terms, you may not access the Website.
+                            By viewing or using Wordpicked (&quot;Website&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;), you agree to abide by these Terms of Service. If you disagree with any part of the terms, you may not access the Website.
                         </p>
 
                         <h2 className="font-playfair text-2xl text-[#141210] mt-10 mb-4">2. Intellectual Property</h2>
@@ -37,7 +37,7 @@ export default function TermsPage() {
                         </p>
                         <ul className="list-disc pl-6 space-y-2">
                             <li>In any way that violates any applicable federal, state, local, or international law or regulation.</li>
-                            <li>To engage in any conduct that restricts or inhibits anyone's use or enjoyment of the Website.</li>
+                            <li>To engage in any conduct that restricts or inhibits anyone&apos;s use or enjoyment of the Website.</li>
                             <li>To impersonate or attempt to impersonate Wordpicked, a Wordpicked employee, another user, or any other person or entity.</li>
                             <li>To attempt to circumvent our security measures or otherwise engage in malicious or strictly destructive actions.</li>
                         </ul>
@@ -49,7 +49,7 @@ export default function TermsPage() {
 
                         <h2 className="font-playfair text-2xl text-[#141210] mt-10 mb-4">6. Disclaimer of Warranties</h2>
                         <p>
-                            The Website and its content are provided on an "as is" and "as available" basis without any warranties of any kind. We disclaim all warranties, including, but not limited to, the warranty of title, merchantability, non-infringement of third parties' rights, and fitness for particular purpose. 
+                            The Website and its content are provided on an &quot;as is&quot; and &quot;as available&quot; basis without any warranties of any kind. We disclaim all warranties, including, but not limited to, the warranty of title, merchantability, non-infringement of third parties&apos; rights, and fitness for particular purpose. 
                         </p>
 
                         <h2 className="font-playfair text-2xl text-[#141210] mt-10 mb-4">7. Limitation of Liability</h2>
