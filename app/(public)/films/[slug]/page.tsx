@@ -85,6 +85,38 @@ async function fetchFilmBySlug(slug: string) {
     return payload.data;
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<import("next").Metadata> {
+    try {
+        const { slug } = await params;
+        const data = await fetchFilmBySlug(slug);
+        
+        return {
+            title: data.article.title,
+            description: data.article.subtitle,
+            openGraph: {
+                title: data.article.title,
+                description: data.article.subtitle,
+                images: [{ url: data.article.coverImageUrl }],
+                type: "video.movie",
+                authors: [data.article.authorName],
+                publishedTime: data.article.publishDate,
+                tags: data.article.tags,
+            },
+            twitter: {
+                card: "summary_large_image",
+                title: data.article.title,
+                description: data.article.subtitle,
+                images: [data.article.coverImageUrl],
+            },
+        };
+    } catch (e) {
+        return {
+            title: "Film Not Found",
+            description: "The requested film could not be found.",
+        };
+    }
+}
+
 export default async function FilmEditorialPage({ params }: PageProps) {
     const { slug } = await params;
     const data = await fetchFilmBySlug(slug);
