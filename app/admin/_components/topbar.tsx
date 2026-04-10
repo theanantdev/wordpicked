@@ -99,7 +99,7 @@ export function Topbar({ onMenuClick, session }: TopbarProps) {
                                 Add Films
                             </Link>
                             <Link
-                                href="/admin/artists/add?category=artists"
+                                href="/admin/artists"
                                 onClick={() => setIsCreateMenuOpen(false)}
                                 className="block px-4 py-2.5 text-[12px] font-medium text-[#1A1714] hover:bg-[#F5F0E8]"
                             >
