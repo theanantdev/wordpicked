@@ -104,7 +104,7 @@ export function GlobalSearch() {
         const handler = (e: KeyboardEvent) => {
             if ((e.metaKey || e.ctrlKey) && e.key === "k") {
                 e.preventDefault();
-                isOpen ? close() : open();
+                if (isOpen) close(); else open();
             }
             if (e.key === "Escape") close();
         };
@@ -115,18 +115,24 @@ export function GlobalSearch() {
     // Debounced search
     useEffect(() => {
         if (debounceRef.current) clearTimeout(debounceRef.current);
+
         if (!query.trim()) {
-            setResults([]);
-            setLoading(false);
-            return;
+            // Schedule state resets outside the synchronous effect body
+            debounceRef.current = setTimeout(() => {
+                setResults([]);
+                setLoading(false);
+            }, 0);
+            return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
         }
-        setLoading(true);
+
         debounceRef.current = setTimeout(async () => {
+            setLoading(true);
             const res = await fetchResults(query.trim());
             setResults(res);
             setLoading(false);
             setActiveIndex(-1);
         }, 280);
+
         return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
     }, [query]);
 
@@ -278,7 +284,7 @@ export function GlobalSearch() {
                                             <BookOpen className="w-3 h-3 text-[#E0BC78]" />
                                             <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#E0BC78]">Literature</p>
                                         </div>
-                                        {litResults.map((item, idx) => {
+                                        {litResults.map((item) => {
                                             const globalIdx = results.indexOf(item);
                                             return (
                                                 <Link
