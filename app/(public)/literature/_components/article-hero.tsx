@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image";
-import { Bookmark, Heart, Star } from "lucide-react";
+import { Bookmark, Heart, Star, Eye } from "lucide-react";
 import { ShareButton } from "./share-button";
 import { usePathname } from "next/navigation";
 type ArticleHeroProps = {
@@ -11,9 +11,10 @@ type ArticleHeroProps = {
     authorName: string;
     publishDate: string;
     coverImageUrl: string;
+    viewCount?: number;
 };
 
-export function ArticleHero({ categoryLabel, title, subtitle, authorName, publishDate, coverImageUrl }: ArticleHeroProps) {
+export function ArticleHero({ categoryLabel, title, subtitle, authorName, publishDate, coverImageUrl, viewCount = 0 }: ArticleHeroProps) {
     const pathname = usePathname();
     return (
 
@@ -45,8 +46,14 @@ export function ArticleHero({ categoryLabel, title, subtitle, authorName, publis
                                 <span className="font-sans font-light text-[14px] leading-none tracking-[1.4px] uppercase text-[#1C1C18]">
                                     {authorName}
                                 </span>
-                                <span className="font-serif text-[12px] leading-none text-[#595959]">
-                                    Senior Literary Critic • {publishDate}
+                                <span className="font-serif text-[12px] leading-none text-[#595959] flex items-center gap-3">
+                                    <span>Senior Literary Critic • {publishDate}</span>
+                                    {viewCount > 0 && (
+                                        <span className="flex items-center gap-1">
+                                            <Eye className="w-3 h-3" />
+                                            {viewCount.toLocaleString()}
+                                        </span>
+                                    )}
                                 </span>
                             </div>
                         </div>

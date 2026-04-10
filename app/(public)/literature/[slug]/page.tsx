@@ -3,6 +3,7 @@ import { ArticleBody } from "../_components/article-body";
 import { ArticleSidebar } from "../_components/article-sidebar";
 import { ArticleRelated } from "../_components/article-related";
 import { CommentsSection } from "@/app/(public)/_components/comments-section";
+import { ViewTracker } from "@/app/(public)/_components/view-tracker";
 import { headers } from "next/headers";
 
 type PageProps = {
@@ -30,6 +31,7 @@ type ArticleApiResponse = {
                     items?: string[];
                 };
             }>;
+            viewCount: number;
         };
         related: Array<{
             tag: string;
@@ -109,7 +111,9 @@ export default async function LiteraturePostPage({ params }: PageProps) {
                 authorName={data.article.authorName}
                 publishDate={data.article.publishDate}
                 coverImageUrl={data.article.coverImageUrl}
+                viewCount={data.article.viewCount}
             />
+            <ViewTracker articleId={data.article.id} />
 
             <div className="max-w-[1240px] mx-auto px-6 md:px-[60px] lg:px-[80px] pb-[80px] md:pb-[120px] relative">
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-16 xl:gap-[100px] relative">

@@ -11,6 +11,7 @@ type PostRow = {
     publish_at: string | null;
     created_at: string | null;
     featured_image_url: string | null;
+    view_count: number;
 };
 
 type PostListItem = {
@@ -86,7 +87,7 @@ export async function GET(request: NextRequest) {
         const supabase = createAdminClient();
         let query = supabase
             .from('articles')
-            .select('id, title, subtitle, category, status, publish_at, created_at, featured_image_url', { count: 'exact' });
+            .select('id, title, subtitle, category, status, publish_at, created_at, featured_image_url, view_count', { count: 'exact' });
 
         if (search) {
             const escaped = search.replaceAll(',', ' ');
@@ -107,6 +108,8 @@ export async function GET(request: NextRequest) {
             query = query.order('created_at', { ascending: true });
         } else if (sort === 'az') {
             query = query.order('title', { ascending: true });
+        } else if (sort === 'mostViewed') {
+            query = query.order('view_count', { ascending: false });
         } else {
             query = query.order('created_at', { ascending: false });
         }
@@ -130,7 +133,7 @@ export async function GET(request: NextRequest) {
                 category,
                 status,
                 date: formatDisplayDate(post.publish_at || post.created_at),
-                views: '-',
+                views: (post.view_count || 0).toLocaleString(),
                 gradient: gradientForCategory(category),
                 featured_image_url: post.featured_image_url || null,
             };

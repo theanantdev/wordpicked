@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
 
         const { data: article, error } = await supabase
             .from('articles')
-            .select('id, title, subtitle, slug, tags, content, author_name, publish_at, created_at, featured_image_url, category, status')
+            .select('id, title, subtitle, slug, tags, content, author_name, publish_at, created_at, featured_image_url, category, status, view_count')
             .eq('slug', slug)
             .eq('status', 'published')
             .single();
@@ -100,6 +100,7 @@ export async function GET(request: NextRequest) {
                         'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800&auto=format&fit=crop',
                     tags: (article.tags || []).slice(0, 6),
                     blocks,
+                    viewCount: article.view_count || 0,
                 },
                 related,
             },

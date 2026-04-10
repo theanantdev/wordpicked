@@ -1,3 +1,5 @@
+import { Eye } from "lucide-react";
+
 type FilmHeroProps = {
     categoryLabel?: string;
     title?: string;
@@ -5,6 +7,7 @@ type FilmHeroProps = {
     authorName?: string;
     publishDate?: string;
     coverImageUrl?: string;
+    viewCount?: number;
 };
 
 export function FilmHero({
@@ -14,6 +17,7 @@ export function FilmHero({
     authorName = "Editorial Desk",
     publishDate = "Unknown Date",
     coverImageUrl = "/pick-of-the-day/hero.png",
+    viewCount = 0,
 }: FilmHeroProps) {
     return (
         <section className="relative w-full h-[400px] md:h-[472px] overflow-hidden">
@@ -53,6 +57,18 @@ export function FilmHero({
                         <span className="font-heading font-normal text-[12px] md:text-[14px] leading-5 tracking-[1.4px] uppercase text-white/70">PUBLISHED</span>
                         <span className="font-sans text-[14px] md:text-[16px] leading-5 text-white">{publishDate}</span>
                     </div>
+                    {viewCount > 0 && (
+                        <>
+                            <div className="hidden sm:block w-1.5 h-1.5 bg-white/50 rounded-full" />
+                            <div className="flex items-center gap-2">
+                                <span className="font-heading font-normal text-[12px] md:text-[14px] leading-5 tracking-[1.4px] uppercase text-white/70">VIEWS</span>
+                                <span className="font-sans text-[14px] md:text-[16px] leading-5 text-white flex items-center gap-1">
+                                    <Eye className="w-3.5 h-3.5" />
+                                    {viewCount.toLocaleString()}
+                                </span>
+                            </div>
+                        </>
+                    )}
                 </div>
 
             </div>

@@ -3,6 +3,7 @@ import { FilmTrailer } from "../_components/film-trailer";
 import { FilmContent } from "../_components/film-content";
 import { FilmRelated } from "../_components/film-related";
 import { CommentsSection } from "@/app/(public)/_components/comments-section";
+import { ViewTracker } from "@/app/(public)/_components/view-tracker";
 import { headers } from "next/headers";
 
 type PageProps = {
@@ -32,6 +33,7 @@ type ArticleApiResponse = {
                     embed?: string;
                 };
             }>;
+            viewCount: number;
         };
         related: Array<{
             tag: string;
@@ -132,7 +134,9 @@ export default async function FilmEditorialPage({ params }: PageProps) {
                 authorName={data.article.authorName}
                 publishDate={data.article.publishDate}
                 coverImageUrl={data.article.coverImageUrl}
+                viewCount={data.article.viewCount}
             />
+            <ViewTracker articleId={data.article.id} />
 
             <FilmTrailer trailerUrl={trailerUrl} />
             <FilmContent blocks={data.article.blocks} tags={data.article.tags} />
