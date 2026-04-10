@@ -87,7 +87,6 @@ export function AnalyticsChart({ data }: Props) {
                                         color: "#1A1714",
                                     }}
                                     labelStyle={{ color: "#8C857C", marginBottom: "4px" }}
-                                    formatter={(value: number) => [`${value} views`, "Total"]}
                                 />
 
                                 <Line
