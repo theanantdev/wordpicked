@@ -461,7 +461,7 @@ export function StaffManagementClient({ initialStaff }: StaffManagementClientPro
                                             <span
                                                 className={`inline-block px-3 py-1 rounded-full text-xs font-medium bg-[#11412A]/10 text-[#11412A]`}
                                             >
-                                                Website Owner
+                                                Admin
                                             </span>
                                         </div>
                                     </>}
