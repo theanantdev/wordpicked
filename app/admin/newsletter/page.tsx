@@ -57,7 +57,7 @@ export default function NewsletterPage() {
     };
 
     const handleExport = () => {
-        const csvContent = "data:text/csv;charset=utf-8," 
+        const csvContent = "data:text/csv;charset=utf-8,"
             + "Email,Subscribed At\n"
             + subscribers.map(s => `${s.email},${s.created_at}`).join("\n");
         const encodedUri = encodeURI(csvContent);
@@ -68,7 +68,7 @@ export default function NewsletterPage() {
         link.click();
     };
 
-    const filtered = subscribers.filter(s => 
+    const filtered = subscribers.filter(s =>
         s.email.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -80,7 +80,7 @@ export default function NewsletterPage() {
                     <h2 className="font-heading font-bold text-[28px] text-[#1A1714]">Newsletter Subscribers</h2>
                     <p className="text-[13px] text-[#8C857C] mt-1">Manage all email signups from your weekly dispatch.</p>
                 </div>
-                <button 
+                <button
                     onClick={handleExport}
                     className="flex items-center gap-2 bg-[#11412a] text-white text-[11px] font-bold tracking-[0.1em] uppercase px-5 py-2.5 rounded-[2px] transition hover:bg-black"
                 >
@@ -114,7 +114,7 @@ export default function NewsletterPage() {
                 <div className="px-6 py-4 border-b border-[#EDE7D9] bg-[#FAFAFA] flex items-center justify-between">
                     <div className="relative w-full max-w-md">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8C857C]" />
-                        <input 
+                        <input
                             type="text"
                             placeholder="Search subscribers by email..."
                             value={search}
@@ -153,7 +153,7 @@ export default function NewsletterPage() {
                                             })}
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <button 
+                                            <button
                                                 onClick={() => handleDelete(subscriber.id, subscriber.email)}
                                                 className="opacity-0 group-hover:opacity-100 transition-all p-2 text-[#8C857C] hover:text-[#DC2828] hover:bg-[#DC2828]/5 rounded-full"
                                                 title="Remove Subscriber"
