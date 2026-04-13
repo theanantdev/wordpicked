@@ -9,11 +9,15 @@ type EditorInstance = any;
 interface EditorProps {
     onContentChange?: (content: OutputData) => void;
     initialContent?: OutputData;
+    onEditorReady?: (getContent: () => Promise<OutputData>) => void;
+    onImageUploadStateChange?: (isUploading: boolean) => void;
 }
 
-const Editor = ({ onContentChange, initialContent }: EditorProps) => {
+const Editor = ({ onContentChange, initialContent, onEditorReady, onImageUploadStateChange }: EditorProps) => {
     const ejInstance = useRef<EditorInstance>(null);
+    const imageInputRef = useRef<HTMLInputElement>(null);
     const isReady = useRef(false);
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [, setRefreshCounter] = useState(0);
 
     const updateStats = useCallback((content: OutputData) => {
@@ -33,6 +37,26 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
             onContentChange?.(content);
         }
     }, [onContentChange]);
+
+    const syncEditorContent = useCallback(async () => {
+        if (!ejInstance.current?.save) return;
+        try {
+            const content = await ejInstance.current.save();
+            updateStats(content);
+        } catch (error) {
+            console.error('Failed to sync editor content:', error);
+        }
+    }, [updateStats]);
+
+    const getContent = useCallback(async (): Promise<OutputData> => {
+        if (!ejInstance.current?.save) {
+            return initialContent || { blocks: [], version: '' };
+        }
+
+        const content = await ejInstance.current.save();
+        updateStats(content);
+        return content;
+    }, [initialContent, updateStats]);
 
     const uploadImageToCloudinary = useCallback(async (file: File) => {
         const signRes = await fetch('/api/cloudinary/signature', {
@@ -69,6 +93,24 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
         return uploadData.secure_url as string;
     }, []);
 
+    const uploadImageByUrlToCloudinary = useCallback(async (url: string) => {
+        const normalizedUrl = url.trim();
+        if (!normalizedUrl) {
+            throw new Error('Image URL is required.');
+        }
+
+        const remoteRes = await fetch(normalizedUrl);
+        if (!remoteRes.ok) {
+            throw new Error('Unable to fetch image from URL.');
+        }
+
+        const blob = await remoteRes.blob();
+        const mime = blob.type || 'image/jpeg';
+        const extension = mime.split('/')[1] || 'jpg';
+        const file = new File([blob], `remote-image.${extension}`, { type: mime });
+        return uploadImageToCloudinary(file);
+    }, [uploadImageToCloudinary]);
+
     const handleInsertBlock = useCallback((type: string, config?: unknown) => {
         if (!ejInstance.current?.blocks) return;
 
@@ -96,6 +138,32 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
 
     const handleInlineFormat = useCallback((command: string, value?: string) => {
         document.execCommand(command, false, value);
+    }, []);
+
+    const handleToolbarImageUpload = useCallback(async (file: File) => {
+        if (!ejInstance.current?.blocks) return;
+
+        setIsUploadingImage(true);
+        try {
+            const imageUrl = await uploadImageToCloudinary(file);
+            ejInstance.current.blocks.insert('image', {
+                file: { url: imageUrl },
+                caption: '',
+                withBorder: false,
+                withBackground: false,
+                stretched: false,
+            });
+            await syncEditorContent();
+        } catch (error) {
+            console.error('Image upload failed:', error);
+            alert(error instanceof Error ? error.message : 'Failed to upload image.');
+        } finally {
+            setIsUploadingImage(false);
+        }
+    }, [uploadImageToCloudinary, syncEditorContent]);
+
+    const triggerImagePicker = useCallback(() => {
+        imageInputRef.current?.click();
     }, []);
 
     const initEditor = useCallback(async () => {
@@ -157,12 +225,15 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
                                     },
                                 };
                             },
-                            uploadByUrl: async (url: string) => ({
-                                success: 1,
-                                file: {
-                                    url,
-                                },
-                            }),
+                            uploadByUrl: async (url: string) => {
+                                const imageUrl = await uploadImageByUrlToCloudinary(url);
+                                return {
+                                    success: 1,
+                                    file: {
+                                        url: imageUrl,
+                                    },
+                                };
+                            },
                         }
                     }
                 },
@@ -189,7 +260,7 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
-    }, [initialContent, updateStats, uploadImageToCloudinary]);
+    }, [initialContent, updateStats, uploadImageToCloudinary, uploadImageByUrlToCloudinary]);
 
     useEffect(() => {
         // Only initialize if it hasn't been already and isn't currently initializing
@@ -212,42 +283,18 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
         };
     }, [initEditor]);
 
+    useEffect(() => {
+        onEditorReady?.(getContent);
+    }, [getContent, onEditorReady]);
+
+    useEffect(() => {
+        onImageUploadStateChange?.(isUploadingImage);
+    }, [isUploadingImage, onImageUploadStateChange]);
+
     return (
         <div className="flex flex-col h-full relative bg-linear-to-b from-white to-gray-50">
 
-            {/* Stats Bar */}
-            {/* <div className="flex flex-wrap items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-gray-50 border-b border-slate-200 gap-3">
-                <div className="flex items-center gap-6 text-sm">
-                    <div className="flex items-center gap-1.5">
-                        <span className="text-gray-500 font-medium">Words:</span>
-                        <span className="font-bold text-slate-900 bg-blue-50 px-2.5 py-0.5  text-blue-700">{wordCount}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <span className="text-gray-500 font-medium">Characters:</span>
-                        <span className="font-bold text-slate-900 bg-purple-50 px-2.5 py-0.5  text-purple-700">{characterCount}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <span className="text-gray-500 font-medium">Read Time:</span>
-                        <span className="font-bold text-slate-900 bg-amber-50 px-2.5 py-0.5  text-amber-700">{readTime} min</span>
-                    </div>
-                </div>
-                <button
-                    onClick={() => setIsPreview(!isPreview)}
-                    className="flex items-center gap-1.5 px-3 py-1.5  hover:bg-gray-200 transition-colors text-gray-600 font-medium text-sm"
-                >
-                    {isPreview ? (
-                        <>
-                            <Eye className="w-4 h-4" />
-                            Preview
-                        </>
-                    ) : (
-                        <>
-                            <EyeOff className="w-4 h-4" />
-                            Hide
-                        </>
-                    )}
-                </button>
-            </div> */}
+
 
             {/* Main Toolbar */}
             <div className="flex items-center flex-row overflow-x-auto gap-2 px-4 py-3 bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
@@ -290,13 +337,26 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
                         <LinkIcon className="w-4 h-4" />
                     </button>
 
-                    <button onClick={() => {
-                        const url = prompt('Paste image URL:');
-                        if (!url) return;
-                        if (ejInstance.current?.blocks) {
-                            ejInstance.current.blocks.insert('image', { file: { url } });
-                        }
-                    }} title="Insert Image" className="w-8 h-8 flex items-center justify-center  hover:bg-white text-slate-600 transition-colors hover:text-blue-600">
+                    <input
+                        ref={imageInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                void handleToolbarImageUpload(file);
+                            }
+                            e.currentTarget.value = '';
+                        }}
+                    />
+
+                    <button
+                        onClick={triggerImagePicker}
+                        disabled={isUploadingImage}
+                        title={isUploadingImage ? 'Uploading image...' : 'Insert Image'}
+                        className="w-8 h-8 flex items-center justify-center hover:bg-white text-slate-600 transition-colors hover:text-blue-600 disabled:opacity-50"
+                    >
                         <ImageIcon className="w-4 h-4" />
                     </button>
 

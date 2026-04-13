@@ -2,7 +2,7 @@
 import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle } from "lucide-react";
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from 'next/navigation';
 import type { OutputData } from "@editorjs/editorjs";
 
@@ -24,6 +24,7 @@ const Editor = dynamic(() => import('@/components/editor'), {
 
 export default function NewPostPage() {
     const searchParams = useSearchParams();
+    const editorGetContentRef = useRef<null | (() => Promise<OutputData>)>(null);
     const [isSaved, setIsSaved] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
     const [title, setTitle] = useState("");
@@ -41,6 +42,7 @@ export default function NewPostPage() {
     const [featuredImageUrl, setFeaturedImageUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isEditorUploadingImage, setIsEditorUploadingImage] = useState(false);
 
     useEffect(() => {
         const incomingCategory = (searchParams.get('category') || '').toLowerCase();
@@ -61,7 +63,7 @@ export default function NewPostPage() {
         }
     }, [category, subcategory]);
 
-    const createArticleRequest = async (status: 'draft' | 'published') => {
+    const createArticleRequest = async (status: 'draft' | 'published', contentPayload: OutputData) => {
         const response = await fetch('/api/articles', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -71,7 +73,7 @@ export default function NewPostPage() {
                 category,
                 subcategory,
                 tags: Array.from(new Set([subcategory, ...tags].filter(Boolean))),
-                content: editorContent,
+                content: contentPayload,
                 featuredImageUrl: featuredImageUrl || null,
                 isPickOfTheDay,
                 status,
@@ -86,12 +88,28 @@ export default function NewPostPage() {
     const persistArticle = async (status: 'draft' | 'published') => {
         setErrorMessage('');
 
+        if (isEditorUploadingImage) {
+            setErrorMessage('Image upload is in progress. Please wait, then try again.');
+            return;
+        }
+
+        let latestEditorContent = editorContent;
+        if (editorGetContentRef.current) {
+            try {
+                latestEditorContent = await editorGetContentRef.current();
+                setEditorContent(latestEditorContent);
+            } catch (error) {
+                setErrorMessage(error instanceof Error ? error.message : 'Failed to sync editor content.');
+                return;
+            }
+        }
+
         if (!title.trim()) {
             setErrorMessage('Article title is required.');
             return;
         }
 
-        if (!editorContent.blocks?.length) {
+        if (!latestEditorContent.blocks?.length) {
             setErrorMessage('Article content is required.');
             return;
         }
@@ -99,7 +117,7 @@ export default function NewPostPage() {
         setIsSubmitting(true);
 
         try {
-            const { response, data } = await createArticleRequest(status);
+            const { response, data } = await createArticleRequest(status, latestEditorContent);
 
             if (!response.ok || !data.success) {
                 throw new Error(data.error || 'Failed to save article.');
@@ -278,7 +296,13 @@ export default function NewPostPage() {
                             </div>
 
                             {/* Editor Component */}
-                            <Editor onContentChange={setEditorContent} />
+                            <Editor
+                                onContentChange={setEditorContent}
+                                onEditorReady={(getContent) => {
+                                    editorGetContentRef.current = getContent;
+                                }}
+                                onImageUploadStateChange={setIsEditorUploadingImage}
+                            />
                         </div>
                     </div>
 

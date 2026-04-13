@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 type ContentBlock = {
@@ -10,6 +11,13 @@ type ContentBlock = {
         source?: string;
         embed?: string;
         service?: string;
+        file?: {
+            url?: string;
+        };
+        url?: string;
+        image?: {
+            url?: string;
+        };
     };
 };
 
@@ -148,6 +156,15 @@ function LinkPreview({ url }: { url: string }) {
     );
 }
 
+function getImageUrl(block: ContentBlock) {
+    return (
+        block.data?.file?.url ||
+        block.data?.image?.url ||
+        block.data?.url ||
+        ""
+    );
+}
+
 export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
     const safeBlocks = blocks.length > 0 ? blocks : [{ type: "paragraph", data: { text: "Article content is currently unavailable." } }];
     const renderedPreviewUrls = new Set<string>();
@@ -202,6 +219,37 @@ export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
                                 </blockquote>
                                 {renderUniquePreviews(urls, `quote-preview-${index}`)}
                             </div>
+                        );
+                    }
+
+                    if (block.type === "image") {
+                        const imageUrl = getImageUrl(block);
+                        const caption = normalizeText(block.data?.caption);
+
+                        if (!imageUrl) {
+                            return null;
+                        }
+
+                        return (
+                            <figure key={`image-${index}`} className="my-6 space-y-3">
+                                <div className="overflow-hidden border border-[#DCD6CC] bg-[#F7F3EC]">
+                                    <Image
+                                        src={imageUrl}
+                                        alt={caption || "Article image"}
+                                        width={1200}
+                                        height={800}
+                                        unoptimized
+                                        className="w-full h-auto object-cover"
+                                        style={{ width: '100%', height: 'auto' }}
+                                    />
+                                </div>
+                                {caption ? (
+                                    <figcaption className="text-[13px] leading-[1.6] text-[#6B6258] italic text-center">
+                                        {caption}
+                                    </figcaption>
+                                ) : null}
+                                {renderUniquePreviews(extractUrls(imageUrl), `image-preview-${index}`)}
+                            </figure>
                         );
                     }
 
