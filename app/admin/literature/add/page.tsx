@@ -438,15 +438,13 @@ export default function NewPostPage() {
                     </div>
 
                     <div className="hidden sm:flex flex-row gap-2 w-full sm:w-auto">
-                        <button onClick={() => void persistArticle("draft")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-4 py-2.5 font-medium text-sm transition-all duration-200 ${
-                            isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-[#EDE7D9]"
-                        }`}>
+                        <button onClick={() => void persistArticle("draft")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-4 py-2.5 font-medium text-sm transition-all duration-200 ${isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-[#EDE7D9]"
+                            }`}>
                             {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Save className="w-4 h-4 shrink-0" />}
                             {isSubmitting ? "Saving..." : "Save Draft"}
                         </button>
-                        <button onClick={() => void persistArticle("published")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-6 py-2.5 font-medium text-sm transition-all duration-200 ${
-                            isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:bg-[#D4A857]"
-                        }`}>
+                        <button onClick={() => void persistArticle("published")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-6 py-2.5 font-medium text-sm transition-all duration-200 ${isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:bg-[#D4A857]"
+                            }`}>
                             {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
                             {isSubmitting ? "Processing..." : articleId ? "Update" : "Publish"}
                         </button>
@@ -594,15 +592,13 @@ export default function NewPostPage() {
                         </div>
 
                         <div className="sm:hidden flex flex-col gap-2 w-full">
-                            <button onClick={() => void persistArticle("draft")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-3 py-2.5 font-medium text-sm transition-all duration-200 ${
-                                isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-[#EDE7D9]"
-                            }`}>
+                            <button onClick={() => void persistArticle("draft")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-3 py-2.5 font-medium text-sm transition-all duration-200 ${isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-[#EDE7D9]"
+                                }`}>
                                 {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Save className="w-4 h-4 shrink-0" />}
                                 {isSubmitting ? "Saving..." : "Save Draft"}
                             </button>
-                            <button onClick={() => void persistArticle("published")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-4 py-2.5 font-medium text-sm transition-all duration-200 ${
-                                isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:bg-[#D4A857]"
-                            }`}>
+                            <button onClick={() => void persistArticle("published")} disabled={isSubmitting || isLoadingArticle} className={`flex items-center justify-center gap-2 px-4 py-2.5 font-medium text-sm transition-all duration-200 ${isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:bg-[#D4A857]"
+                                }`}>
                                 {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
                                 {isSubmitting ? "Processing..." : articleId ? "Update" : "Publish"}
                             </button>

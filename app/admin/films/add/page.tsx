@@ -312,9 +312,8 @@ export default function NewPostPage() {
                         <button
                             onClick={handleSaveDraft}
                             disabled={isSubmitting}
-                            className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
-                                isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-slate-50 hover:shadow-md"
-                            } active:scale-95`}
+                            className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-slate-50 hover:shadow-md"
+                                } active:scale-95`}
                         >
                             {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Save className="w-4 h-4 shrink-0" />}
                             <span className="hidden sm:inline">{isSubmitting ? "Saving..." : "Save Draft"}</span>
@@ -323,9 +322,8 @@ export default function NewPostPage() {
                         <button
                             onClick={handlePublish}
                             disabled={isSubmitting}
-                            className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
-                                isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:shadow-lg"
-                            } transform hover:scale-105 active:scale-95`}
+                            className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:shadow-lg"
+                                } transform hover:scale-105 active:scale-95`}
                         >
                             {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
                             <span>{isSubmitting ? "Processing..." : "Publish"}</span>
@@ -572,9 +570,8 @@ export default function NewPostPage() {
                             <button
                                 onClick={handleSaveDraft}
                                 disabled={isSubmitting}
-                                className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
-                                    isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-slate-50 hover:shadow-md"
-                                } active:scale-95`}
+                                className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-slate-50 hover:shadow-md"
+                                    } active:scale-95`}
                             >
                                 {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Save className="w-4 h-4 shrink-0" />}
                                 <span className="hidden sm:inline">{isSubmitting ? "Saving..." : "Save Draft"}</span>
@@ -583,9 +580,8 @@ export default function NewPostPage() {
                             <button
                                 onClick={handlePublish}
                                 disabled={isSubmitting}
-                                className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
-                                    isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:shadow-lg"
-                                } transform hover:scale-105 active:scale-95`}
+                                className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:shadow-lg"
+                                    } transform hover:scale-105 active:scale-95`}
                             >
                                 {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
                                 <span>{isSubmitting ? "Processing..." : "Publish"}</span>
