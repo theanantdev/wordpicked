@@ -2,7 +2,7 @@
 
 import type { Editor } from "@tiptap/react"
 import { useCurrentEditor, useEditorState } from "@tiptap/react"
-import { useEffect, useState } from "react"
+import { useCallback, useSyncExternalStore } from "react"
 
 function getActivePageEditor(editor: Editor): Editor | null {
   const storage = editor.storage as unknown as Record<string, unknown>
@@ -19,38 +19,32 @@ export function useTiptapEditor(providedEditor?: Editor | null): {
   const { editor: coreEditor } = useCurrentEditor()
   const mainEditor = providedEditor ?? coreEditor
 
-  const [storageEditor, setStorageEditor] = useState<Editor | null>(null)
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      if (!mainEditor) return () => { }
 
-  useEffect(() => {
-    if (!mainEditor) {
-      setStorageEditor(null)
-      return
-    }
+      const notify = () => onStoreChange()
 
-    const updateHandler = () =>
-      setStorageEditor(getActivePageEditor(mainEditor))
+      mainEditor.on("update", notify)
+      mainEditor.on("selectionUpdate", notify)
+      mainEditor.on("transaction", notify)
+      mainEditor.on("destroy", notify)
 
-    updateHandler()
+      return () => {
+        mainEditor.off("update", notify)
+        mainEditor.off("selectionUpdate", notify)
+        mainEditor.off("transaction", notify)
+        mainEditor.off("destroy", notify)
+      }
+    },
+    [mainEditor]
+  )
 
-    mainEditor.on("update", updateHandler)
-    mainEditor.on("selectionUpdate", updateHandler)
-
-    return () => {
-      mainEditor.off("update", updateHandler)
-      mainEditor.off("selectionUpdate", updateHandler)
-    }
-  }, [mainEditor])
-
-  useEffect(() => {
-    if (!storageEditor) return
-
-    const handleDestroy = () => setStorageEditor(null)
-
-    storageEditor.on("destroy", handleDestroy)
-    return () => {
-      storageEditor.off("destroy", handleDestroy)
-    }
-  }, [storageEditor])
+  const storageEditor = useSyncExternalStore(
+    subscribe,
+    () => (mainEditor ? getActivePageEditor(mainEditor) : null),
+    () => null
+  )
 
   const editorState = useEditorState({
     editor: storageEditor ?? mainEditor,

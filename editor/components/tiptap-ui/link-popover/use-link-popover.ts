@@ -114,17 +114,6 @@ export function useLinkHandler(props: LinkHandlerProps) {
   useEffect(() => {
     if (!editor) return
 
-    // Get URL immediately on mount
-    const { href } = editor.getAttributes("link")
-
-    if (isLinkActive(editor) && url === null) {
-      setUrl(href || "")
-    }
-  }, [editor, url])
-
-  useEffect(() => {
-    if (!editor) return
-
     const updateLinkState = () => {
       const { href } = editor.getAttributes("link")
       setUrl(href || "")
@@ -171,18 +160,30 @@ export function useLinkHandler(props: LinkHandlerProps) {
 
   const openLink = useCallback(
     (target: string = "_blank", features: string = "noopener,noreferrer") => {
-      if (!url) return
+      const currentUrl =
+        url ??
+        (editor && isLinkActive(editor)
+          ? String(editor.getAttributes("link").href || "")
+          : "")
 
-      const safeUrl = sanitizeUrl(url, window.location.href)
+      if (!currentUrl) return
+
+      const safeUrl = sanitizeUrl(currentUrl, window.location.href)
       if (safeUrl !== "#") {
         window.open(safeUrl, target, features)
       }
     },
-    [url]
+    [editor, url]
   )
 
+  const resolvedUrl =
+    url ??
+    (editor && isLinkActive(editor)
+      ? String(editor.getAttributes("link").href || "")
+      : "")
+
   return {
-    url: url || "",
+    url: resolvedUrl,
     setUrl,
     setLink,
     removeLink,
@@ -201,29 +202,10 @@ export function useLinkState(props: {
 
   const canSet = canSetLink(editor)
   const isActive = isLinkActive(editor)
-
-  const [isVisible, setIsVisible] = useState(true)
-
-  useEffect(() => {
-    if (!editor) return
-
-    const handleSelectionUpdate = () => {
-      setIsVisible(
-        shouldShowLinkButton({
-          editor,
-          hideWhenUnavailable,
-        })
-      )
-    }
-
-    handleSelectionUpdate()
-
-    editor.on("selectionUpdate", handleSelectionUpdate)
-
-    return () => {
-      editor.off("selectionUpdate", handleSelectionUpdate)
-    }
-  }, [editor, hideWhenUnavailable])
+  const isVisible = shouldShowLinkButton({
+    editor,
+    hideWhenUnavailable,
+  })
 
   return {
     isVisible,

@@ -1,7 +1,7 @@
 "use client"
 
 import type { Editor } from "@tiptap/react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Orientation = "horizontal" | "vertical" | "both"
 
@@ -64,6 +64,7 @@ export function useMenuNavigation<T>({
   const [selectedIndex, setSelectedIndex] = useState<number>(
     autoSelectFirstItem ? 0 : -1
   )
+  const lastQueryRef = useRef<string | undefined>(query)
 
   useEffect(() => {
     const handleKeyboardNavigation = (event: KeyboardEvent) => {
@@ -184,9 +185,16 @@ export function useMenuNavigation<T>({
   ])
 
   useEffect(() => {
-    if (query) {
+    if (query === lastQueryRef.current) return
+    lastQueryRef.current = query
+
+    if (!query) return
+
+    const timer = window.setTimeout(() => {
       setSelectedIndex(autoSelectFirstItem ? 0 : -1)
-    }
+    }, 0)
+
+    return () => window.clearTimeout(timer)
   }, [query, autoSelectFirstItem])
 
   return {

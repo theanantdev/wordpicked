@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMemo, useSyncExternalStore } from "react"
 
 type BreakpointMode = "min" | "max"
 
@@ -14,24 +14,28 @@ export function useIsBreakpoint(
   mode: BreakpointMode = "max",
   breakpoint = 768
 ) {
-  const [matches, setMatches] = useState<boolean | undefined>(undefined)
-
-  useEffect(() => {
-    const query =
+  const query = useMemo(
+    () =>
       mode === "min"
         ? `(min-width: ${breakpoint}px)`
-        : `(max-width: ${breakpoint - 1}px)`
+        : `(max-width: ${breakpoint - 1}px)`,
+    [mode, breakpoint]
+  )
 
-    const mql = window.matchMedia(query)
-    const onChange = (e: MediaQueryListEvent) => setMatches(e.matches)
+  const matches = useSyncExternalStore(
+    (onStoreChange) => {
+      if (typeof window === "undefined") return () => { }
+      const mql = window.matchMedia(query)
+      const handleChange = () => onStoreChange()
+      mql.addEventListener("change", handleChange)
+      return () => mql.removeEventListener("change", handleChange)
+    },
+    () => {
+      if (typeof window === "undefined") return false
+      return window.matchMedia(query).matches
+    },
+    () => false
+  )
 
-    // Set initial value
-    setMatches(mql.matches)
-
-    // Add listener
-    mql.addEventListener("change", onChange)
-    return () => mql.removeEventListener("change", onChange)
-  }, [mode, breakpoint])
-
-  return !!matches
+  return matches
 }
