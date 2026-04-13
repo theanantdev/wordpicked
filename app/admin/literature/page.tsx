@@ -307,7 +307,7 @@ export default function PostsPage() {
 
                                     <td className="py-4 px-5 align-middle">
                                         <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">Edit</button>
+                                            <Link href={`/admin/literature/add?id=${encodeURIComponent(post.id)}`} className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">Edit</Link>
                                             <button className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">Preview</button>
                                             <button className="text-[11px] font-medium text-[#B5542A] bg-white border border-[#B5542A]/30 px-2.5 py-1 rounded-[2px] hover:bg-[#B5542A]/10">Delete</button>
                                         </div>

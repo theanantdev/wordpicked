@@ -55,8 +55,8 @@ body,
 }
 
 .simple-editor-wrapper {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 420px;
   overflow: auto;
 }
 
@@ -68,6 +68,11 @@ body,
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+.editor-full-width .simple-editor-content {
+  max-width: none;
+  margin: 0;
 }
 
 .simple-editor-content .tiptap.ProseMirror.simple-editor {

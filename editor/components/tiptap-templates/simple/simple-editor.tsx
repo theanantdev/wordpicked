@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react"
+import type { JSONContent } from "@tiptap/core"
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit"
@@ -74,6 +75,21 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/editor/lib/tiptap-utils"
 import "@/editor/components/tiptap-templates/simple/simple-editor.scss"
 
 import content from "@/editor/components/tiptap-templates/simple/data/content.json"
+
+type UploadHandler = (
+  file: File,
+  onProgress?: (event: { progress: number }) => void,
+  abortSignal?: AbortSignal
+) => Promise<string>
+
+type SimpleEditorProps = {
+  initialContent?: JSONContent
+  onContentChange?: (content: JSONContent) => void
+  onEditorReady?: (getter: () => Promise<JSONContent>) => void
+  onImageUpload?: UploadHandler
+  onImageUploadStateChange?: (isUploading: boolean) => void
+  className?: string
+}
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -183,13 +199,33 @@ const MobileToolbarContent = ({
   </>
 )
 
-export function SimpleEditor() {
+export function SimpleEditor({
+  initialContent,
+  onContentChange,
+  onEditorReady,
+  onImageUpload,
+  onImageUploadStateChange,
+  className,
+}: SimpleEditorProps) {
   const isMobile = useIsBreakpoint()
   const { height } = useWindowSize()
   const [mobileView, setMobileView] = useState<"main" | "highlighter" | "link">(
     "main"
   )
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
   const toolbarRef = useRef<HTMLDivElement>(null)
+  const lastAppliedInitialContent = useRef<string | null>(null)
+
+  const uploadHandler: UploadHandler = async (file, onProgress, abortSignal) => {
+    setIsUploadingImage(true)
+    try {
+      const uploader = onImageUpload || handleImageUpload
+      const uploadedUrl = await uploader(file, onProgress, abortSignal)
+      return uploadedUrl
+    } finally {
+      setIsUploadingImage(false)
+    }
+  }
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -224,11 +260,14 @@ export function SimpleEditor() {
         accept: "image/*",
         maxSize: MAX_FILE_SIZE,
         limit: 3,
-        upload: handleImageUpload,
+        upload: uploadHandler,
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content,
+    content: initialContent || (content as JSONContent),
+    onUpdate: ({ editor: currentEditor }) => {
+      onContentChange?.(currentEditor.getJSON())
+    },
   })
 
   const rect = useCursorVisibility({
@@ -242,17 +281,35 @@ export function SimpleEditor() {
     }
   }, [isMobile, mobileView])
 
-  const handleLogContent = () => {
-    if (!editor) {
-      console.warn("Editor is not ready yet")
+  useEffect(() => {
+    if (!editor || !initialContent) return
+
+    const nextContent = JSON.stringify(initialContent)
+    const currentContent = JSON.stringify(editor.getJSON())
+
+    if (
+      nextContent === currentContent ||
+      nextContent === lastAppliedInitialContent.current
+    ) {
       return
     }
 
-    console.log("Editor content:", editor.getJSON())
-  }
+    lastAppliedInitialContent.current = nextContent
+    editor.commands.setContent(initialContent, { emitUpdate: false })
+  }, [editor, initialContent])
+
+  useEffect(() => {
+    if (!editor || !onEditorReady) return
+    onEditorReady(async () => editor.getJSON())
+  }, [editor, onEditorReady])
+
+  useEffect(() => {
+    onImageUploadStateChange?.(isUploadingImage)
+  }, [isUploadingImage, onImageUploadStateChange])
+
 
   return (
-    <div className="simple-editor-wrapper">
+    <div className={`simple-editor-wrapper border border-zinc-300 ${className || ""}`}>
       <EditorContext.Provider value={{ editor }}>
         <Toolbar
           ref={toolbarRef}
@@ -283,12 +340,6 @@ export function SimpleEditor() {
           role="presentation"
           className="simple-editor-content"
         />
-
-        <div style={{ marginTop: "12px" }}>
-          <Button onClick={handleLogContent} disabled={!editor}>
-            Log editor content
-          </Button>
-        </div>
       </EditorContext.Provider>
 
     </div>

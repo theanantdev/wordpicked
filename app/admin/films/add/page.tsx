@@ -1,10 +1,29 @@
 "use client"
 import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle } from "lucide-react";
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useEffect, useState } from "react";
 import { useSearchParams } from 'next/navigation';
-import type { OutputData } from "@editorjs/editorjs";
+import type { JSONContent } from "@tiptap/core";
+import { SimpleEditor } from "@/editor/components/tiptap-templates/simple/simple-editor";
+
+type ArticleBlock = {
+    id?: string;
+    type: string;
+    data: Record<string, unknown>;
+};
+
+type ArticleContent = {
+    time?: number;
+    version?: string;
+    blocks: ArticleBlock[];
+};
+
+type TiptapNode = {
+    type?: string;
+    text?: string;
+    attrs?: Record<string, unknown>;
+    content?: TiptapNode[];
+};
 
 const SUBCATEGORY_OPTIONS: Record<string, string[]> = {
     literature: ["Poetry", "Novels", "Essays", "Short Stories", "Criticism"],
@@ -12,15 +31,77 @@ const SUBCATEGORY_OPTIONS: Record<string, string[]> = {
     artists: ["Profiles", "Exhibitions", "Interviews", "Techniques", "Awards"],
 };
 
-const Editor = dynamic(() => import('@/components/editor'), {
-    ssr: false,
-    loading: () => <div className="flex items-center justify-center h-96 bg-linear-to-br from-gray-50 to-gray-100 ">
-        <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading advanced editor...</p>
-        </div>
-    </div>
-});
+function extractText(node?: TiptapNode): string {
+    if (!node) return "";
+    if (typeof node.text === "string") return node.text;
+    return (node.content || [])
+        .map((child) => extractText(child))
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function tiptapToArticleContent(doc: JSONContent): ArticleContent {
+    const nodes = Array.isArray(doc?.content) ? (doc.content as TiptapNode[]) : [];
+    const blocks: ArticleContent["blocks"] = [];
+
+    for (const node of nodes) {
+        if (!node?.type) continue;
+
+        if (node.type === "heading") {
+            blocks.push({
+                id: crypto.randomUUID(),
+                type: "header",
+                data: { text: extractText(node), level: Number(node.attrs?.level || 2) },
+            });
+            continue;
+        }
+
+        if (node.type === "bulletList" || node.type === "orderedList") {
+            const items = (node.content || []).map((item) => extractText(item)).filter(Boolean);
+            blocks.push({
+                id: crypto.randomUUID(),
+                type: "list",
+                data: { style: node.type === "orderedList" ? "ordered" : "unordered", items },
+            });
+            continue;
+        }
+
+        if (node.type === "blockquote") {
+            blocks.push({
+                id: crypto.randomUUID(),
+                type: "quote",
+                data: { text: extractText(node), caption: "" },
+            });
+            continue;
+        }
+
+        if (node.type === "image") {
+            const src = typeof node.attrs?.src === "string" ? node.attrs.src : "";
+            const caption = typeof node.attrs?.title === "string" ? node.attrs.title : "";
+            if (src) {
+                blocks.push({
+                    id: crypto.randomUUID(),
+                    type: "image",
+                    data: {
+                        file: { url: src },
+                        caption,
+                        withBorder: false,
+                        withBackground: false,
+                        stretched: false,
+                    },
+                });
+            }
+            continue;
+        }
+
+        if (node.type === "paragraph") {
+            blocks.push({ id: crypto.randomUUID(), type: "paragraph", data: { text: extractText(node) } });
+        }
+    }
+
+    return { time: Date.now(), version: "2.30.0", blocks };
+}
 
 export default function NewPostPage() {
     const searchParams = useSearchParams();
@@ -36,7 +117,7 @@ export default function NewPostPage() {
     const [schedule, setSchedule] = useState(false);
     const [publishDate, setPublishDate] = useState("2026-04-30T09:00");
     const [showAdvanced, setShowAdvanced] = useState(false);
-    const [editorContent, setEditorContent] = useState<OutputData>({ blocks: [], version: '' });
+    const [editorJson, setEditorJson] = useState<JSONContent>({ type: "doc", content: [{ type: "paragraph" }] });
     const [featuredImageUrl, setFeaturedImageUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,7 +151,7 @@ export default function NewPostPage() {
                 category,
                 subcategory,
                 tags: Array.from(new Set([subcategory, ...tags].filter(Boolean))),
-                content: editorContent,
+                content: tiptapToArticleContent(editorJson),
                 featuredImageUrl: featuredImageUrl || null,
                 status,
                 publishAt: schedule ? publishDate : null,
@@ -89,7 +170,9 @@ export default function NewPostPage() {
             return;
         }
 
-        if (!editorContent.blocks?.length) {
+        const contentPayload = tiptapToArticleContent(editorJson);
+
+        if (!contentPayload.blocks?.length) {
             setErrorMessage('Article content is required.');
             return;
         }
@@ -276,7 +359,10 @@ export default function NewPostPage() {
                             </div>
 
                             {/* Editor Component */}
-                            <Editor onContentChange={setEditorContent} />
+                            <SimpleEditor
+                                className="w-full max-w-none border-0 editor-full-width"
+                                onContentChange={setEditorJson}
+                            />
                         </div>
                     </div>
 
