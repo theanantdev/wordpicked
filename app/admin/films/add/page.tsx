@@ -41,6 +41,65 @@ function extractText(node?: TiptapNode): string {
         .trim();
 }
 
+function stripHtml(html: string): string {
+    return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function outputDataToTiptap(content: ArticleContent): JSONContent {
+    const blocks = content.blocks || [];
+
+    const docContent: JSONContent[] = blocks.map((block) => {
+        if (block.type === "header") {
+            const data = block.data as { text?: string; level?: number };
+            const level = Number(data?.level || 2);
+            const text = String(data?.text || "");
+            return { type: "heading", attrs: { level }, content: text ? [{ type: "text", text }] : [] };
+        }
+
+        if (block.type === "list") {
+            const data = block.data as { style?: string; items?: string[] };
+            const items = (data?.items || []).filter(Boolean);
+            const listType = data?.style === "ordered" ? "orderedList" : "bulletList";
+            return {
+                type: listType,
+                content: items.map((item) => ({
+                    type: "listItem",
+                    content: [{ type: "paragraph", content: [{ type: "text", text: item }] }],
+                })),
+            };
+        }
+
+        if (block.type === "quote") {
+            const data = block.data as { text?: string };
+            const text = String(data?.text || "");
+            return { type: "blockquote", content: [{ type: "paragraph", content: text ? [{ type: "text", text }] : [] }] };
+        }
+
+        if (block.type === "image") {
+            const data = block.data as { file?: { url?: string }; url?: string; caption?: string };
+            const src = data?.file?.url || data?.url || "";
+            if (!src) return { type: "paragraph" };
+            const caption = String(data?.caption || "");
+            return { type: "image", attrs: { src, alt: caption, title: caption } };
+        }
+
+        if (block.type === "raw") {
+            const data = block.data as { html?: string };
+            const text = stripHtml(String(data?.html || ""));
+            return { type: "codeBlock", content: text ? [{ type: "text", text }] : [] };
+        }
+
+        if (block.type === "delimiter") {
+            return { type: "horizontalRule" };
+        }
+
+        const text = String((block.data as { text?: string })?.text || "");
+        return { type: "paragraph", content: text ? [{ type: "text", text }] : [] };
+    });
+
+    return { type: "doc", content: docContent.length ? docContent : [{ type: "paragraph" }] };
+}
+
 function tiptapToArticleContent(doc: JSONContent): ArticleContent {
     const nodes = Array.isArray(doc?.content) ? (doc.content as TiptapNode[]) : [];
     const blocks: ArticleContent["blocks"] = [];
@@ -106,6 +165,7 @@ function tiptapToArticleContent(doc: JSONContent): ArticleContent {
 export default function NewPostPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const articleId = searchParams.get('id');
     const [isSaved, setIsSaved] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
     const [title, setTitle] = useState("");
@@ -122,6 +182,8 @@ export default function NewPostPage() {
     const [featuredImageUrl, setFeaturedImageUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoadingArticle, setIsLoadingArticle] = useState(false);
+    const [isEditorUploadingImage, setIsEditorUploadingImage] = useState(false);
 
     useEffect(() => {
         const incomingCategory = (searchParams.get('category') || '').toLowerCase();
@@ -142,9 +204,52 @@ export default function NewPostPage() {
         }
     }, [category, subcategory]);
 
+    useEffect(() => {
+        if (!articleId) return;
+
+        let cancelled = false;
+        setIsLoadingArticle(true);
+
+        (async () => {
+            try {
+                const res = await fetch(`/api/articles?id=${encodeURIComponent(articleId)}`, { cache: 'no-store' });
+                const data = await res.json();
+
+                if (!res.ok || !data.success || !data.data) {
+                    throw new Error(data.error || 'Failed to load article for editing.');
+                }
+
+                if (cancelled) return;
+
+                const article = data.data;
+                setTitle(article.title || '');
+                setSubtitle(article.subtitle || '');
+                setCategory(article.category || 'films');
+                setSubcategory(article.subcategory || SUBCATEGORY_OPTIONS.films[0]);
+                setTags(Array.isArray(article.tags) ? article.tags : []);
+                setFeaturedImageUrl(article.featured_image_url || '');
+
+                const output = (article.content as ArticleContent) || { blocks: [], version: '' };
+                setEditorJson(outputDataToTiptap(output));
+            } catch (error) {
+                if (!cancelled) {
+                    setErrorMessage(error instanceof Error ? error.message : 'Failed to load article.');
+                }
+            } finally {
+                if (!cancelled) {
+                    setIsLoadingArticle(false);
+                }
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [articleId]);
+
     const createArticleRequest = async (status: 'draft' | 'published') => {
-        const response = await fetch('/api/articles', {
-            method: 'POST',
+        const response = await fetch(articleId ? `/api/articles?id=${encodeURIComponent(articleId)}` : '/api/articles', {
+            method: articleId ? 'PUT' : 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 title: title.trim(),
@@ -165,6 +270,11 @@ export default function NewPostPage() {
 
     const persistArticle = async (status: 'draft' | 'published') => {
         setErrorMessage('');
+
+        if (isEditorUploadingImage) {
+            setErrorMessage('Image upload is in progress. Please wait, then try again.');
+            return;
+        }
 
         if (!title.trim()) {
             setErrorMessage('Article title is required.');
@@ -273,7 +383,7 @@ export default function NewPostPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 pb-16">
+        <div className="min-h-screen bg-linear-to-b from-white to-gray-50 pb-16">
             {/* Success Notifications */}
             {isSaved && (
                 <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 shadow-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-4 z-50">
@@ -300,10 +410,10 @@ export default function NewPostPage() {
                 {/* Header with Actions */}
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6 sm:mb-8">
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2 wrap-break-word">Create New Article</h1>
+                        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2 wrap-break-word">{articleId ? "Edit Film" : "Create New Film"}</h1>
                         <p className="text-slate-600 flex items-center gap-1 text-sm sm:text-base flex-wrap">
                             <PenTool className="w-4 h-4 shrink-0" />
-                            <span>Write, save, and publish your amazing story</span>
+                            <span>{articleId ? "Update and republish your film article" : "Write, save, and publish your amazing story"}</span>
                         </p>
                     </div>
 
@@ -326,10 +436,14 @@ export default function NewPostPage() {
                                 } transform hover:scale-105 active:scale-95`}
                         >
                             {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
-                            <span>{isSubmitting ? "Processing..." : "Publish"}</span>
+                            <span>{isSubmitting ? "Processing..." : articleId ? "Update" : "Publish"}</span>
                         </button>
                     </div>
                 </div>
+
+                {isLoadingArticle && (
+                    <div className="mb-4 rounded border border-[#DDD7CC] bg-white px-4 py-3 text-sm text-[#8C857C]">Loading film data...</div>
+                )}
 
                 {/* Main Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -357,7 +471,7 @@ export default function NewPostPage() {
 
                         {/* Rich Text Editor */}
                         <div className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
-                            <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
+                            <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 bg-linear-to-r from-slate-50 to-white">
                                 <div className="w-8 sm:w-10 h-8 sm:h-10 bg-blue-100 flex items-center justify-center shrink-0">
                                     <PenTool className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600" />
                                 </div>
@@ -370,7 +484,9 @@ export default function NewPostPage() {
                             {/* Editor Component */}
                             <SimpleEditor
                                 className="w-full max-w-none border-0 editor-full-width"
+                                initialContent={editorJson}
                                 onContentChange={setEditorJson}
+                                onImageUploadStateChange={setIsEditorUploadingImage}
                             />
                         </div>
                     </div>
@@ -379,12 +495,12 @@ export default function NewPostPage() {
                     <div className="lg:col-span-1 space-y-4 sm:space-y-6">
 
                         {/* Publishing Status Card */}
-                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 p-3 sm:p-4 shadow-sm">
+                        <div className="bg-linear-to-br from-blue-50 to-indigo-50 border border-blue-200 p-3 sm:p-4 shadow-sm">
                             <div className="flex items-start gap-2 sm:gap-3">
                                 <AlertCircle className="w-4 sm:w-5 h-4 sm:h-5 text-blue-600 shrink-0 mt-0.5" />
                                 <div className="min-w-0">
                                     <p className="font-semibold text-blue-900 text-xs sm:text-sm mb-0.5 sm:mb-1">Not Published</p>
-                                    <p className="text-xs text-blue-700">Your article is in draft mode. Click &quot;Publish&quot; to make it live.</p>
+                                    <p className="text-xs text-blue-700">{isEditorUploadingImage ? "Uploading image to Cloudinary..." : "Your article is in draft mode. Click Publish to make it live."}</p>
                                 </div>
                             </div>
                         </div>
@@ -396,7 +512,7 @@ export default function NewPostPage() {
                                 <h3 className="font-semibold text-slate-900 text-xs sm:text-sm">Featured Image</h3>
                             </div>
                             <div className="p-3 sm:p-4">
-                                <label className="border-2 border-dashed border-slate-300 bg-gradient-to-br from-slate-50 to-slate-100 p-4 sm:p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50 group">
+                                <label className="border-2 border-dashed border-slate-300 bg-linear-to-br from-slate-50 to-slate-100 p-4 sm:p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:border-blue-500 hover:bg-blue-50 group">
                                     <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                                     <div className="w-10 sm:w-12 h-10 sm:h-12 bg-slate-200 flex items-center justify-center mb-2 group-hover:bg-blue-200 transition-colors">
                                         <ImageIcon className="w-5 sm:w-6 h-5 sm:h-6 text-slate-600 group-hover:text-blue-600 transition-colors" />
@@ -456,7 +572,7 @@ export default function NewPostPage() {
                                     <label className="text-xs font-semibold text-slate-900 uppercase tracking-wide">Tags</label>
                                     <div className="flex flex-wrap gap-1 p-2 bg-slate-50 border border-slate-300 transition-all focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-500">
                                         {tags.map((tag, index) => (
-                                            <div key={index} className="inline-flex items-center gap-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md font-medium border border-blue-200">
+                                            <div key={index} className="inline-flex items-center gap-1 bg-linear-to-r from-blue-100 to-blue-50 text-blue-700 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md font-medium border border-blue-200">
                                                 <span className="truncate">{tag}</span>
                                                 <button
                                                     onClick={() => handleRemoveTag(index)}
@@ -537,7 +653,7 @@ export default function NewPostPage() {
                         </div>
 
                         {/* Advanced Options */}
-                        <div className="bg-gradient-to-br from-slate-50 to-gray-50 border border-slate-200 p-3 sm:p-4 overflow-hidden">
+                        <div className="bg-linear-to-br from-slate-50 to-gray-50 border border-slate-200 p-3 sm:p-4 overflow-hidden">
                             <button
                                 onClick={() => setShowAdvanced(!showAdvanced)}
                                 className="w-full flex items-center justify-between p-2 hover:bg-white transition-colors active:bg-slate-100"
@@ -584,7 +700,7 @@ export default function NewPostPage() {
                                     } transform hover:scale-105 active:scale-95`}
                             >
                                 {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
-                                <span>{isSubmitting ? "Processing..." : "Publish"}</span>
+                                <span>{isSubmitting ? "Processing..." : articleId ? "Update" : "Publish"}</span>
                             </button>
                         </div>
                     </div>

@@ -232,3 +232,44 @@ export async function PUT(request: NextRequest) {
         );
     }
 }
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const session = await parseAuthSession(request.cookies.get(AUTH_SESSION_COOKIE)?.value);
+
+        if (!session) {
+            return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const id = request.nextUrl.searchParams.get('id');
+        if (!id) {
+            return NextResponse.json({ success: false, error: 'id is required.' }, { status: 400 });
+        }
+
+        const supabase = createAdminClient();
+        const { error } = await supabase
+            .from('articles')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: error.message || 'Failed to delete article.',
+                },
+                { status: 500 },
+            );
+        }
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        return NextResponse.json(
+            {
+                success: false,
+                error: error instanceof Error ? error.message : 'Failed to delete article.',
+            },
+            { status: 500 },
+        );
+    }
+}
