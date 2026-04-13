@@ -144,7 +144,7 @@ export default async function FilmEditorialPage({ params }: PageProps) {
             />
             <ViewTracker articleId={data.article.id} />
 
-            {/* <FilmTrailer trailerUrl={trailerUrl} /> */}
+            <FilmTrailer trailerUrl={trailerUrl} />
             <FilmContent blocks={data.article.blocks} tags={data.article.tags} />
             <FilmRelated items={data.related} />
 
