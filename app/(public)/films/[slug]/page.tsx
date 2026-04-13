@@ -98,7 +98,7 @@ export async function generateMetadata({ params }: PageProps): Promise<import("n
     try {
         const { slug } = await params;
         const data = await fetchFilmBySlug(slug);
-        
+
         return {
             title: data.article.title,
             description: data.article.subtitle,
