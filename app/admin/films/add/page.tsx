@@ -1,8 +1,8 @@
 "use client"
-import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle } from "lucide-react";
+import { PenTool, Image as ImageIcon, Tag, Globe, Save, Send, CheckCircle2, ChevronDown, AlertCircle, Loader } from "lucide-react";
 import Image from 'next/image';
 import { useEffect, useState } from "react";
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import type { JSONContent } from "@tiptap/core";
 import { SimpleEditor } from "@/editor/components/tiptap-templates/simple/simple-editor";
 
@@ -104,6 +104,7 @@ function tiptapToArticleContent(doc: JSONContent): ArticleContent {
 }
 
 export default function NewPostPage() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const [isSaved, setIsSaved] = useState(false);
     const [isPublished, setIsPublished] = useState(false);
@@ -188,10 +189,16 @@ export default function NewPostPage() {
 
             if (status === 'draft') {
                 setIsSaved(true);
-                setTimeout(() => setIsSaved(false), 2000);
+                setTimeout(() => {
+                    setIsSaved(false);
+                    router.push('/admin/films');
+                }, 1500);
             } else {
                 setIsPublished(true);
-                setTimeout(() => setIsPublished(false), 2000);
+                setTimeout(() => {
+                    setIsPublished(false);
+                    router.push('/admin/films');
+                }, 1500);
             }
         } catch (error) {
             setErrorMessage(error instanceof Error ? error.message : 'Failed to save article.');
@@ -305,19 +312,23 @@ export default function NewPostPage() {
                         <button
                             onClick={handleSaveDraft}
                             disabled={isSubmitting}
-                            className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-[#F7F3EC] text-slate-700 font-medium text-sm sm:text-base hover:bg-slate-50 transition-all hover:shadow-md active:scale-95"
+                            className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
+                                isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-slate-50 hover:shadow-md"
+                            } active:scale-95`}
                         >
-                            <Save className="w-4 h-4 shrink-0" />
-                            <span className="hidden sm:inline">Save Draft</span>
-                            <span className="sm:hidden">Save</span>
+                            {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Save className="w-4 h-4 shrink-0" />}
+                            <span className="hidden sm:inline">{isSubmitting ? "Saving..." : "Save Draft"}</span>
+                            <span className="sm:hidden">{isSubmitting ? "Saving..." : "Save"}</span>
                         </button>
                         <button
                             onClick={handlePublish}
                             disabled={isSubmitting}
-                            className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-[#E0BC78] font-medium text-sm sm:text-base hover:shadow-lg hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95"
+                            className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
+                                isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:shadow-lg"
+                            } transform hover:scale-105 active:scale-95`}
                         >
-                            <Send className="w-4 h-4 shrink-0" />
-                            <span>Publish</span>
+                            {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
+                            <span>{isSubmitting ? "Processing..." : "Publish"}</span>
                         </button>
                     </div>
                 </div>
@@ -561,19 +572,23 @@ export default function NewPostPage() {
                             <button
                                 onClick={handleSaveDraft}
                                 disabled={isSubmitting}
-                                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 bg-[#F7F3EC] text-slate-700 font-medium text-sm sm:text-base hover:bg-slate-50 transition-all hover:shadow-md active:scale-95"
+                                className={`flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
+                                    isSubmitting ? "bg-[#E8E3D6] text-slate-500 cursor-not-allowed" : "bg-[#F7F3EC] text-slate-700 hover:bg-slate-50 hover:shadow-md"
+                                } active:scale-95`}
                             >
-                                <Save className="w-4 h-4 shrink-0" />
-                                <span className="hidden sm:inline">Save Draft</span>
-                                <span className="sm:hidden">Save</span>
+                                {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Save className="w-4 h-4 shrink-0" />}
+                                <span className="hidden sm:inline">{isSubmitting ? "Saving..." : "Save Draft"}</span>
+                                <span className="sm:hidden">{isSubmitting ? "Saving..." : "Save"}</span>
                             </button>
                             <button
                                 onClick={handlePublish}
                                 disabled={isSubmitting}
-                                className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 bg-[#E0BC78] font-medium text-sm sm:text-base hover:shadow-lg hover:shadow-blue-200 transition-all transform hover:scale-105 active:scale-95"
+                                className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 font-medium text-sm sm:text-base transition-all duration-200 ${
+                                    isSubmitting ? "bg-[#D4A857] text-slate-50 cursor-not-allowed" : "bg-[#E0BC78] text-slate-900 hover:shadow-lg"
+                                } transform hover:scale-105 active:scale-95`}
                             >
-                                <Send className="w-4 h-4 shrink-0" />
-                                <span>Publish</span>
+                                {isSubmitting ? <Loader className="w-4 h-4 shrink-0 animate-spin" /> : <Send className="w-4 h-4 shrink-0" />}
+                                <span>{isSubmitting ? "Processing..." : "Publish"}</span>
                             </button>
                         </div>
                     </div>
