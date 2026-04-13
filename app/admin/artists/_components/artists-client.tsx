@@ -34,6 +34,10 @@ const defaultFormValues: ArtistFormValues = {
     is_featured: false,
 };
 
+function isCloudinaryUrl(url: string): boolean {
+    return /^https:\/\/res\.cloudinary\.com\//i.test(url);
+}
+
 export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
     const [artists, setArtists] = useState<Artist[]>(initialArtists);
     const [state, formAction, isPending] = useActionState<ActionState, FormData>(createArtistAction, initialState);
@@ -118,8 +122,11 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
         const form = e.currentTarget;
         const formData = new FormData(form);
 
-        if (imagePreview) {
+        // Preserve only valid Cloudinary URLs from existing records.
+        if (!imageFile && imagePreview && isCloudinaryUrl(imagePreview)) {
             formData.set('image_url', imagePreview);
+        } else {
+            formData.delete('image_url');
         }
 
         if (imageFile) {
@@ -149,7 +156,8 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                 const uploadResult = await uploadRes.json();
 
                 if (uploadResult.secure_url) {
-                    formData.append('image_url', uploadResult.secure_url);
+                    formData.set('image_url', uploadResult.secure_url);
+                    setImagePreview(uploadResult.secure_url);
                 } else {
                     throw new Error('Failed to upload image');
                 }
@@ -183,7 +191,14 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                 ? prev.map((artist) => (artist.id === savedArtist.id ? savedArtist : artist))
                 : [savedArtist, ...prev];
         });
-        handleCancel();
+
+        setIsFormOpen(false);
+        setEditingArtistId(null);
+        setFormValues(defaultFormValues);
+        setImageFile(null);
+        setImagePreview(null);
+        setUploadError(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
     }, [state.success, state.artist, state.message]);
 
     // Note: To automatically prepend our optimistically added artist or refresh, Next.js revalidatePath runs on the server, 

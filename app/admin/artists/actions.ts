@@ -30,13 +30,16 @@ export async function createArtistAction(
         const twitter = formData.get('twitter') as string | null;
         const website = formData.get('website') as string | null;
         const isFeatured = formData.get('is_featured') === 'true';
+        const normalizedImageUrl = imageUrl && /^https:\/\/res\.cloudinary\.com\//i.test(imageUrl)
+            ? imageUrl
+            : null;
 
         const baseInput: UpdateArtistInput = {
             full_name: fullName,
             art_form: artForm,
             quote: quote || null,
             biography: biography || null,
-            image_url: imageUrl || null,
+            image_url: normalizedImageUrl,
             instagram: instagram || null,
             twitter: twitter || null,
             website: website || null,
