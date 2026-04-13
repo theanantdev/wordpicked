@@ -106,6 +106,7 @@ export default function PostsPage() {
     const [sort, setSort] = useState<SortOption>("newest");
     const [searchInput, setSearchInput] = useState("");
     const [search, setSearch] = useState("");
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -153,6 +154,32 @@ export default function PostsPage() {
         "Literature": "bg-[#243D2C]/10 text-[#243D2C] border-[#243D2C]/20 border",
         "Film": "bg-[#B5542A]/10 text-[#B5542A] border-[#B5542A]/20 border",
         "Artist": "bg-[#A8812A]/10 text-[#A8812A] border-[#A8812A]/20 border"
+    };
+
+    const handleDeletePost = async (postId: string) => {
+        const confirmed = window.confirm("Are you sure you want to delete this literature post?");
+        if (!confirmed) return;
+
+        setDeletingId(postId);
+        setError(null);
+
+        try {
+            const response = await fetch(`/api/articles?id=${encodeURIComponent(postId)}`, {
+                method: "DELETE",
+            });
+            const payload = (await response.json()) as { success?: boolean; error?: string };
+
+            if (!response.ok || !payload.success) {
+                throw new Error(payload.error || "Failed to delete post.");
+            }
+
+            setPosts((prev) => prev.filter((post) => post.id !== postId));
+            setTotal((prev) => Math.max(0, prev - 1));
+        } catch (deleteError) {
+            setError(deleteError instanceof Error ? deleteError.message : "Failed to delete post.");
+        } finally {
+            setDeletingId(null);
+        }
     };
 
     return (
@@ -309,7 +336,7 @@ export default function PostsPage() {
                                         <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <Link href={`/admin/literature/add?id=${encodeURIComponent(post.id)}`} className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">Edit</Link>
                                             <button className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">Preview</button>
-                                            <button className="text-[11px] font-medium text-[#B5542A] bg-white border border-[#B5542A]/30 px-2.5 py-1 rounded-[2px] hover:bg-[#B5542A]/10">Delete</button>
+                                            <button onClick={() => void handleDeletePost(post.id)} disabled={deletingId === post.id} className="text-[11px] font-medium text-[#B5542A] bg-white border border-[#B5542A]/30 px-2.5 py-1 rounded-[2px] hover:bg-[#B5542A]/10 disabled:opacity-60 disabled:cursor-not-allowed">{deletingId === post.id ? "Deleting..." : "Delete"}</button>
                                         </div>
                                     </td>
                                 </tr>
