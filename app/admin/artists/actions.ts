@@ -1,12 +1,13 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createArtist as createArtistDb, deleteArtist as deleteArtistDb, CreateArtistInput } from '@/utils/server-artists';
+import { createArtist as createArtistDb, updateArtist as updateArtistDb, deleteArtist as deleteArtistDb, CreateArtistInput, UpdateArtistInput, Artist } from '@/utils/server-artists';
 
 export type ActionState = {
     message?: string;
     error?: string;
     success?: boolean;
+    artist?: Artist;
 };
 
 export async function createArtistAction(
@@ -14,9 +15,10 @@ export async function createArtistAction(
     formData: FormData
 ): Promise<ActionState> {
     try {
+        const artistId = formData.get('artist_id') as string | null;
         const fullName = formData.get('full_name') as string;
         const artForm = formData.get('art_form') as string;
-        
+
         if (!fullName || !artForm) {
             return { error: 'Full name and art form are required.' };
         }
@@ -29,16 +31,7 @@ export async function createArtistAction(
         const website = formData.get('website') as string | null;
         const isFeatured = formData.get('is_featured') === 'true';
 
-        // Select a random gradient for empty states
-        const gradients = [
-            "from-[#1a1208] to-[#321e0e]",
-            "from-[#08101a] to-[#10203a]",
-            "from-[#100a1a] to-[#201535]",
-            "from-[#1c2e24] to-[#111e17]"
-        ];
-        const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
-
-        const input: CreateArtistInput = {
+        const baseInput: UpdateArtistInput = {
             full_name: fullName,
             art_form: artForm,
             quote: quote || null,
@@ -48,19 +41,42 @@ export async function createArtistAction(
             twitter: twitter || null,
             website: website || null,
             is_featured: isFeatured,
-            gradient: randomGradient,
         };
 
-        const { error } = await createArtistDb(input);
+        let result: { artist?: Artist; error?: string };
 
-        if (error) {
-            return { error: `Failed to create artist: ${error}` };
+        if (artistId) {
+            result = await updateArtistDb(artistId, baseInput);
+        } else {
+            // Select a random gradient for empty states when creating a new artist.
+            const gradients = [
+                "from-[#1a1208] to-[#321e0e]",
+                "from-[#08101a] to-[#10203a]",
+                "from-[#100a1a] to-[#201535]",
+                "from-[#1c2e24] to-[#111e17]"
+            ];
+            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+
+            const createInput: CreateArtistInput = {
+                ...baseInput,
+                gradient: randomGradient,
+            } as CreateArtistInput;
+
+            result = await createArtistDb(createInput);
+        }
+
+        if (result.error) {
+            return { error: `Failed to ${artistId ? 'update' : 'create'} artist: ${result.error}` };
         }
 
         revalidatePath('/admin/artists');
         revalidatePath('/artists');
-        
-        return { success: true, message: 'Artist created successfully.' };
+
+        return {
+            success: true,
+            message: artistId ? 'Artist updated successfully.' : 'Artist created successfully.',
+            artist: result.artist,
+        };
 
     } catch (err) {
         console.error('Error in createArtistAction:', err);

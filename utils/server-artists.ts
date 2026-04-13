@@ -19,6 +19,7 @@ export interface Artist {
 }
 
 export type CreateArtistInput = Omit<Artist, 'id' | 'created_at' | 'updated_at' | 'posts' | 'views'>;
+export type UpdateArtistInput = Partial<CreateArtistInput>;
 
 export async function getArtists(): Promise<Artist[]> {
     try {
@@ -79,6 +80,28 @@ export async function createArtist(input: CreateArtistInput): Promise<{ artist?:
     } catch (error) {
         console.error('Exception creating artist:', error);
         return { error: 'Failed to create artist.' };
+    }
+}
+
+export async function updateArtist(id: string, input: UpdateArtistInput): Promise<{ artist?: Artist; error?: string }> {
+    try {
+        const supabase = await createAdminClient();
+        const { data, error } = await supabase
+            .from('artists')
+            .update(input)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error updating artist:', error);
+            return { error: error.message };
+        }
+
+        return { artist: data as Artist };
+    } catch (error) {
+        console.error('Exception updating artist:', error);
+        return { error: 'Failed to update artist.' };
     }
 }
 

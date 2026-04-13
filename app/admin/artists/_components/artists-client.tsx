@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useRef } from "react";
+import { useActionState, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { Plus, Trash2, Image as ImageIcon, Loader2 } from "lucide-react";
 import { Artist } from "@/utils/server-artists";
@@ -12,9 +12,33 @@ interface ArtistsClientProps {
 
 const initialState: ActionState = {};
 
+type ArtistFormValues = {
+    full_name: string;
+    art_form: string;
+    quote: string;
+    biography: string;
+    instagram: string;
+    twitter: string;
+    website: string;
+    is_featured: boolean;
+};
+
+const defaultFormValues: ArtistFormValues = {
+    full_name: "",
+    art_form: "",
+    quote: "",
+    biography: "",
+    instagram: "",
+    twitter: "",
+    website: "",
+    is_featured: false,
+};
+
 export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
     const [artists, setArtists] = useState<Artist[]>(initialArtists);
     const [state, formAction, isPending] = useActionState<ActionState, FormData>(createArtistAction, initialState);
+    const [editingArtistId, setEditingArtistId] = useState<string | null>(null);
+    const [formValues, setFormValues] = useState<ArtistFormValues>(defaultFormValues);
 
     // Cloudinary state
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -24,6 +48,51 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
     const [isFormOpen, setIsFormOpen] = useState(false);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const handledSuccessRef = useRef<string | null>(null);
+
+    const isSaving = isPending || isUploadingImage;
+
+    const resetForm = () => {
+        setEditingArtistId(null);
+        setFormValues(defaultFormValues);
+        setImageFile(null);
+        setImagePreview(null);
+        setUploadError(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
+
+    const handleAddArtist = () => {
+        if (isFormOpen && !editingArtistId) {
+            setIsFormOpen(false);
+            return;
+        }
+        resetForm();
+        setIsFormOpen(true);
+    };
+
+    const handleEditArtist = (artist: Artist) => {
+        setEditingArtistId(artist.id);
+        setFormValues({
+            full_name: artist.full_name || "",
+            art_form: artist.art_form || "",
+            quote: artist.quote || "",
+            biography: artist.biography || "",
+            instagram: artist.instagram || "",
+            twitter: artist.twitter || "",
+            website: artist.website || "",
+            is_featured: artist.is_featured === true,
+        });
+        setImageFile(null);
+        setImagePreview(artist.image_url || null);
+        setUploadError(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        setIsFormOpen(true);
+    };
+
+    const handleCancel = () => {
+        setIsFormOpen(false);
+        resetForm();
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -48,6 +117,10 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
 
         const form = e.currentTarget;
         const formData = new FormData(form);
+
+        if (imagePreview) {
+            formData.set('image_url', imagePreview);
+        }
 
         if (imageFile) {
             setIsUploadingImage(true);
@@ -90,8 +163,28 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
         }
 
         // Call the useActionState action with updated formData
+        if (editingArtistId) {
+            formData.append('artist_id', editingArtistId);
+        }
         formAction(formData);
     };
+
+    useEffect(() => {
+        if (!state.success || !state.artist) return;
+
+        const token = `${state.artist.id}:${state.message || "ok"}`;
+        if (handledSuccessRef.current === token) return;
+        handledSuccessRef.current = token;
+
+        const savedArtist = state.artist;
+        setArtists((prev) => {
+            const alreadyExists = prev.some((artist) => artist.id === savedArtist.id);
+            return alreadyExists
+                ? prev.map((artist) => (artist.id === savedArtist.id ? savedArtist : artist))
+                : [savedArtist, ...prev];
+        });
+        handleCancel();
+    }, [state.success, state.artist, state.message]);
 
     // Note: To automatically prepend our optimistically added artist or refresh, Next.js revalidatePath runs on the server, 
     // but the client component might not get the fresh initialArtists without a prop update or transition. 
@@ -106,11 +199,11 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                     <div className="text-[12.5px] text-[#8C857C] mt-1">{artists.length} active profiles</div>
                 </div>
                 <button
-                    onClick={() => setIsFormOpen(!isFormOpen)}
+                    onClick={handleAddArtist}
                     className="flex items-center gap-1.5 bg-[#B5542A] text-white text-[11px] font-medium tracking-[0.08em] uppercase px-4 py-2 rounded-[2px] transition-colors hover:bg-[#C96840]"
                 >
                     <Plus className="w-[14px] h-[14px]" />
-                    {isFormOpen ? "Close Form" : "Add Artist"}
+                    {isFormOpen && !editingArtistId ? "Close Form" : "Add Artist"}
                 </button>
             </div>
             {/* Add Artist Form Placeholder Box */}
@@ -118,7 +211,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                 <div className="bg-white border text-left border-[#DDD7CC] rounded-[4px] shadow-[0_2px_4px_rgba(26,23,20,0.02)] overflow-hidden max-w-[800px] mb-10">
                     <form onSubmit={handleSubmit}>
                         <div className="px-6 py-4 border-b border-[#EDE7D9] flex justify-between items-center bg-[#FAFAFA]">
-                            <div className="font-heading font-bold text-[16px] text-[#1A1714]">Add New Artist Profile</div>
+                            <div className="font-heading font-bold text-[16px] text-[#1A1714]">{editingArtistId ? "Edit Artist Profile" : "Add New Artist Profile"}</div>
                             <span className="text-[11px] text-[#8C857C]">Takes less than 2 minutes</span>
                         </div>
 
@@ -134,7 +227,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                         )}
                         {state.success && (
                             <div className="px-6 py-3 bg-green-50 border-b border-green-100 text-green-600 text-sm">
-                                Artist profile successfully created! Refreshing list...
+                                {editingArtistId ? "Artist profile successfully updated!" : "Artist profile successfully created!"}
                             </div>
                         )}
 
@@ -142,11 +235,11 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Full Name *</label>
-                                    <input name="full_name" required type="text" placeholder="Artist's full name" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                    <input name="full_name" required type="text" value={formValues.full_name} onChange={(e) => setFormValues((prev) => ({ ...prev, full_name: e.target.value }))} placeholder="Artist's full name" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Art Form *</label>
-                                    <input name="art_form" required type="text" placeholder="Writer, Filmmaker, Poet..." className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                    <input name="art_form" required type="text" value={formValues.art_form} onChange={(e) => setFormValues((prev) => ({ ...prev, art_form: e.target.value }))} placeholder="Writer, Filmmaker, Poet..." className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
                                 </div>
                             </div>
 
@@ -183,7 +276,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                                                 onClick={() => fileInputRef.current?.click()}
                                                 className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-3 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors"
                                             >
-                                                Upload Image
+                                                {isUploadingImage ? "Uploading..." : "Upload Image"}
                                             </button>
                                             <div className="text-[10px] text-[#8C857C] mt-1.5">Recommended: 800x1000px, under 2MB</div>
                                         </div>
@@ -197,6 +290,8 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                                                 type="checkbox"
                                                 name="is_featured"
                                                 value="true"
+                                                checked={formValues.is_featured}
+                                                onChange={(e) => setFormValues((prev) => ({ ...prev, is_featured: e.target.checked }))}
                                                 className="peer h-4 w-4 cursor-pointer appearance-none rounded-[2px] border border-[#DDD7CC] checked:border-[#A8812A] checked:bg-[#A8812A] hover:border-[#1A1714]"
                                             />
                                             <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100">
@@ -212,47 +307,47 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
 
                             <div className="flex flex-col gap-1.5 mb-4">
                                 <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Quote</label>
-                                <textarea name="quote" placeholder="Signature quote..." className="w-full min-h-[60px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
+                                <textarea name="quote" value={formValues.quote} onChange={(e) => setFormValues((prev) => ({ ...prev, quote: e.target.value }))} placeholder="Signature quote..." className="w-full min-h-[60px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
                             </div>
 
                             <div className="flex flex-col gap-1.5 mb-4">
                                 <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Biography</label>
-                                <textarea name="biography" placeholder="Short biography for profile page…" className="w-full min-h-[80px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
+                                <textarea name="biography" value={formValues.biography} onChange={(e) => setFormValues((prev) => ({ ...prev, biography: e.target.value }))} placeholder="Short biography for profile page..." className="w-full min-h-[80px] bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors resize-y" />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Instagram</label>
-                                    <input name="instagram" type="text" placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                    <input name="instagram" type="text" value={formValues.instagram} onChange={(e) => setFormValues((prev) => ({ ...prev, instagram: e.target.value }))} placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Twitter / X</label>
-                                    <input name="twitter" type="text" placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                    <input name="twitter" type="text" value={formValues.twitter} onChange={(e) => setFormValues((prev) => ({ ...prev, twitter: e.target.value }))} placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Website</label>
-                                    <input name="website" type="url" placeholder="https://…" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                    <input name="website" type="url" value={formValues.website} onChange={(e) => setFormValues((prev) => ({ ...prev, website: e.target.value }))} placeholder="https://..." className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
                                 </div>
                             </div>
 
                             <div className="flex gap-2.5">
                                 <button
-                                    disabled={isPending || isUploadingImage}
+                                    disabled={isSaving}
                                     type="submit"
                                     className="bg-[#B5542A] disabled:opacity-70 disabled:cursor-not-allowed text-white text-[11px] font-medium tracking-[0.08em] uppercase px-5 py-2.5 rounded-[2px] transition-colors hover:bg-[#C96840] flex items-center justify-center gap-2 min-w-[150px]"
                                 >
-                                    {isPending || isUploadingImage ? (
+                                    {isSaving ? (
                                         <>
                                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                            Saving...
+                                            {isUploadingImage ? "Uploading..." : editingArtistId ? "Updating..." : "Saving..."}
                                         </>
                                     ) : (
-                                        "Save Artist Profile"
+                                        editingArtistId ? "Update Artist Profile" : "Save Artist Profile"
                                     )}
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => setIsFormOpen(false)}
+                                    onClick={handleCancel}
                                     className="bg-white border border-[#DDD7CC] text-[#1A1714] text-[11px] font-medium tracking-[0.08em] uppercase px-5 py-2.5 rounded-[2px] transition-colors hover:bg-[#EDE7D9]"
                                 >
                                     Cancel
@@ -308,7 +403,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                         </div>
 
                         <div className="flex items-center gap-2 pt-4 border-t border-[#EDE7D9]">
-                            <button className="flex-1 text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors">Edit</button>
+                            <button onClick={() => handleEditArtist(artist)} className="flex-1 text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors">Edit</button>
                             <button className="flex-1 text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors">View Posts</button>
                             <button onClick={() => handleDelete(artist.id)} className="text-[11px] font-medium text-[#B5542A] bg-white border border-[#B5542A]/30 px-3 py-1.5 rounded-[2px] hover:bg-[#B5542A]/10 transition-colors flex items-center justify-center gap-1">
                                 <Trash2 className="w-3 h-3" />
