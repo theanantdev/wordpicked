@@ -47,6 +47,12 @@ type ArticleApiResponse = {
 
 const URL_REGEX = /(https?:\/\/[^\s<>")\]]+)/g;
 
+function normalizeText(value: unknown): string {
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return String(value);
+    return "";
+}
+
 function extractTrailerUrl(
     blocks: Array<{ type?: string; data?: { text?: string; source?: string; embed?: string } }>,
 ) {
@@ -56,8 +62,8 @@ function extractTrailerUrl(
             if (embedUrl) return embedUrl;
         }
 
-        const text = block.data?.text || "";
-        const urls = text.match(URL_REGEX) || [];
+        const text = normalizeText(block.data?.text);
+        const urls = text ? Array.from(text.matchAll(URL_REGEX), (match) => match[0]) : [];
         const videoUrl = urls.find((url) => /youtu\.be|youtube\.com|vimeo\.com|\.(mp4|webm|ogg)(\?.*)?$/i.test(url));
         if (videoUrl) return videoUrl;
     }

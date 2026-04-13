@@ -20,9 +20,21 @@ type ArticleBodyProps = {
 
 const URL_REGEX = /(https?:\/\/[^\s<>")\]]+)/g;
 
-function extractUrls(text: string) {
-    const matches = text.match(URL_REGEX) || [];
-    return Array.from(new Set(matches));
+function normalizeText(value: unknown): string {
+    if (typeof value === "string") return value;
+    if (typeof value === "number") return String(value);
+    return "";
+}
+
+function extractUrls(text: unknown) {
+    try {
+        const normalized = normalizeText(text);
+        if (!normalized) return [];
+        const matches = Array.from(normalized.matchAll(URL_REGEX), (match) => match[0]);
+        return Array.from(new Set(matches));
+    } catch {
+        return [];
+    }
 }
 
 function parseYouTubeId(url: string) {
@@ -85,10 +97,11 @@ function toEmbedConfig(url: string) {
     return null;
 }
 
-function renderTextWithLinks(text: string): ReactNode {
-    if (!text) return "";
+function renderTextWithLinks(text: unknown): ReactNode {
+    const normalized = normalizeText(text);
+    if (!normalized) return "";
 
-    const parts = text.split(URL_REGEX);
+    const parts = normalized.split(URL_REGEX);
     return parts.map((part, index) => {
         if (/^https?:\/\//i.test(part)) {
             return (
@@ -169,7 +182,7 @@ export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
 
             <div className="font-sans font-light text-[18px] leading-[29px] text-[#1C1C18] flex flex-col gap-8">
                 {safeBlocks.map((block, index) => {
-                    const text = block.data?.text || "";
+                    const text = normalizeText(block.data?.text);
                     const urls = extractUrls(text);
 
                     if (block.type === "embed") {
@@ -193,7 +206,8 @@ export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
                     }
 
                     if (block.type === "list") {
-                        const listItems = block.data?.items || [];
+                        const rawItems = Array.isArray(block.data?.items) ? block.data.items : [];
+                        const listItems = rawItems.map((item) => normalizeText(item)).filter(Boolean);
                         const listUrls = Array.from(new Set(listItems.flatMap((item) => extractUrls(item))));
 
                         return (
