@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 type FilmTrailerProps = {
     trailerUrl?: string;
 };
@@ -35,6 +33,11 @@ function toEmbed(url?: string) {
 
 export function FilmTrailer({ trailerUrl }: FilmTrailerProps) {
     const embedUrl = toEmbed(trailerUrl);
+    const hasVideoFile = Boolean(trailerUrl && /\.(mp4|webm|ogg)(\?.*)?$/i.test(trailerUrl));
+
+    if (!embedUrl && !hasVideoFile) {
+        return null;
+    }
 
     return (
         <section className="w-full bg-[#FDF9F2] pt-[60px] md:pt-[100px] flex flex-col items-center">
@@ -53,21 +56,12 @@ export function FilmTrailer({ trailerUrl }: FilmTrailerProps) {
                             allowFullScreen
                         />
                     </div>
-                ) : trailerUrl && /\.(mp4|webm|ogg)(\?.*)?$/i.test(trailerUrl) ? (
+                ) : hasVideoFile ? (
                     <video className="w-full border border-black/5 rounded-[2px] shadow-sm" controls preload="metadata">
                         <source src={trailerUrl} />
                         Your browser does not support the video tag.
                     </video>
-                ) : (
-                    <div className="relative w-full aspect-video bg-[#F9F9F9] border border-black/5 group overflow-hidden rounded-[2px] shadow-sm">
-                        <Image
-                            src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=1200&auto=format&fit=crop"
-                            alt="Trailer Thumbnail"
-                            fill
-                            className="object-cover opacity-90"
-                        />
-                    </div>
-                )}
+                ) : null}
             </div>
         </section>
     );
