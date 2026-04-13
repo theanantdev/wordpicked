@@ -26,7 +26,7 @@ export function SiteHeader() {
 
                 {/* Desktop Logo */}
                 <Link href="/" className="font-heading text-[26px] font-semibold text-[#f5f0e8] tracking-[0.26px]">
-                    <Image src="/logo.png" alt="Logo" width={80} height={80} />
+                    <Image src="/logo.png" alt="Logo" width={80} height={80} style={{ width: 'auto', height: 'auto' }} />
                 </Link>
 
                 {/* Desktop Navigation */}

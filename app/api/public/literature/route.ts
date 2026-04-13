@@ -14,8 +14,36 @@ function parsePositiveInt(value: string | null, fallback: number) {
     return parsed;
 }
 
-function mapCategory(tags: string[] | null | undefined, title: string): Category {
-    const normalizedTags = (tags || []).map((tag) => tag.toLowerCase());
+function normalizeTags(tags: unknown): string[] {
+    if (Array.isArray(tags)) {
+        return tags.filter((tag): tag is string => typeof tag === 'string');
+    }
+
+    if (typeof tags === 'string') {
+        const maybeJson = tags.trim();
+
+        if (maybeJson.startsWith('[') && maybeJson.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(maybeJson);
+                if (Array.isArray(parsed)) {
+                    return parsed.filter((tag): tag is string => typeof tag === 'string');
+                }
+            } catch {
+                return [];
+            }
+        }
+
+        return maybeJson
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter(Boolean);
+    }
+
+    return [];
+}
+
+function mapCategory(tags: unknown, title: string): Category {
+    const normalizedTags = normalizeTags(tags).map((tag) => tag.toLowerCase());
     const normalizedTitle = title.toLowerCase();
 
     if (normalizedTags.some((tag) => tag.includes('poetry') || tag.includes('poem')) || normalizedTitle.includes('poetry')) {
@@ -36,18 +64,20 @@ function mapCategory(tags: string[] | null | undefined, title: string): Category
 function estimateReadTime(content: unknown) {
     if (!content || typeof content !== 'object') return '5 MIN READ';
 
-    const contentRecord = content as { blocks?: Array<{ data?: { text?: string; items?: string[] } }> };
+    const contentRecord = content as { blocks?: Array<{ data?: { text?: unknown; items?: unknown } }> };
     const blocks = contentRecord.blocks || [];
 
     let wordCount = 0;
 
     for (const block of blocks) {
-        const text = block?.data?.text || '';
-        const items = block?.data?.items || [];
+        const text = typeof block?.data?.text === 'string' ? block.data.text : '';
+        const items = Array.isArray(block?.data?.items) ? block.data.items : [];
 
         wordCount += text.split(/\s+/).filter(Boolean).length;
         for (const item of items) {
-            wordCount += item.split(/\s+/).filter(Boolean).length;
+            if (typeof item === 'string') {
+                wordCount += item.split(/\s+/).filter(Boolean).length;
+            }
         }
     }
 
@@ -110,20 +140,21 @@ export async function GET(request: NextRequest) {
         }
 
         const mapped = (data || []).map((row) => {
-            const mappedCategory = mapCategory(row.tags, row.title);
+            const safeTitle = typeof row.title === 'string' && row.title.trim() ? row.title : 'Untitled';
+            const mappedCategory = mapCategory(row.tags, safeTitle);
 
             return {
                 id: row.id,
                 category: mappedCategory,
                 readTime: estimateReadTime(row.content),
                 releaseDate: toIsoDate(row.publish_at || row.created_at),
-                title: row.title,
+                title: safeTitle,
                 author: row.author_name ? `By ${row.author_name}` : 'By Editorial Desk',
                 description: row.subtitle || 'A thoughtful exploration of literature and contemporary writing.',
                 imageUrl:
                     row.featured_image_url ||
                     'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=600&auto=format&fit=crop',
-                slug: row.slug || makeSlugFromTitle(row.id, row.title),
+                slug: row.slug || makeSlugFromTitle(row.id, safeTitle),
             };
         });
 

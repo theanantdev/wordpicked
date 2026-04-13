@@ -70,9 +70,28 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
     }, []);
 
     const handleInsertBlock = useCallback((type: string, config?: unknown) => {
-        if (ejInstance.current && ejInstance.current.blocks) {
-            ejInstance.current.blocks.insert(type, config, undefined, undefined, true);
+        if (!ejInstance.current?.blocks) return;
+
+        const cfg = (config ?? {}) as Record<string, unknown>;
+        let blockData: Record<string, unknown> = {};
+
+        if (type === 'header') {
+            blockData = {
+                text: '',
+                level: Number(cfg.level ?? 2),
+            };
+        } else if (type === 'list') {
+            blockData = {
+                style: String(cfg.style ?? 'unordered'),
+                items: [''],
+            };
+        } else if (type === 'quote') {
+            blockData = { text: '', caption: '' };
+        } else if (type === 'raw') {
+            blockData = { html: '' };
         }
+
+        ejInstance.current.blocks.insert(type, blockData);
     }, []);
 
     const handleInlineFormat = useCallback((command: string, value?: string) => {
@@ -271,11 +290,30 @@ const Editor = ({ onContentChange, initialContent }: EditorProps) => {
                         <LinkIcon className="w-4 h-4" />
                     </button>
 
-                    <button onClick={() => handleInsertBlock('image')} title="Insert Image" className="w-8 h-8 flex items-center justify-center  hover:bg-white text-slate-600 transition-colors hover:text-blue-600">
+                    <button onClick={() => {
+                        const url = prompt('Paste image URL:');
+                        if (!url) return;
+                        if (ejInstance.current?.blocks) {
+                            ejInstance.current.blocks.insert('image', { file: { url } });
+                        }
+                    }} title="Insert Image" className="w-8 h-8 flex items-center justify-center  hover:bg-white text-slate-600 transition-colors hover:text-blue-600">
                         <ImageIcon className="w-4 h-4" />
                     </button>
 
-                    <button onClick={() => handleInsertBlock('embed', { service: 'youtube' })} title="Embed Video" className="w-8 h-8 flex items-center justify-center  hover:bg-white text-slate-600 transition-colors hover:text-blue-600">
+                    <button onClick={() => {
+                        const source = prompt('Paste YouTube / Vimeo / X URL:');
+                        if (!source) return;
+                        if (ejInstance.current?.blocks) {
+                            ejInstance.current.blocks.insert('embed', {
+                                service: 'youtube',
+                                source,
+                                embed: source,
+                                width: 580,
+                                height: 320,
+                                caption: '',
+                            });
+                        }
+                    }} title="Embed Video" className="w-8 h-8 flex items-center justify-center  hover:bg-white text-slate-600 transition-colors hover:text-blue-600">
                         <Video className="w-4 h-4" />
                     </button>
 

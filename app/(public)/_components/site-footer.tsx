@@ -6,7 +6,7 @@ export function SiteFooter() {
             <div className="mx-auto grid w-full max-w-310 gap-10 px-4 sm:grid-cols-2 md:grid-cols-4 md:px-6">
                 <div>
                     <div>
-                        <Image src="/logo.png" alt="Logo" width={100} height={100} />
+                        <Image src="/logo.png" alt="Logo" width={100} height={100} style={{ width: 'auto', height: 'auto' }} />
                     </div>
                     <p className="mt-4 text-sm text-zinc-600">
                         A digital curator for the modern intellectual. Exploring the intersections of literature, film, and the visual arts.
