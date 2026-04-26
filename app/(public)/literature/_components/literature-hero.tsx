@@ -1,14 +1,13 @@
-import Link from "next/link";
 import Image from "next/image";
 
 export function LiteratureHero() {
     return (
         <section className="relative mx-auto mt-0 w-full min-h-88.25 overflow-hidden border-b border-[#262626] bg-[#0F0F0F]">
             <Image
-                src="/pick-of-the-day/hero.png"
+                src="/literature/hero.png"
                 alt="The Weight of Silence: A Meditation on Absence"
                 fill
-                sizes="(max-width: 1024px) 100vw, 429px"
+                sizes="(max-width: 1024px) 100vw, 342px"
                 className="object-cover"
             />
 
@@ -34,12 +33,6 @@ export function LiteratureHero() {
                         Curated insights into the world of written word. From contemporary fiction to
                         timeless poetry, we explore the narratives that shape our cultural landscape.                    </p>
                 </div>
-
-                <Link href="#latest-pick" className="hidden sm:inline-flex h-12.5 w-full shrink-0 items-center justify-center gap-2.5 rounded-[8px] bg-[#DC2828] px-6 py-4.5 transition-colors hover:bg-[#b02020] sm:w-52.25">
-                    <span className="font-sans text-[18px] font-semibold leading-6.75 text-white sm:text-[22px]">
-                        Read Now
-                    </span>
-                </Link>
             </div>
         </section>
     );

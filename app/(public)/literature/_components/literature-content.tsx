@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-
+import MaxWidthWrapper from "@/components/max-width-wraper";
 type Category = "ALL" | "FICTION" | "NON-FICTION" | "POETRY";
 type SortOption = "LATEST" | "OLDEST" | "TITLE_A_Z";
 
@@ -102,25 +102,17 @@ export function LiteratureContent() {
             setPage(1);
             setSearch(searchInput.trim());
         }, 300);
-
         return () => clearTimeout(timer);
     }, [searchInput]);
 
     useEffect(() => {
         let cancelled = false;
-
         (async () => {
             setLoading(true);
             const result = await fetchLiterature({
-                page,
-                pageSize,
-                search,
-                category: activeTab,
-                sort: activeSort,
+                page, pageSize, search, category: activeTab, sort: activeSort,
             });
-
             if (cancelled) return;
-
             setItems(result.items);
             setTotal(result.total);
             setTotalPages(result.totalPages);
@@ -129,10 +121,7 @@ export function LiteratureContent() {
             setError(result.error);
             setLoading(false);
         })();
-
-        return () => {
-            cancelled = true;
-        };
+        return () => { cancelled = true; };
     }, [page, pageSize, search, activeTab, activeSort]);
 
     const pageButtons = useMemo(() => {
@@ -144,35 +133,25 @@ export function LiteratureContent() {
     }, [page, totalPages]);
 
     const sortLabelMap: Record<SortOption, string> = {
-        LATEST: "Latest Release",
-        OLDEST: "Oldest Release",
+        LATEST: "Latest",
+        OLDEST: "Oldest",
         TITLE_A_Z: "Title A-Z",
     };
 
     return (
-        <section className="w-full flex flex-col items-center">
-            {/* Tab and Sort Bar */}
-            <div className="z-20 max-w-[1200px] w-full bg-[#F5F0E8] py-4 sm:py-5 -mt-15">
-                <div className="mx-auto flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 px-4 sm:px-6 md:px-8">
-                    <input
-                        type="text"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        placeholder="Search title, author, subtitle..."
-                        className="w-full sm:w-70 bg-white border border-[#E4E4E7] px-3 py-2 text-sm text-[#18181B] outline-none"
-                    />
-
-                    <div className="flex flex-row items-center gap-2 sm:gap-2.5 overflow-x-auto">
+        <MaxWidthWrapper>
+            {/* Header & Filters */}
+            <div className="w-full border-b border-zinc-100 bg-white/50 backdrop-blur-md sticky top-0 z-40">
+                <div className="flex flex-col gap-4 py-6">
+                    {/* Categories */}
+                    <div className="flex flex-wrap items-center gap-2">
                         {(["ALL", "FICTION", "NON-FICTION", "POETRY"] as Category[]).map(tab => (
                             <button
                                 key={tab}
-                                onClick={() => {
-                                    setPage(1);
-                                    setActiveTab(tab);
-                                }}
-                                className={`flex h-7.25 justify-center items-center px-3 sm:px-4.5 py-2.5 font-heading font-medium tracking-[1px] sm:tracking-[2px] text-xs sm:text-[14px] uppercase transition-colors whitespace-nowrap ${activeTab === tab
-                                    ? "bg-[#DC2828] text-white"
-                                    : "bg-white text-[#52525B] hover:text-[#18181B]"
+                                onClick={() => { setPage(1); setActiveTab(tab); }}
+                                className={`px-4 py-2 text-[11px] font-bold tracking-[2px] uppercase transition-all border ${activeTab === tab
+                                    ? "bg-[#DC2828] border-[#DC2828] text-white shadow-lg shadow-red-100"
+                                    : "bg-white border-zinc-200 text-zinc-500 hover:border-zinc-400"
                                     }`}
                             >
                                 {tab}
@@ -180,165 +159,157 @@ export function LiteratureContent() {
                         ))}
                     </div>
 
-                    <div className="relative w-full sm:w-auto">
-                        <button
-                            type="button"
-                            onClick={() => setIsSortOpen((prev) => !prev)}
-                            className="group flex w-full sm:w-auto cursor-pointer flex-row items-center justify-between sm:justify-start gap-2"
-                        >
-                            <span className="hidden sm:inline font-sans font-medium text-[#A1A1AA] tracking-[1.5px] uppercase text-[13px]">
-                                Sort by:
-                            </span>
-                            <span className="font-heading font-bold text-[#18181B] tracking-[1.5px] sm:tracking-[2px] uppercase text-xs sm:text-[14px]">
-                                {sortLabelMap[activeSort]}
-                            </span>
-                            <ChevronDown className={`h-4 sm:h-4.5 w-4 sm:w-4.5 text-[#A1A1AA] transition group-hover:text-[#18181B] ${isSortOpen ? "rotate-180" : "rotate-0"}`} />
-                        </button>
+                    {/* Sort & Pagination Controls */}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div className="relative inline-block text-left w-full sm:w-auto">
+                            <button
+                                onClick={() => setIsSortOpen(!isSortOpen)}
+                                className="flex items-center justify-between gap-3 w-full sm:w-auto bg-zinc-50 px-4 py-2 border border-zinc-200 hover:bg-zinc-100 transition-colors"
+                            >
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">Sort:</span>
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-900">{sortLabelMap[activeSort]}</span>
+                                <ChevronDown className={`w-4 h-4 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
+                            </button>
 
-                        {isSortOpen && (
-                            <div className="absolute right-0 sm:right-0 z-30 mt-2 w-full sm:w-auto sm:min-w-47.5 border border-[#E4E4E7] bg-white shadow-lg">
-                                {(["LATEST", "OLDEST", "TITLE_A_Z"] as SortOption[]).map((option) => (
-                                    <button
-                                        key={option}
-                                        type="button"
-                                        onClick={() => {
-                                            setPage(1);
-                                            setActiveSort(option);
-                                            setIsSortOpen(false);
-                                        }}
-                                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left font-sans text-xs sm:text-[13px] tracking-[1px] sm:tracking-[1.1px] uppercase transition-colors ${activeSort === option
-                                            ? "bg-[#F4F4F5] text-[#18181B]"
-                                            : "text-[#52525B] hover:bg-[#FAFAFA]"
-                                            }`}
-                                    >
-                                        {sortLabelMap[option]}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
+                            {isSortOpen && (
+                                <div className="absolute left-0 mt-2 w-48 bg-white border border-zinc-200 shadow-xl z-50">
+                                    {(Object.keys(sortLabelMap) as SortOption[]).map((option) => (
+                                        <button
+                                            key={option}
+                                            onClick={() => { setActiveSort(option); setIsSortOpen(false); setPage(1); }}
+                                            className="w-full text-left px-4 py-3 text-[11px] font-bold uppercase tracking-wider hover:bg-zinc-50 border-b border-zinc-50 last:border-0"
+                                        >
+                                            {sortLabelMap[option]}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <input
+                                type="text"
+                                placeholder="Search literature..."
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                className="flex-1 sm:w-64 px-4 py-2 border border-zinc-200 bg-zinc-50 text-[13px] outline-none focus:border-zinc-400"
+                            />
+                            <select
+                                value={pageSize}
+                                onChange={(e) => { setPage(1); setPageSize(Number(e.target.value)); }}
+                                className="px-3 py-2 border border-zinc-200 bg-zinc-50 text-[11px] font-bold uppercase outline-none"
+                            >
+                                <option value={10}>10</option>
+                                <option value={20}>20</option>
+                                <option value={50}>50</option>
+                            </select>
+                        </div>
                     </div>
-
-                    <select
-                        value={pageSize}
-                        onChange={(e) => {
-                            setPage(1);
-                            setPageSize(Number.parseInt(e.target.value, 10));
-                        }}
-                        className="bg-white border border-[#E4E4E7] px-3 py-2 text-sm text-[#18181B] outline-none"
-                    >
-                        <option value={10}>10 / page</option>
-                        <option value={20}>20 / page</option>
-                        <option value={30}>30 / page</option>
-                    </select>
                 </div>
             </div>
 
-            {/* Grid */}
-            <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 sm:gap-12 lg:gap-15 px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
-                <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-x-8 md:gap-y-12">
-                    {items.map(article => (
-                        <Link key={article.id} href={`/literature/${article.slug}`} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
-                            {/* Image */}
-                            <div className="relative w-full aspect-3/4">
-                                <Image
-                                    src={article.imageUrl}
-                                    alt={article.title}
-                                    fill
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                    className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-500 rounded-t-sm"
-                                />
-                                {/* Vintage overlay effect similar to user's figma reference */}
-                                <div className="absolute inset-0 bg-white/10 mix-blend-saturation pointer-events-none" />
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex flex-col gap-2.5 sm:gap-3 md:gap-4 p-4 sm:p-5 md:p-6">
-                                <div className="flex flex-row items-center gap-2.5 sm:gap-3">
-                                    <span className="font-sans font-black text-[9px] sm:text-[10.4px] leading-3.5 sm:leading-4 tracking-[1.8px] sm:tracking-[2.08px] text-[#E50914] uppercase">
-                                        {article.category}
-                                    </span>
-                                    <div className="w-0.5 sm:w-1 h-0.5 sm:h-1 bg-[#E4E4E7] rounded-full" />
-                                    <span className="font-sans font-bold text-[9px] sm:text-[10.4px] leading-3.5 sm:leading-4 tracking-[1.8px] sm:tracking-[2.08px] text-[#A1A1AA] uppercase">
-                                        {article.readTime}
-                                    </span>
+            {/* Content Grid */}
+            <div className="py-1">
+                {error ? (
+                    <div className="bg-red-50 text-red-600 p-8 text-center font-bold tracking-widest uppercase text-xs border border-red-100">
+                        {error}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                        {items.map(article => (
+                            <Link key={article.id} href={`/literature/${article.slug}`} className="group block">
+                                <div className="relative aspect-[16/9] overflow-hidden bg-zinc-100 border border-zinc-200">
+                                    <Image
+                                        src={article.imageUrl}
+                                        alt={article.title}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
+                                    {/* Category Badge over Image */}
+                                    <div className="absolute top-4 left-4">
+                                        <span className="bg-white/90 backdrop-blur px-3 py-1 text-[9px] font-black tracking-[2px] uppercase text-[#E50914]">
+                                            {article.category}
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <h2 className="font-heading h-auto sm:h-16 md:h-16.5 text-xl sm:text-2xl md:text-[28px] leading-5.75 sm:leading-7 md:leading-8.25 font-bold tracking-tight text-[#18181B] line-clamp-2 transition-colors group-hover:text-[#DC2828]">
-                                    {article.title}
-                                </h2>
-
-                                <p className="font-heading text-sm sm:text-base md:text-[16px] leading-5 sm:leading-5.75 md:leading-6 italic text-[#71717A]">
-                                    {article.author}
-                                </p>
-
-                                <p className="font-sans h-auto sm:h-10 md:h-11.5 text-xs sm:text-sm md:text-[14px] leading-4.5 sm:leading-5 md:leading-5.75 text-[#52525B] line-clamp-2">
-                                    {article.description}
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
-                    {loading && Array.from({ length: 9 }).map((_, i) => (
-                        <div key={i} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm overflow-hidden">
-                            {/* Image skeleton */}
-                            <div className="w-full aspect-3/4 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                            {/* Content skeleton */}
-                            <div className="flex flex-col gap-3 p-4 sm:p-5 md:p-6">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-2.5 w-14 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                    <div className="h-2.5 w-14 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
+                                <div className="mt-6 flex flex-col gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[10px] font-bold tracking-[2px] text-zinc-400 uppercase">{article.readTime}</span>
+                                        <span className="w-1 h-1 bg-zinc-200 rounded-full" />
+                                        <span className="text-[10px] font-bold tracking-[2px] text-zinc-400 uppercase">{new Date(article.releaseDate).getFullYear()}</span>
+                                    </div>
+                                    <h2 className="text-2xl font-bold tracking-tight text-zinc-900 group-hover:text-[#DC2828] transition-colors line-clamp-2">
+                                        {article.title}
+                                    </h2>
+                                    <p className="text-sm italic text-zinc-500">by {article.author}</p>
+                                    <p className="text-sm leading-relaxed text-zinc-600 line-clamp-3">
+                                        {article.description}
+                                    </p>
                                 </div>
-                                <div className="h-6 w-full bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-6 w-3/4 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-4 w-1/2 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-4 w-full bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-4 w-5/6 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                            </div>
-                        </div>
-                    ))}
-                    {!loading && !error && items.length === 0 && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 sm:py-16 md:py-20 text-gray-500">
-                            No articles found.
-                        </div>
-                    )}
-                    {!loading && error && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 text-red-500">{error}</div>
-                    )}
-                </div>
+                            </Link>
+                        ))}
 
+                        {/* Skeleton Loading State */}
+                        {loading && Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="animate-pulse">
+                                <div className="aspect-[3/4] bg-zinc-100 mb-6" />
+                                <div className="h-4 bg-zinc-100 w-1/3 mb-4" />
+                                <div className="h-8 bg-zinc-100 w-full mb-3" />
+                                <div className="h-4 bg-zinc-100 w-2/3" />
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Empty State */}
+                {!loading && items.length === 0 && !error && (
+                    <div className="text-center py-24">
+                        <p className="text-zinc-400 font-bold tracking-widest uppercase text-xs">No entries found in this collection.</p>
+                    </div>
+                )}
+
+                {/* Pagination */}
                 {total > 0 && (
-                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <span className="text-sm text-[#71717A]">
-                            Showing {total === 0 ? 0 : (page - 1) * pageSize + 1}-{Math.min(page * pageSize, total)} of {total}
-                        </span>
+                    <div className="mt-20 pt-10 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-8">
+                        <p className="text-xs font-bold tracking-widest text-zinc-400 uppercase">
+                            Volume {page} of {totalPages} — {total} Items
+                        </p>
 
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-2">
                             <button
-                                onClick={() => hasPrev && setPage((p) => Math.max(1, p - 1))}
-                                disabled={!hasPrev}
-                                className="w-8 h-8 border border-[#E4E4E7] bg-white disabled:opacity-40"
+                                onClick={() => setPage(p => p - 1)}
+                                disabled={!hasPrev || loading}
+                                className="px-4 py-2 border border-zinc-200 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-50 disabled:opacity-30 transition-all"
                             >
-                                ‹
+                                Previous
                             </button>
-                            {pageButtons.map((value) => (
-                                <button
-                                    key={value}
-                                    onClick={() => setPage(value)}
-                                    className={`w-8 h-8 border ${value === page ? 'bg-[#18181B] text-white border-[#18181B]' : 'bg-white border-[#E4E4E7] text-[#18181B]'}`}
-                                >
-                                    {value}
-                                </button>
-                            ))}
+                            <div className="flex gap-1">
+                                {pageButtons.map((btn) => (
+                                    <button
+                                        key={btn}
+                                        onClick={() => setPage(btn)}
+                                        className={`w-10 h-10 border text-[10px] font-black transition-all ${page === btn
+                                            ? "bg-zinc-900 border-zinc-900 text-white"
+                                            : "border-zinc-200 text-zinc-900 hover:border-zinc-900"
+                                            }`}
+                                    >
+                                        {btn}
+                                    </button>
+                                ))}
+                            </div>
                             <button
-                                onClick={() => hasNext && setPage((p) => p + 1)}
-                                disabled={!hasNext}
-                                className="w-8 h-8 border border-[#E4E4E7] bg-white disabled:opacity-40"
+                                onClick={() => setPage(p => p + 1)}
+                                disabled={!hasNext || loading}
+                                className="px-4 py-2 border border-zinc-200 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-50 disabled:opacity-30 transition-all"
                             >
-                                ›
+                                Next
                             </button>
                         </div>
                     </div>
                 )}
             </div>
-        </section>
+        </MaxWidthWrapper>
     );
 }
