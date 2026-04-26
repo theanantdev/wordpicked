@@ -2,10 +2,10 @@ import Image from "next/image";
 
 export function ArticleSidebar() {
     return (
-        <aside className="w-full h-full flex flex-col gap-16 pt-8 md:pt-[100px]">
+        <aside className="w-full h-full flex flex-col ">
 
             {/* Related Critiques */}
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-8 px-6 md:px-0">
                 <div className="border-b border-[#2B5940] pb-2">
                     <h3 className="font-sans text-[22px] leading-[27px] text-[#1C1C18]">Related Critiques</h3>
                 </div>
@@ -52,7 +52,7 @@ export function ArticleSidebar() {
             </div>
 
             {/* Sidebar Ad */}
-            <div className="flex flex-col items-center justify-center h-[345px] bg-[#EBE8E1] border border-[#C1C9C1]/30 p-8 gap-8">
+            <div className="flex flex-col items-center justify-center h-[345px] bg-[#EBE8E1] border border-[#C1C9C1]/30 p-8 gap-8 mt-12 ">
                 <span className="font-sans font-medium text-[14px] tracking-[1px] uppercase text-[#A8A29E]">
                     Advertisement
                 </span>
@@ -69,7 +69,7 @@ export function ArticleSidebar() {
             </div>
 
             {/* Newsletter */}
-            <div className="flex flex-col pb-6 bg-white shadow-sm border-l-[4px] border-[#EBC164]">
+            <div className="flex flex-col pb-6 bg-white shadow-sm border-l-[4px] border-[#EBC164] mt-12">
                 <div className="flex flex-col p-8 gap-4">
                     <h3 className="font-heading font-normal text-[22px] leading-[29px] text-[#1C1C18]">
                         The Weekly Dispatch

@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: PageProps): Promise<import("n
     try {
         const { slug } = await params;
         const data = await fetchArticleBySlug(slug);
-        
+
         return {
             title: data.article.title,
             description: data.article.subtitle,
@@ -115,12 +115,12 @@ export default async function LiteraturePostPage({ params }: PageProps) {
             />
             <ViewTracker articleId={data.article.id} />
 
-            <div className="max-w-[1240px] mx-auto px-6 md:px-[60px] lg:px-[80px] pb-[80px] md:pb-[120px] relative">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-16 xl:gap-[100px] relative">
+            <div className=" mx-auto px-6 md:px-[60px] lg:px-[40px] pb-[80px] md:pb-[120px] relative">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-16 xl:gap-[100px] relative">
                     <ArticleBody blocks={data.article.blocks} tags={data.article.tags} />
 
                     {/* Optional separator line visible only on large screens if desired */}
-                    {/* <div className="hidden lg:block absolute left-[calc(100%-350px-50px)] xl:left-[calc(100%-350px-50px)] top-0 bottom-0 w-px bg-[#E7E5E4]" /> */}
+                    <div className="hidden lg:block absolute left-[calc(100%-250px-50px)] xl:left-[calc(100%-350px-50px)] top-0 bottom-0 w-px bg-[#E7E5E4]" />
 
                     <ArticleSidebar />
                 </div>

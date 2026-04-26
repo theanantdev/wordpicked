@@ -183,21 +183,8 @@ export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
     };
 
     return (
-        <div className="flex flex-col gap-10 w-full pt-8 lg:pr-[40px]">
-            <div className="flex flex-col items-center mb-6">
-                <div className="flex items-center text-[#FBBC05] gap-[10px]">
-                    <Star className="w-6 h-6 fill-current" />
-                    <Star className="w-6 h-6 fill-current" />
-                    <Star className="w-6 h-6 fill-current" />
-                    <Star className="w-6 h-6 fill-current" />
-                    <Star className="w-6 h-6 text-transparent stroke-[#181821] stroke-2" />
-                </div>
-                <span className="font-heading italic text-[18px] text-[#615E5A] mt-4">
-                    The Wordpicked Essential Reading
-                </span>
-            </div>
-
-            <div className="font-sans font-light text-[18px] leading-[29px] text-[#1C1C18] flex flex-col gap-8">
+        <div className="flex flex-col w-full ">
+            <div className="font-sans font-light text-[18px] leading-[29px] text-[#1C1C18] flex flex-col gap-2">
                 {safeBlocks.map((block, index) => {
                     const text = normalizeText(block.data?.text);
                     const urls = extractUrls(text);
