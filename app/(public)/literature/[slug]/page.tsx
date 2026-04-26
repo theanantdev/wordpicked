@@ -5,7 +5,7 @@ import { ArticleRelated } from "../_components/article-related";
 import { CommentsSection } from "@/app/(public)/_components/comments-section";
 import { ViewTracker } from "@/app/(public)/_components/view-tracker";
 import { headers } from "next/headers";
-
+import MaxWidthWrapper from "@/components/max-width-wraper";
 type PageProps = {
     params: Promise<{ slug: string }>;
 };
@@ -115,7 +115,7 @@ export default async function LiteraturePostPage({ params }: PageProps) {
             />
             <ViewTracker articleId={data.article.id} />
 
-            <div className=" mx-auto px-6 md:px-[60px] lg:px-[40px] pb-[80px] md:pb-[120px] relative">
+            <MaxWidthWrapper>
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-16 xl:gap-[100px] relative">
                     <ArticleBody blocks={data.article.blocks} tags={data.article.tags} />
 
@@ -124,7 +124,7 @@ export default async function LiteraturePostPage({ params }: PageProps) {
 
                     <ArticleSidebar />
                 </div>
-            </div>
+            </MaxWidthWrapper>
 
             <ArticleRelated items={data.related} />
 
