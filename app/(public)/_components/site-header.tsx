@@ -82,10 +82,10 @@ export function SiteHeader() {
             {/* Mobile Dropdown Menu Formatted to Spec */}
             {isMenuOpen && (
                 <div className="absolute left-0 top-0 z-50 flex min-h-90 w-full flex-col items-center overflow-y-auto border-b border-zinc-800 bg-[#141210] shadow-2xl animate-in slide-in-from-top-2 duration-200 min-[1024px]:hidden">
-                    <div className="relative flex h-16 w-full items-center justify-start px-4">
+                    <div className="relative flex flex-col  h-16 w-full items-start justify-start px-4">
                         {/* Centered Mobile Logo */}
                         <Link href="/" onClick={() => setIsMenuOpen(false)} className="font-heading text-[26px] font-semibold tracking-[0.26px] text-[#f5f0e8]">
-                            <Image src="/logo.png" alt="Logo" width={88} height={88} className="h-10 w-auto" />
+                            <Image src="/logo.png" alt="Logo" width={88} height={88} className="h-10" />
                         </Link>
 
                         {/* Close button positioned strictly matching Vector layout */}
@@ -95,7 +95,7 @@ export function SiteHeader() {
                     </div>
 
                     {/* Centered Links exactly 18px apart */}
-                    <nav className="mt-4 flex w-full max-w-90 flex-col items-start gap-4.5 px-6 pb-8 min-[480px]:max-w-120 min-[640px]:max-w-160">
+                    <nav className="flex w-full flex-col items-start gap-4.5 px-1pb-8 px-5">
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href;
                             return (
