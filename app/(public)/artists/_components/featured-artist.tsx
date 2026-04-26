@@ -6,26 +6,26 @@ const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1544717297-fa95b6ee964
 
 export function FeaturedArtist({ artist }: { artist: Artist }) {
     return (
-        <section className="w-full bg-[#EBE8E1] border-t-[0.8px] border-white/5 py-16 md:py-[60px] flex justify-center">
-            <div className="max-w-[1200px] w-full px-6 md:px-[60px] lg:px-[120px] flex flex-col md:flex-row gap-10 md:gap-[60px] lg:gap-[80px] items-center md:items-start">
+        <section className="flex w-full justify-center border-t-[0.8px] border-white/5 bg-[#EBE8E1] py-16 md:py-15">
+            <div className="flex w-full max-w-300 flex-col items-center gap-10 px-6 md:flex-row md:items-start md:gap-15 md:px-15 lg:gap-20 lg:px-30">
 
                 {/* Left Image */}
-                <div className="relative w-full md:w-[45%] lg:w-[48%] aspect-[4/5] md:aspect-[3/4] flex-shrink-0">
+                <div className="relative aspect-4/5 w-full shrink-0 md:aspect-3/4 md:w-[45%] lg:w-[48%]">
                     <Image
                         src={artist.image_url || FALLBACK_IMAGE}
                         alt={artist.full_name}
                         fill
-                        className="object-cover rounded-[2px]"
+                        className="rounded-xs object-cover"
                     />
                 </div>
 
                 {/* Right Content */}
-                <div className="flex flex-col gap-8 md:gap-[40px] lg:gap-[60px] w-full md:w-[55%] lg:w-[52%] pt-0 md:pt-4">
-                    <div className="flex flex-col gap-6 md:gap-[30px]">
-                        <div className="flex flex-col gap-3 md:gap-[15px]">
+                <div className="flex w-full flex-col gap-8 pt-0 md:w-[55%] md:gap-10 md:pt-4 lg:w-[52%] lg:gap-15">
+                    <div className="flex flex-col gap-6 md:gap-7.5">
+                        <div className="flex flex-col gap-3 md:gap-3.75">
                             <div className="flex items-center gap-2">
-                                <span className="text-[#A8812A] text-[10px] md:text-[11px] leading-[19px]">★</span>
-                                <span className="font-sans font-normal text-[9px] md:text-[10px] leading-[15px] tracking-[1.8px] uppercase text-[#A8812A]">
+                                <span className="text-[10px] leading-4.75 text-[#A8812A] md:text-[11px]">★</span>
+                                <span className="font-sans text-[9px] font-normal uppercase tracking-[1.8px] leading-3.75 text-[#A8812A] md:text-[10px]">
                                     Featured Artist
                                 </span>
                             </div>
@@ -34,7 +34,7 @@ export function FeaturedArtist({ artist }: { artist: Artist }) {
                                 {artist.full_name}
                             </h2>
 
-                            <span className="font-sans font-normal text-[10px] md:text-[11px] leading-[19px] tracking-[1.54px] uppercase text-[#1C1A17]/40">
+                            <span className="font-sans text-[10px] font-normal uppercase tracking-[1.54px] leading-4.75 text-[#1C1A17]/40 md:text-[11px]">
                                 {artist.art_form}
                             </span>
                         </div>
@@ -52,7 +52,7 @@ export function FeaturedArtist({ artist }: { artist: Artist }) {
 
                     <div className="flex flex-col gap-8">
                         {/* Social Buttons */}
-                        <div className="flex flex-row flex-wrap gap-[10px]">
+                        <div className="flex flex-row flex-wrap gap-2.5">
                             {artist.instagram && (
                                 <Link href={artist.instagram} target="_blank" className="px-5 py-1.5 border border-black/10 rounded-[1px] bg-transparent transition-colors hover:bg-black/5">
                                     <span className="font-sans font-medium text-[9px] md:text-[10px] uppercase tracking-[1px] text-[#1B1B1B]/70">Instagram</span>
