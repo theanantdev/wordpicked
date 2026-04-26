@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Bookmark, Heart, Star, Eye } from "lucide-react";
 import { ShareButton } from "./share-button";
 import { usePathname } from "next/navigation";
+import MaxWidthWrapper from "@/components/max-width-wraper";
 type ArticleHeroProps = {
     categoryLabel: string;
     title: string;
@@ -18,9 +19,9 @@ export function ArticleHero({ categoryLabel, title, subtitle, authorName, publis
     const pathname = usePathname();
     return (
 
-        <section className="w-full bg-[#FDF9F2] pt-[40px] md:pt-[60px] lg:pt-[92px] pb-[40px] md:pb-[60px] relative mt-16 md:mt-2">
-            <div className="max-w-[1240px] mx-auto px-6 md:px-[60px] lg:px-[80px] grid grid-cols-1 md:grid-cols-[55%_45%] lg:grid-cols-[60%_40%] gap-10 md:gap-8 items-center relative z-10">
-                <div className="flex flex-col items-start gap-8 lg:gap-10">
+        <MaxWidthWrapper className="px-1">
+            <div className="flex sm:flex-row flex-col mt-10 gap-10 lg:gap-20">
+                <div className="flex flex-col items-start gap-8 lg:gap-10 p-2">
                     <div className="flex flex-col items-start gap-6 lg:gap-8 w-full">
                         <div className="bg-[#11412A] px-4 py-[5px]">
                             <span className="font-heading font-medium text-[12px] md:text-[14px] leading-tight uppercase tracking-[2px] text-white">
@@ -39,9 +40,9 @@ export function ArticleHero({ categoryLabel, title, subtitle, authorName, publis
 
                     <div className="flex flex-col gap-8 w-full border-t border-[#292524] pt-8">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full overflow-hidden relative grayscale">
+                            {/* <div className="w-12 h-12 rounded-full overflow-hidden relative grayscale">
                                 <Image src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&auto=format&fit=crop" alt="Julian Barnes-Holloway" fill className="object-cover" />
-                            </div>
+                            </div> */}
                             <div className="flex flex-col gap-1">
                                 <span className="font-sans font-light text-[14px] leading-none tracking-[1.4px] uppercase text-[#1C1C18]">
                                     {authorName}
@@ -90,11 +91,11 @@ export function ArticleHero({ categoryLabel, title, subtitle, authorName, publis
                 </div>
 
                 {/* Mobile Cover Representation */}
-                <div className="relative w-full max-w-[80%] mx-auto aspect-[2/3] md:hidden shadow-2xl mt-4">
+                <div className="relative w-full max-w-[95%] mx-auto aspect-[2/3] md:hidden shadow-2xl mt-4">
                     <Image src={coverImageUrl} alt={title} fill className="object-cover" />
                 </div>
 
             </div>
-        </section>
+        </MaxWidthWrapper>
     );
 }
