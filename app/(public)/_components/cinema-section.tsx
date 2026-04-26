@@ -49,7 +49,7 @@ export function CinemaSection({ initialData }: { initialData?: { recent: Article
             <div className="grid gap-6 min-[640px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1440px]:gap-8">
                 {articles.slice(0, 3).map((article) => (
                     <Link key={article.id} href={`/films/${article.slug}`} className="block h-full">
-                        <article className="flex h-80.25 w-full flex-col border border-zinc-100 bg-[#fdf9f2] p-8 shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:shadow-md min-[360px]:p-9 min-[480px]:p-10 min-[768px]:h-85 min-[768px]:p-10 min-[1024px]:h-90 min-[1200px]:h-95 min-[1440px]:h-102.5 min-[1440px]:p-12 min-[1920px]:h-110">
+                        <article className="flex h-80.25 w-full flex-col border items-start justify-start border-zinc-100 bg-[#fdf9f2] p-8 shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-1 hover:shadow-md min-[360px]:p-9 min-[480px]:p-10 min-[768px]:h-85 min-[768px]:p-10 min-[1024px]:h-90 min-[1200px]:h-95 min-[1440px]:h-102.5 min-[1440px]:p-12 min-[1920px]:h-110">
                             <p className="font-heading text-[30px] leading-9 text-[#2b5940] min-[768px]:text-[34px] min-[1200px]:text-[38px] min-[1440px]:text-[42px]">
                                 {Math.min(9.8, 8 + (article.view_count % 20) / 10).toFixed(1)}
                             </p>
@@ -76,7 +76,7 @@ export function CinemaSection({ initialData }: { initialData?: { recent: Article
         <section className="bg-[#f7f3ec]">
             <MaxWidthWrapper className="px-3 py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-8 min-[1200px]:py-16 min-[1440px]:py-20 min-[1920px]:py-24">
                 <div className="space-y-8 min-[768px]:space-y-10 min-[1200px]:space-y-12 min-[1440px]:space-y-14">
-                    <div className="grid items-center gap-8 min-[640px]:gap-10 min-[1024px]:grid-cols-2 min-[1200px]:gap-12 min-[1440px]:gap-16">
+                    <div className="grid items-center gap-2 min-[640px]:gap-10 min-[1024px]:grid-cols-2 min-[1200px]:gap-12 min-[1440px]:gap-16">
                         <div className="relative aspect-4/3 w-full overflow-hidden shadow-sm min-[640px]:aspect-16/10 min-[1024px]:aspect-5/4 min-[1440px]:aspect-16/11 min-[1920px]:aspect-18/12">
                             <Image
                                 src="/home/image.png"
@@ -86,9 +86,9 @@ export function CinemaSection({ initialData }: { initialData?: { recent: Article
                                 className="object-cover object-center"
                             />
                         </div>
-                        <div className="text-center min-[1024px]:text-left">
-                            <h2 className="font-heading text-[34px] leading-tight text-[#1c1c18] min-[360px]:text-[36px] min-[640px]:text-[42px] min-[768px]:text-[48px] min-[1200px]:text-[54px] min-[1440px]:text-[60px] min-[1920px]:text-[68px]">Cinema as Ritual</h2>
-                            <p className="mx-auto mt-5 max-w-xl text-[15px] leading-7 text-zinc-700 min-[480px]:text-[16px] min-[768px]:mt-6 min-[768px]:text-[18px] min-[1024px]:mx-0 min-[1200px]:max-w-[58ch] min-[1440px]:text-[19px] min-[1920px]:text-[20px]">
+                        <div className="text-start min-[1024px]:text-left">
+                            <h2 className="font-heading text-center sm:text-start text-[34px] leading-tight text-[#1c1c18] min-[360px]:text-[36px] min-[640px]:text-[42px] min-[768px]:text-[48px] min-[1200px]:text-[54px] min-[1440px]:text-[60px] min-[1920px]:text-[68px]">Cinema as Ritual</h2>
+                            <p className=" items-start max-w-xl text-[15px] leading-7 text-zinc-700 min-[480px]:text-[16px] min-[768px]:mt-1 min-[768px]:text-[18px] min-[1024px]:mx-0 min-[1200px]:max-w-[58ch] min-[1440px]:text-[19px] min-[1920px]:text-[20px]">
                                 Our film critiques go beyond the surface of plot and performance. We dissect the visual grammar,
                                 the acoustic textures, and the psychological resonance of masterpieces.
                             </p>
