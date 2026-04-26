@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { StoryCard } from "./story-card";
 import { TabFilter } from "./tab-filter";
 import { StoryCardSkeleton } from "./home-skeletons";
-
+import MaxWidthWrapper from "@/components/max-width-wraper";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 type Article = {
     id: string;
     title: string;
@@ -48,13 +50,13 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
     const renderGrid = (articles: Article[], isLoading: boolean) => {
         if (isLoading) {
             return (
-                <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-5 grid gap-4 min-[360px]:mt-6 min-[360px]:gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:gap-8">
                     {[1, 2, 3].map(i => <StoryCardSkeleton key={i} />)}
                 </div>
             );
         }
         return (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-5 grid gap-4 min-[360px]:mt-6 min-[360px]:gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:gap-8">
                 {articles.map((article) => (
                     <StoryCard
                         key={article.id}
@@ -70,15 +72,25 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
         );
     };
 
-    return (
-        <section className="border-y border-zinc-200 bg-[#fdf9f2] py-20">
-            <div className="mx-auto w-full max-w-310 space-y-24 px-4 md:px-6">
+    return (<section className=" bg-[#fdf9f2]">
+        <MaxWidthWrapper className="px-1 py-8 min-[360px]:px-4 min-[360px]:py-9 min-[480px]:px-5 min-[640px]:py-10 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-8 min-[1200px]:py-16 min-[1440px]:py-20 min-[1920px]:py-24">
+
+            <div className="mx-auto w-full space-y-10 min-[768px]:space-y-12 min-[1200px]:space-y-14 min-[1440px]:space-y-16">
                 {/* Literature Section */}
                 <div>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-zinc-100 pb-8">
-                        <div>
-                            <div className="mb-3 h-1 w-12 bg-[#DC2828]" />
-                            <h2 className="font-heading text-4xl font-semibold text-zinc-900">Literature</h2>
+                    <div className="">
+                        <div className="flex flex-col border-b border-zinc-100">
+                            <div className="h-1 w-12 bg-[#DC2828]" />
+                            <div className="relative flex items-center flex-row w-full justify-between gap-4 py-2 min-[768px]:py-3">
+                                <h2 className="font-heading text-xl font-semibold text-zinc-900 min-[360px]:text-2xl min-[640px]:text-3xl min-[768px]:text-4xl min-[1440px]:text-[44px] min-[1920px]:text-[52px]">Literature</h2>
+                                <Link href={"/literature"}>
+                                    <button className="group inline-flex h-9 items-center justify-center gap-2 border border-zinc-200 bg-[#DC2828] px-4 py-2 text-[9px] font-bold uppercase tracking-[0.16em] text-white transition-all hover:border-[#DC2828] min-[480px]:h-10 min-[480px]:px-5 min-[480px]:text-[10px] min-[768px]:h-11 min-[768px]:px-6">
+                                        View All <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                                    </button>
+                                </Link>
+
+                            </div>
+
                         </div>
                         <TabFilter activeTab={litTab} onChange={setLitTab} />
                     </div>
@@ -87,16 +99,27 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
 
                 {/* Films Section */}
                 <div>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-zinc-100 pb-8">
-                        <div>
-                            <div className="mb-3 h-1 w-12 bg-[#DC2828]" />
-                            <h2 className="font-heading text-4xl font-semibold text-zinc-900">Films</h2>
+                    <div className="">
+                        <div className="flex flex-col border-b border-zinc-100">
+                            <div className="h-1 w-12 bg-[#DC2828]" />
+                            <div className="relative flex items-center flex-row w-full justify-between gap-4 py-2 min-[768px]:py-3">
+                                <h2 className="font-heading text-xl font-semibold text-zinc-900 min-[360px]:text-2xl min-[640px]:text-3xl min-[768px]:text-4xl min-[1440px]:text-[44px] min-[1920px]:text-[52px]">Films</h2>
+                                <Link href={"/films"}>
+                                    <button className="group inline-flex h-9 items-center justify-center gap-2 border border-zinc-200 bg-[#DC2828] px-4 py-2 text-[9px] font-bold uppercase tracking-[0.16em] text-white transition-all hover:border-[#DC2828] min-[480px]:h-10 min-[480px]:px-5 min-[480px]:text-[10px] min-[768px]:h-11 min-[768px]:px-6">
+                                        View All <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                                    </button>
+                                </Link>
+
+                            </div>
+
                         </div>
                         <TabFilter activeTab={filmsTab} onChange={setFilmsTab} />
                     </div>
                     {renderGrid(filmsData?.[filmsTab].slice(0, 3) || [], loading)}
                 </div>
             </div>
-        </section>
+
+        </MaxWidthWrapper>
+    </section>
     );
 }
