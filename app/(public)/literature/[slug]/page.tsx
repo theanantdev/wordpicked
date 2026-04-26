@@ -120,7 +120,7 @@ export default async function LiteraturePostPage({ params }: PageProps) {
                     <ArticleBody blocks={data.article.blocks} tags={data.article.tags} />
 
                     {/* Optional separator line visible only on large screens if desired */}
-                    <div className="hidden lg:block absolute left-[calc(100%-250px-50px)] xl:left-[calc(100%-350px-50px)] top-0 bottom-0 w-px bg-[#E7E5E4]" />
+                    {/* <div className="hidden lg:block absolute left-[calc(100%-250px-50px)] xl:left-[calc(100%-350px-50px)] top-0 bottom-0 w-px bg-[#E7E5E4]" /> */}
 
                     <ArticleSidebar />
                 </div>
