@@ -86,29 +86,7 @@ export default function AboutPage() {
             <section className="relative w-full h-[380px] sm:h-[430px] md:h-[478px] bg-[#1C1C18] overflow-hidden">
 
                 {/* Angled book/film covers — hidden on very small screens */}
-                <div className="absolute inset-0">
-                    {FILM_COVERS.map((cover, i) => (
-                        <div
-                            key={i}
-                            className="absolute top-1/2 shadow-2xl overflow-hidden"
-                            style={{
-                                left: `${-4 + i * 21}%`,
-                                width: '19%',
-                                aspectRatio: '2/3',
-                                transform: `translateY(-48%) rotate(${cover.rotate})`,
-                            }}
-                        >
-                            <Image
-                                src={cover.src}
-                                alt={cover.alt}
-                                fill
-                                priority={i < 2}
-                                className="object-cover"
-                                sizes="(max-width: 640px) 35vw, 20vw"
-                            />
-                        </div>
-                    ))}
-                </div>
+                <Image src="/literature/hero.png" alt="Stack of book and film covers" fill className="object-cover object-center opacity-40 " sizes="100vw" priority />
 
                 {/* Dark gradient — bottom-heavy so text is legible */}
                 <div
@@ -177,7 +155,7 @@ export default function AboutPage() {
             </section>
 
             {/* ── Stats bar ─────────────────────────────────── */}
-            <div className="w-full bg-white border-y border-[#E7E5E4] overflow-x-auto">
+            <div className="w-full bg-white border-y border-[#E7E5E4] overflow-x-auto no-scrollbar">
                 <div className="flex items-center min-w-max md:min-w-0 md:justify-center gap-6 sm:gap-10 md:gap-[56px] px-6 py-4">
                     {STATS.map((s, i) => (
                         <span
@@ -203,10 +181,10 @@ export default function AboutPage() {
                             <Link
                                 key={s.number}
                                 href={s.href}
-                                className="group flex flex-row sm:grid sm:grid-row-[180px_1fr] gap-3 sm:gap-10 py-8 sm:py-10 transition-colors items-center justify-center"
+                                className="group flex flex-col sm:grid sm:grid-col-[180px_1fr] gap-3 sm:gap-10 py-8 sm:py-10 transition-colors items-start justify-start"
                             >
                                 {/* Number + title */}
-                                <div className="flex sm:flex-row gap-3 sm:gap-1.5 w-full justify-center">
+                                <div className="flex sm:flex-row gap-3 sm:gap-1.5 w-full justify-start ">
                                     <span className="font-heading font-normal text-[12px] tracking-[1.5px] uppercase text-[#A8812A] pt-1">
                                         {s.number}
                                     </span>
