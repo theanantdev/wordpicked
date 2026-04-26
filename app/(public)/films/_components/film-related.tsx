@@ -38,68 +38,69 @@ export function FilmRelated({ items = [] }: FilmRelatedProps) {
     ];
 
     return (
-        <section className="w-full bg-[#FDF9F2] px-6 md:px-12 lg:px-[152px] pb-[80px] md:pb-[120px] flex flex-col gap-12 border-t border-[rgba(0,0,0,0.05)] pt-12 md:pt-20">
-            <div className="flex flex-row items-center justify-between">
-                <h2 className="font-heading italic font-bold text-[28px] md:text-[36px] leading-[40px] text-[#1A1A1A]">
+        <section className="w-full border-t border-[rgba(0,0,0,0.05)] bg-[#FDF9F2] px-4 py-12 min-[360px]:px-6 min-[640px]:px-8 min-[768px]:py-20 min-[1200px]:px-12 min-[1200px]:py-24 min-[1440px]:px-38 min-[1920px]:px-44 min-[1920px]:py-28">
+            <div className="flex flex-col items-start justify-between gap-4 min-[640px]:flex-row min-[640px]:items-center">
+                <h2 className="font-heading text-[28px] font-bold italic leading-10 text-[#1A1A1A] min-[768px]:text-[36px]">
                     Further Readings
                 </h2>
-                <Link href="/films" className="px-5 py-2.5 bg-[#DC2828] text-white hover:bg-[#b02020] transition-colors rounded-[2px] hidden sm:flex items-center justify-center shadow-sm hover:shadow-md">
-                    <span className="font-sans font-medium text-[12px] md:text-[14px] leading-[20px] uppercase tracking-[1.4px]">
+                <Link href="/films" className="hidden items-center justify-center rounded-xs bg-[#DC2828] px-5 py-2.5 text-white shadow-sm transition-colors hover:bg-[#b02020] hover:shadow-md min-[640px]:flex">
+                    <span className="font-sans text-[12px] font-medium uppercase tracking-[1.4px] leading-5 min-[768px]:text-[14px]">
                         View Archive
                     </span>
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
+            <div className="grid grid-cols-1 gap-6 min-[640px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1440px]:gap-8 min-[1920px]:gap-10">
                 {RELATED_FILMS.map((film, index) => (
-                    <div key={(film as FilmRelatedItem).href || `related-${index}`} className="flex flex-col gap-[28px] group cursor-pointer w-full group">
-                        <div className="relative w-full aspect-[4/5] max-h-[446px] bg-[#F5F5F5] border border-[rgba(0,0,0,0.05)] overflow-hidden rounded-[2px]">
+
+                    <Link key={(film as FilmRelatedItem).href || `related-${index}`} href={(film as FilmRelatedItem).href || "/films"} className="group flex w-full flex-col gap-7 cursor-pointer">
+                        <div className="relative aspect-4/5 w-full max-h-111.5 overflow-hidden rounded-xs border border-[rgba(0,0,0,0.05)] bg-[#F5F5F5]">
                             <Image
                                 src={(film as FilmRelatedItem).img || (film as { image?: string }).image || "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=800&auto=format&fit=crop"}
                                 alt={film.title}
                                 fill
                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                className="object-cover opacity-90 group-hover:scale-105 transition-transform duration-[800ms]"
+                                className="object-cover opacity-90 transition-transform duration-800 group-hover:scale-105"
                             />
                             {/* Gradient Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.6)] to-transparent" />
+                            <div className="absolute inset-0 bg-linear-to-t from-[rgba(0,0,0,0.6)] to-transparent" />
 
                             {/* Tag Badge */}
-                            <div className="absolute bottom-[25px] left-[25px] bg-[rgba(229,9,20,0.9)] px-[12px] py-[2.5px] rounded-[1px] shadow-sm">
-                                <span className="font-sans font-semibold text-[12px] md:text-[14px] leading-[15px] tracking-[1px] uppercase text-white">
+                            <div className="absolute bottom-6.25 left-6.25 rounded-[1px] bg-[rgba(229,9,20,0.9)] px-3 py-[2.5px] shadow-sm">
+                                <span className="font-sans text-[12px] font-semibold uppercase tracking-[1px] leading-3.75 min-[768px]:text-[14px]">
                                     {film.tag}
                                 </span>
                             </div>
                         </div>
 
-                        <Link href={(film as FilmRelatedItem).href || "/films"} className="flex flex-col gap-2">
-                            <h3 className="font-heading font-bold text-[20px] md:text-[24px] text-[#1A1A1A] leading-[28px] group-hover:text-[#E50914] transition-colors line-clamp-2">
-                                {film.title}
-                            </h3>
-                            <p className="font-sans font-normal text-[14px] md:text-[15px] leading-[20px] text-[rgba(26,26,26,0.6)] line-clamp-3">
-                                {(film as { description?: string }).description || "Read the full film feature."}
-                            </p>
-                        </Link>
-                    </div>
+
+                        <h3 className="font-heading text-[20px] font-bold leading-7 text-[#1A1A1A] transition-colors line-clamp-2 group-hover:text-[#E50914] min-[768px]:text-[24px]">
+                            {film.title}
+                        </h3>
+                        <p className="font-sans text-[14px] font-normal leading-5 text-[rgba(26,26,26,0.6)] line-clamp-3 min-[768px]:text-[15px]">
+                            {(film as { description?: string }).description || "Read the full film feature."}
+                        </p>
+                    </Link>
+
                 ))}
             </div>
 
             {/* Mobile View Archive Button */}
-            <div className="sm:hidden w-full flex justify-center mt-2">
-                <Link href="/films" className="px-8 py-3.5 bg-[#DC2828] text-white hover:bg-[#b02020] transition-colors rounded-[2px] w-full text-center shadow-sm">
-                    <span className="font-sans font-medium text-[13px] uppercase tracking-[1.4px]">
+            <div className="mt-2 flex w-full justify-center min-[640px]:hidden">
+                <Link href="/films" className="w-full rounded-xs bg-[#DC2828] px-8 py-3.5 text-center text-white shadow-sm transition-colors hover:bg-[#b02020]">
+                    <span className="font-sans text-[13px] font-medium uppercase tracking-[1.4px]">
                         View Archive
                     </span>
                 </Link>
             </div>
 
-            <div className="w-full flex justify-center mt-[40px] md:mt-[48px]">
-                <button className="bg-[#DC2828] transition-transform shadow-[2px_2px_0px_#DC2828] px-[48px] py-[20px] rounded-[2px] flex flex-col items-center justify-center">
-                    <span className="font-sans font-bold text-[14px] md:text-[18px] leading-[22px] tracking-[2.24px] uppercase text-white">
+            {/* <div className="mt-10 flex w-full justify-center min-[768px]:mt-12">
+                <button className="flex flex-col items-center justify-center rounded-xs bg-[#DC2828] px-12 py-5 text-white shadow-[2px_2px_0px_#DC2828] transition-transform">
+                    <span className="font-sans text-[14px] font-bold uppercase tracking-[2.24px] leading-5.5 min-[768px]:text-[18px]">
                         Load More Reviews
                     </span>
                 </button>
-            </div>
+            </div> */}
         </section>
     );
 }

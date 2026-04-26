@@ -1,3 +1,5 @@
+import MaxWidthWrapper from "@/components/max-width-wraper";
+
 type ContentBlock = {
     type?: string;
     data?: {
@@ -55,7 +57,7 @@ function LinkPreview({ url }: { url: string }) {
 
     if (embedUrl) {
         return (
-            <div className="relative mt-4 w-full aspect-video overflow-hidden rounded-[4px] border border-black/10 bg-black">
+            <div className="relative mt-4 w-full aspect-video overflow-hidden rounded-lg border border-black/10 bg-black">
                 <iframe
                     src={embedUrl}
                     title="Embedded preview"
@@ -72,7 +74,7 @@ function LinkPreview({ url }: { url: string }) {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 block rounded-[4px] border border-[#1A1A1A]/15 bg-[#FFFFFF] p-3 text-[14px] text-[#1A1A1A] hover:bg-[#F8F3EA]"
+            className="mt-4 block rounded-lg border border-[#1A1A1A]/15 bg-[#FFFFFF] p-3 text-[14px] text-[#1A1A1A] hover:bg-[#F8F3EA]"
         >
             {url}
         </a>
@@ -83,8 +85,8 @@ export function FilmContent({ blocks = [], tags = [] }: FilmContentProps) {
     const safeBlocks = blocks.length > 0 ? blocks : [{ type: "paragraph", data: { text: "Film content is currently unavailable." } }];
 
     return (
-        <article className="w-full bg-[#FDF9F2] flex flex-col items-center py-[80px] md:py-[120px] px-6">
-            <div className="w-full max-w-[656px] flex flex-col gap-[36px]">
+        <MaxWidthWrapper>
+            <div className="flex w-full mx-auto max-w-164 flex-col gap-9 min-[768px]:max-w-3xl min-[1200px]:max-w-230 min-[1440px]:max-w-300">
                 {safeBlocks
                     .map((block, index) => {
                         const text = block.data?.text || "";
@@ -98,7 +100,7 @@ export function FilmContent({ blocks = [], tags = [] }: FilmContentProps) {
 
                         if (block.type === "header") {
                             return (
-                                <h2 key={`header-${index}`} className="font-heading font-bold text-[30px] leading-[38px] text-[#1A1A1A]">
+                                <h2 key={`header-${index}`} className="font-heading text-[30px] font-bold leading-9.5 text-[#1A1A1A] min-[640px]:text-[34px] min-[1200px]:text-[38px]">
                                     {text}
                                 </h2>
                             );
@@ -106,8 +108,8 @@ export function FilmContent({ blocks = [], tags = [] }: FilmContentProps) {
 
                         if (block.type === "quote") {
                             return (
-                                <blockquote key={`quote-${index}`} className="my-[20px] pl-[24px] py-3 border-l-[2px] border-[#E50914] flex flex-col gap-4">
-                                    <p className="font-heading italic font-bold text-[22px] md:text-[28px] leading-[34px] text-[#1A1A1A]">
+                                <blockquote key={`quote-${index}`} className="my-5 flex flex-col gap-4 border-l-2 border-[#E50914] py-3 pl-6">
+                                    <p className="font-heading text-[22px] font-bold italic leading-8.5 text-[#1A1A1A] md:text-[28px] md:leading-9.5">
                                         {text || block.data?.caption || "-"}
                                     </p>
                                 </blockquote>
@@ -129,8 +131,8 @@ export function FilmContent({ blocks = [], tags = [] }: FilmContentProps) {
 
                             return (
                                 <div key={`p-${index}`}>
-                                    <p className="font-sans font-light text-[18px] md:text-[20px] leading-[28px] text-[#1A1A1A]/90">
-                                        <span className="float-left font-sans font-bold text-[60px] md:text-[72px] leading-[65px] md:leading-[72px] text-[#1A1A1A]/60 mr-4">
+                                    <p className="font-sans text-[18px] font-light leading-7 text-[#1A1A1A]/90 md:text-[20px]">
+                                        <span className="float-left mr-4 font-sans text-[60px] font-bold leading-16.25 text-[#1A1A1A]/60 md:text-[72px] md:leading-18">
                                             {text.charAt(0) || "F"}
                                         </span>
                                         {text.slice(1)}
@@ -146,7 +148,7 @@ export function FilmContent({ blocks = [], tags = [] }: FilmContentProps) {
 
                         return (
                             <div key={`p-${index}`}>
-                                <p className="font-sans font-light text-[18px] md:text-[20px] leading-[28px] text-[#1A1A1A]/90">
+                                <p className="font-sans text-[18px] font-light leading-7 text-[#1A1A1A]/90 md:text-[20px]">
                                     {text}
                                 </p>
                                 {urls.map((url) => (
@@ -167,6 +169,6 @@ export function FilmContent({ blocks = [], tags = [] }: FilmContentProps) {
                 )}
 
             </div>
-        </article>
+        </MaxWidthWrapper>
     );
 }

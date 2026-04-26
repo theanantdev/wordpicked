@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import Link from "next/link";
+import MaxWidthWrapper from "@/components/max-width-wraper";
 
 type Category = "ALL" | "FICTION" | "NON-FICTION" | "POETRY";
 type SortOption = "LATEST" | "OLDEST" | "TITLE_A_Z";
@@ -88,7 +89,7 @@ export function FilmsContent() {
     const [searchInput, setSearchInput] = useState("");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(12); // Use multiples of 2 and 3 for cleaner grids
     const [items, setItems] = useState<Article[]>([]);
     const [total, setTotal] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -102,25 +103,17 @@ export function FilmsContent() {
             setPage(1);
             setSearch(searchInput.trim());
         }, 300);
-
         return () => clearTimeout(timer);
     }, [searchInput]);
 
     useEffect(() => {
         let cancelled = false;
-
         (async () => {
             setLoading(true);
             const result = await fetchFilms({
-                page,
-                pageSize,
-                search,
-                category: activeTab,
-                sort: activeSort,
+                page, pageSize, search, category: activeTab, sort: activeSort,
             });
-
             if (cancelled) return;
-
             setItems(result.items);
             setTotal(result.total);
             setTotalPages(result.totalPages);
@@ -129,10 +122,7 @@ export function FilmsContent() {
             setError(result.error);
             setLoading(false);
         })();
-
-        return () => {
-            cancelled = true;
-        };
+        return () => { cancelled = true; };
     }, [page, pageSize, search, activeTab, activeSort]);
 
     const pageButtons = useMemo(() => {
@@ -144,201 +134,182 @@ export function FilmsContent() {
     }, [page, totalPages]);
 
     const sortLabelMap: Record<SortOption, string> = {
-        LATEST: "Latest Release",
-        OLDEST: "Oldest Release",
+        LATEST: "Latest",
+        OLDEST: "Oldest",
         TITLE_A_Z: "Title A-Z",
     };
 
     return (
-        <section className="w-full flex flex-col items-center">
-            {/* Tab and Sort Bar */}
-            <div className="z-20 max-w-[1200px] w-full bg-[#F5F0E8] py-4 sm:py-5 -mt-15">
-                <div className="mx-auto flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 px-4 sm:px-6 md:px-8">
-                    <input
-                        type="text"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        placeholder="Search title, author, subtitle..."
-                        className="w-full sm:w-70 bg-white border border-[#E4E4E7] px-3 py-2 text-sm text-[#18181B] outline-none"
-                    />
+        <div className="min-h-screen bg-[#F5F0E8]/30">
+            {/* Toolbar: Search, Tabs, and Sort */}
+            <div className="sticky top-0 z-40 w-full border-b border-zinc-200 bg-[#F5F0E8] py-4 shadow-sm">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
-                    <div className="flex flex-row items-center gap-2 sm:gap-2.5 overflow-x-auto">
-                        {(["ALL", "FICTION", "NON-FICTION", "POETRY"] as Category[]).map(tab => (
-                            <button
-                                key={tab}
-                                onClick={() => {
-                                    setPage(1);
-                                    setActiveTab(tab);
-                                }}
-                                className={`flex h-7.25 justify-center items-center px-3 sm:px-4.5 py-2.5 font-heading font-medium tracking-[1px] sm:tracking-[2px] text-xs sm:text-[14px] uppercase transition-colors whitespace-nowrap ${activeTab === tab
-                                    ? "bg-[#DC2828] text-white"
-                                    : "bg-white text-[#52525B] hover:text-[#18181B]"
-                                    }`}
+                        {/* Search Input */}
+                        <div className="relative w-full lg:max-w-xs">
+                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                            <input
+                                type="text"
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                placeholder="Search films..."
+                                className="w-full rounded-none border border-zinc-300 bg-white py-2 pl-10 pr-4 text-sm outline-none focus:border-[#DC2828] transition-colors"
+                            />
+                        </div>
+
+                        {/* Category Tabs */}
+                        <div className="flex items-center gap-1.5 flex-wrap pb-1 lg:pb-0">
+                            {(["ALL", "FICTION", "NON-FICTION", "POETRY"] as Category[]).map(tab => (
+                                <button
+                                    key={tab}
+                                    onClick={() => { setPage(1); setActiveTab(tab); }}
+                                    className={`px-4 py-2 text-[11px] font-bold uppercase tracking-widest transition-all ${activeTab === tab
+                                        ? "bg-[#DC2828] text-white"
+                                        : "bg-white text-zinc-500 border border-zinc-200 hover:border-zinc-400"
+                                        }`}
+                                >
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Sort & Page Size */}
+                        <div className="flex items-center justify-between gap-4 border-t border-zinc-200 pt-4 lg:border-none lg:pt-0">
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsSortOpen(!isSortOpen)}
+                                    className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-zinc-900"
+                                >
+                                    <span className="text-zinc-400">Sort:</span> {sortLabelMap[activeSort]}
+                                    <ChevronDown className={`h-4 w-4 transition-transform ${isSortOpen ? 'rotate-180' : ''}`} />
+                                </button>
+                                {isSortOpen && (
+                                    <div className="absolute right-0 mt-3 w-48 border border-zinc-200 bg-white shadow-xl">
+                                        {(Object.keys(sortLabelMap) as SortOption[]).map((option) => (
+                                            <button
+                                                key={option}
+                                                onClick={() => { setPage(1); setActiveSort(option); setIsSortOpen(false); }}
+                                                className="w-full px-4 py-3 text-left text-[11px] font-bold uppercase tracking-widest hover:bg-zinc-50 border-b border-zinc-50 last:border-0"
+                                            >
+                                                {sortLabelMap[option]}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <select
+                                value={pageSize}
+                                onChange={(e) => { setPage(1); setPageSize(Number(e.target.value)); }}
+                                className="bg-transparent text-[11px] font-bold uppercase tracking-widest outline-none cursor-pointer"
                             >
-                                {tab}
-                            </button>
+                                <option value={12}>12 Per Page</option>
+                                <option value={24}>24 Per Page</option>
+                                <option value={48}>48 Per Page</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <MaxWidthWrapper>
+                <div className="py-12 sm:py-16">
+                    {/* Grid */}
+                    <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3">
+                        {items.map(article => (
+                            <Link key={article.id} href={`/films/${article.slug}`} className="group flex flex-col">
+                                <div className="relative aspect-video w-full overflow-hidden  bg-zinc-100 shadow-sm">
+                                    <Image
+                                        src={article.imageUrl}
+                                        alt={article.title}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity group-hover:opacity-100" />
+                                </div>
+
+                                <div className="mt-6 flex flex-col gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[10px] font-black tracking-[2px] text-[#E50914] uppercase">
+                                            {article.category}
+                                        </span>
+                                        <span className="h-1 w-1 rounded-full bg-zinc-300" />
+                                        <span className="text-[10px] font-bold tracking-[2px] text-zinc-400 uppercase">
+                                            {article.readTime}
+                                        </span>
+                                    </div>
+
+                                    <h2 className="text-2xl font-bold leading-tight tracking-tight text-zinc-900 group-hover:text-[#DC2828] transition-colors line-clamp-2 min-h-[3.5rem]">
+                                        {article.title}
+                                    </h2>
+
+                                    <p className="text-sm italic text-zinc-500">by {article.author}</p>
+
+                                    <p className="text-sm leading-relaxed text-zinc-600 line-clamp-2 min-h-[2.5rem]">
+                                        {article.description}
+                                    </p>
+                                </div>
+                            </Link>
+                        ))}
+
+                        {/* Skeletons */}
+                        {loading && Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="flex flex-col">
+                                <div className="aspect-video w-full animate-pulse bg-zinc-200" />
+                                <div className="mt-6 h-4 w-1/4 animate-pulse bg-zinc-200" />
+                                <div className="mt-4 h-8 w-full animate-pulse bg-zinc-200" />
+                                <div className="mt-4 h-4 w-2/3 animate-pulse bg-zinc-200" />
+                            </div>
                         ))}
                     </div>
 
-                    <div className="relative w-full sm:w-auto">
-                        <button
-                            type="button"
-                            onClick={() => setIsSortOpen((prev) => !prev)}
-                            className="group flex w-full sm:w-auto cursor-pointer flex-row items-center justify-between sm:justify-start gap-2"
-                        >
-                            <span className="hidden sm:inline font-sans font-medium text-[#A1A1AA] tracking-[1.5px] uppercase text-[13px]">
-                                Sort by:
-                            </span>
-                            <span className="font-heading font-bold text-[#18181B] tracking-[1.5px] sm:tracking-[2px] uppercase text-xs sm:text-[14px]">
-                                {sortLabelMap[activeSort]}
-                            </span>
-                            <ChevronDown className={`h-4 sm:h-4.5 w-4 sm:w-4.5 text-[#A1A1AA] transition group-hover:text-[#18181B] ${isSortOpen ? "rotate-180" : "rotate-0"}`} />
-                        </button>
+                    {/* Empty/Error States */}
+                    {!loading && items.length === 0 && (
+                        <div className="flex flex-col items-center justify-center py-20 text-center">
+                            <p className="text-sm font-bold uppercase tracking-widest text-zinc-400">
+                                {error || "No films found matching your criteria."}
+                            </p>
+                        </div>
+                    )}
 
-                        {isSortOpen && (
-                            <div className="absolute right-0 sm:right-0 z-30 mt-2 w-full sm:w-auto sm:min-w-47.5 border border-[#E4E4E7] bg-white shadow-lg">
-                                {(["LATEST", "OLDEST", "TITLE_A_Z"] as SortOption[]).map((option) => (
+                    {/* Pagination */}
+                    {total > 0 && (
+                        <div className="mt-20 flex flex-col items-center justify-between gap-6 border-t border-zinc-200 pt-10 sm:flex-row">
+                            <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">
+                                Page {page} of {totalPages} <span className="mx-2">—</span> {total} Total
+                            </p>
+
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setPage(p => p - 1)}
+                                    disabled={!hasPrev || loading}
+                                    className="border border-zinc-300 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-widest disabled:opacity-30"
+                                >
+                                    Prev
+                                </button>
+                                {pageButtons.map((val) => (
                                     <button
-                                        key={option}
-                                        type="button"
-                                        onClick={() => {
-                                            setPage(1);
-                                            setActiveSort(option);
-                                            setIsSortOpen(false);
-                                        }}
-                                        className={`block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left font-sans text-xs sm:text-[13px] tracking-[1px] sm:tracking-[1.1px] uppercase transition-colors ${activeSort === option
-                                            ? "bg-[#F4F4F5] text-[#18181B]"
-                                            : "text-[#52525B] hover:bg-[#FAFAFA]"
+                                        key={val}
+                                        onClick={() => setPage(val)}
+                                        className={`h-10 w-10 border text-[10px] font-black transition-colors ${page === val ? "bg-zinc-900 border-zinc-900 text-white" : "border-zinc-300 bg-white hover:border-zinc-900"
                                             }`}
                                     >
-                                        {sortLabelMap[option]}
+                                        {val}
                                     </button>
                                 ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <select
-                        value={pageSize}
-                        onChange={(e) => {
-                            setPage(1);
-                            setPageSize(Number.parseInt(e.target.value, 10));
-                        }}
-                        className="bg-white border border-[#E4E4E7] px-3 py-2 text-sm text-[#18181B] outline-none"
-                    >
-                        <option value={10}>10 / page</option>
-                        <option value={20}>20 / page</option>
-                        <option value={30}>30 / page</option>
-                    </select>
-                </div>
-            </div>
-
-            {/* Grid */}
-            <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-8 sm:gap-12 lg:gap-15 px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
-                <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-x-8 md:gap-y-12">
-                    {items.map(article => (
-                        <Link key={article.id} href={`/films/${article.slug}`} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm hover:shadow-md transition-shadow group cursor-pointer">
-                            {/* Image */}
-                            <div className="relative w-full aspect-[3/4]">
-                                <Image
-                                    src={article.imageUrl}
-                                    alt={article.title}
-                                    fill
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                    className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-500 rounded-t-sm"
-                                />
-                                {/* Vintage overlay effect */}
-                                <div className="absolute inset-0 bg-white/10 mix-blend-saturation pointer-events-none" />
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex flex-col gap-2.5 sm:gap-3 md:gap-4 p-4 sm:p-5 md:p-6">
-                                <div className="flex flex-row items-center gap-2.5 sm:gap-3">
-                                    <span className="font-sans font-black text-[9px] sm:text-[10.4px] leading-[14px] sm:leading-[16px] tracking-[1.8px] sm:tracking-[2.08px] text-[#E50914] uppercase">
-                                        {article.category}
-                                    </span>
-                                    <div className="w-0.5 sm:w-1 h-0.5 sm:h-1 bg-[#E4E4E7] rounded-full" />
-                                    <span className="font-sans font-bold text-[9px] sm:text-[10.4px] leading-[14px] sm:leading-[16px] tracking-[1.8px] sm:tracking-[2.08px] text-[#A1A1AA] uppercase">
-                                        {article.readTime}
-                                    </span>
-                                </div>
-
-                                <h2 className="font-heading h-auto sm:h-16 md:h-[66px] text-xl sm:text-2xl md:text-[28px] leading-[23px] sm:leading-[28px] md:leading-[33px] font-bold tracking-tight text-[#18181B] line-clamp-2 transition-colors group-hover:text-[#DC2828]">
-                                    {article.title}
-                                </h2>
-
-                                <p className="font-heading text-sm sm:text-base md:text-[16px] leading-[20px] sm:leading-[23px] md:leading-[24px] italic text-[#71717A]">
-                                    {article.author}
-                                </p>
-
-                                <p className="font-sans h-auto sm:h-10 md:h-[46px] text-xs sm:text-sm md:text-[14px] leading-[18px] sm:leading-[20px] md:leading-[23px] text-[#52525B] line-clamp-2">
-                                    {article.description}
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
-                    {loading && Array.from({ length: 9 }).map((_, i) => (
-                        <div key={i} className="flex flex-col bg-[#FAFAFA] border border-[#F4F4F5] shadow-sm overflow-hidden">
-                            {/* Image skeleton */}
-                            <div className="w-full aspect-[3/4] bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                            {/* Content skeleton */}
-                            <div className="flex flex-col gap-3 p-4 sm:p-5 md:p-6">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-2.5 w-14 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                    <div className="h-2.5 w-14 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                </div>
-                                <div className="h-6 w-full bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-6 w-3/4 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-4 w-1/2 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-4 w-full bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                                <div className="h-4 w-5/6 bg-gradient-to-r from-[#E8E3DC] via-[#F0EBE3] to-[#E8E3DC] bg-[length:400%_100%] animate-[shimmer_1.4s_ease-in-out_infinite]" />
-                            </div>
-                        </div>
-                    ))}
-                    {!loading && !error && items.length === 0 && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 sm:py-16 md:py-20 text-gray-500">
-                            No films found.
-                        </div>
-                    )}
-                    {!loading && error && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12 text-red-500">{error}</div>
-                    )}
-                </div>
-
-                {total > 0 && (
-                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <span className="text-sm text-[#71717A]">
-                            Showing {total === 0 ? 0 : (page - 1) * pageSize + 1}-{Math.min(page * pageSize, total)} of {total}
-                        </span>
-
-                        <div className="flex items-center gap-1">
-                            <button
-                                onClick={() => hasPrev && setPage((p) => Math.max(1, p - 1))}
-                                disabled={!hasPrev}
-                                className="w-8 h-8 border border-[#E4E4E7] bg-white disabled:opacity-40"
-                            >
-                                ‹
-                            </button>
-                            {pageButtons.map((value) => (
                                 <button
-                                    key={value}
-                                    onClick={() => setPage(value)}
-                                    className={`w-8 h-8 border ${value === page ? 'bg-[#18181B] text-white border-[#18181B]' : 'bg-white border-[#E4E4E7] text-[#18181B]'}`}
+                                    onClick={() => setPage(p => p + 1)}
+                                    disabled={!hasNext || loading}
+                                    className="border border-zinc-300 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-widest disabled:opacity-30"
                                 >
-                                    {value}
+                                    Next
                                 </button>
-                            ))}
-                            <button
-                                onClick={() => hasNext && setPage((p) => p + 1)}
-                                disabled={!hasNext}
-                                className="w-8 h-8 border border-[#E4E4E7] bg-white disabled:opacity-40"
-                            >
-                                ›
-                            </button>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </div>
-        </section>
+                    )}
+                </div>
+            </MaxWidthWrapper>
+        </div>
     );
 }
