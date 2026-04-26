@@ -189,11 +189,11 @@ export function GlobalSearch() {
             <button
                 onClick={open}
                 aria-label="Open search"
-                className="flex items-center gap-2 border border-white/30 bg-white/5 px-3 py-1.5 text-white/70 text-[13px] font-sans rounded-[3px] hover:bg-white/10 hover:border-white/50 transition-all group w-[220px]"
+                className="flex h-7 w-34 items-center gap-2 rounded-[3px] border border-white/30 bg-white/5 px-2.5 py-1 text-[11px] font-sans text-white/70 transition-all group hover:border-white/50 hover:bg-white/10 min-[360px]:h-8 min-[360px]:w-36 min-[360px]:px-3 min-[360px]:text-[12px] min-[480px]:w-40 min-[480px]:text-[12px] min-[640px]:w-44 min-[640px]:text-[13px] min-[768px]:h-9 min-[768px]:w-48 min-[768px]:px-3.5 min-[1024px]:h-10 min-[1024px]:w-52 min-[1024px]:px-4 min-[1200px]:w-56 min-[1440px]:w-60 min-[1920px]:w-64"
             >
-                <Search className="w-3.5 h-3.5 shrink-0" />
+                <Search className="h-3 w-3 shrink-0 min-[360px]:h-3.5 min-[360px]:w-3.5" />
                 <span className="inline flex-1 text-left">Search…</span>
-                <kbd className="inline-flex items-center gap-0.5 text-[10px] text-white/40 border border-white/20 rounded px-1 py-0.5 ml-auto">
+                <kbd className="ml-auto inline-flex items-center gap-0.5 rounded border border-white/20 px-1 py-0.5 text-[9px] text-white/40 min-[360px]:text-[10px]">
                     ⌘K
                 </kbd>
             </button>
@@ -202,14 +202,14 @@ export function GlobalSearch() {
             {isOpen && (
                 <div
                     ref={overlayRef}
-                    className="fixed inset-0 z-[200] flex items-start justify-center pt-[10vh] px-4"
+                    className="fixed inset-0 z-200 flex items-start justify-center px-4 pt-[10vh]"
                     onClick={(e) => { if (e.target === overlayRef.current) close(); }}
                 >
                     {/* Backdrop */}
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
                     {/* Panel */}
-                    <div className="relative w-full max-w-[640px] bg-[#1A1714] border border-white/10 rounded-[6px] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200">
+                    <div className="relative w-full max-w-160 overflow-hidden rounded-[6px] border border-white/10 bg-[#1A1714] shadow-2xl animate-in fade-in slide-in-from-top-4 duration-200">
 
                         {/* Search Input */}
                         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-white/10">
@@ -242,7 +242,7 @@ export function GlobalSearch() {
                         {/* Recent searches */}
                         {showRecent && (
                             <div className="px-4 py-3">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/30 mb-2">Recent searches</p>
+                                <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/30">Recent searches</p>
                                 <div className="flex flex-col gap-1">
                                     {recent.map((term) => (
                                         <button
@@ -282,7 +282,7 @@ export function GlobalSearch() {
                                     <div className="px-4 py-3">
                                         <div className="flex items-center gap-1.5 mb-2">
                                             <BookOpen className="w-3 h-3 text-[#E0BC78]" />
-                                            <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#E0BC78]">Literature</p>
+                                            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#E0BC78]">Literature</p>
                                         </div>
                                         {litResults.map((item) => {
                                             const globalIdx = results.indexOf(item);
@@ -293,7 +293,7 @@ export function GlobalSearch() {
                                                     onClick={() => handleResultClick(item)}
                                                     className={`flex items-center gap-3 px-2 py-2.5 rounded-[3px] transition-colors group ${activeIndex === globalIdx ? "bg-white/10" : "hover:bg-white/5"}`}
                                                 >
-                                                    <div className="relative w-9 h-9 shrink-0 rounded-[2px] overflow-hidden bg-white/10">
+                                                    <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xs bg-white/10">
                                                         {item.imageUrl && (
                                                             <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
                                                         )}
@@ -314,7 +314,7 @@ export function GlobalSearch() {
                                     <div className="px-4 py-3">
                                         <div className="flex items-center gap-1.5 mb-2">
                                             <Film className="w-3 h-3 text-[#B5542A]" />
-                                            <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#B5542A]">Films</p>
+                                            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#B5542A]">Films</p>
                                         </div>
                                         {filmResults.map((item) => {
                                             const globalIdx = results.indexOf(item);
@@ -325,7 +325,7 @@ export function GlobalSearch() {
                                                     onClick={() => handleResultClick(item)}
                                                     className={`flex items-center gap-3 px-2 py-2.5 rounded-[3px] transition-colors group ${activeIndex === globalIdx ? "bg-white/10" : "hover:bg-white/5"}`}
                                                 >
-                                                    <div className="relative w-9 h-9 shrink-0 rounded-[2px] overflow-hidden bg-white/10">
+                                                    <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xs bg-white/10">
                                                         {item.imageUrl && (
                                                             <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
                                                         )}
