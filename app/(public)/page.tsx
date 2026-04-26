@@ -15,9 +15,9 @@ export default async function Home() {
     <main className="bg-[#fafafa] text-zinc-900">
       <HeroSection />
       <PickOfDaySection initialData={homeData.pickOfDay} />
-      <StoriesSections 
-        initialLiterature={homeData.literature} 
-        initialFilms={homeData.films} 
+      <StoriesSections
+        initialLiterature={homeData.literature}
+        initialFilms={homeData.films}
       />
       <CinemaSection initialData={homeData.films} />
       <ArtistsSection initialData={homeData.artists} />

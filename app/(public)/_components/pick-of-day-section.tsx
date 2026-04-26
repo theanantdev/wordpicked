@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PickOfDaySkeleton } from "./home-skeletons";
+import MaxWidthWrapper from "@/components/max-width-wraper";
 
 type Article = {
     id: string;
@@ -39,7 +40,7 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
 
     if (loading) {
         return (
-            <section className="mx-auto w-full max-w-[1171px] px-4 py-14 md:px-6">
+            <section className="mx-auto w-full max-w-80 px-4 py-10 min-[360px]:max-w-90 min-[480px]:max-w-120 min-[640px]:max-w-160 min-[768px]:max-w-3xl min-[1024px]:max-w-5xl min-[1200px]:max-w-300 min-[1440px]:max-w-360 min-[1920px]:max-w-420 min-[768px]:py-12 min-[1200px]:py-14 min-[1920px]:py-16">
                 <SectionHeader title="Pick of the Day" redirectionUrl="/pick-of-the-day" />
                 <PickOfDaySkeleton />
             </section>
@@ -55,10 +56,10 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
     });
 
     return (
-        <section className="mx-auto w-full max-w-[1171px] px-4 py-14 md:px-6">
+        <MaxWidthWrapper>
             <SectionHeader title="Pick of the Day" redirectionUrl="/pick-of-the-day" />
-            <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1.9fr] lg:items-start">
-                <div className="relative aspect-[387/440] w-full overflow-hidden rounded-[2px] shadow-sm">
+            <div className="mt-4 grid gap-6 min-[640px]:gap-8 min-[1024px]:grid-cols-[1fr_1.6fr] min-[1024px]:items-start min-[1200px]:grid-cols-[1fr_1.8fr] min-[1440px]:gap-10 min-[1920px]:grid-cols-[1fr_2fr]">
+                <div className="relative aspect-4/5 w-full overflow-hidden rounded-xs shadow-sm min-[640px]:aspect-5/6 min-[1024px]:aspect-4/5 min-[1440px]:min-h-140 min-[1920px]:min-h-160">
                     <Image
                         src={data.featured_image_url || "/home/pick-of-the-day.png"}
                         alt={data.title}
@@ -66,43 +67,44 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
                         className="object-cover transition-transform duration-500 hover:scale-105"
                     />
                 </div>
-                <div className="space-y-8 text-center lg:text-left">
-                    <div className="space-y-4">
-                        <p className="text-xs tracking-[0.12em] text-zinc-500 uppercase">{displayDate}</p>
-                        <p className="text-sm font-semibold tracking-[0.18em] text-[#DC2828] uppercase">{data.category}</p>
-                        <h3 className="font-heading text-3xl font-semibold leading-tight text-zinc-900 sm:text-4xl lg:text-[42px]">
+                <div className="space-y-1 text-start min-[1024px]:space-y-8 min-[1024px]:text-left min-[1440px]:space-y-10">
+                    <div className="space-y-2 min-[768px]:space-y-4 min-[1440px]:space-y-5">
+                        <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500 min-[640px]:text-xs">{displayDate}</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#DC2828] min-[768px]:text-sm">{data.category}</p>
+                        <h3 className="font-heading text-[28px] font-semibold leading-tight text-zinc-900 min-[360px]:text-[30px] min-[480px]:text-[34px] min-[768px]:text-[38px] min-[1024px]:text-[42px] min-[1440px]:text-[52px] min-[1920px]:text-[60px]">
                             {data.title}
                         </h3>
-                        <p className="mx-auto max-w-2xl text-zinc-600 lg:mx-0 leading-relaxed">
+                        <p className=" max-w-2xl leading-relaxed text-zinc-600 min-[480px]:text-[15px] min-[1024px]:mx-0 min-[1024px]:text-[16px] min-[1440px]:max-w-[48ch] min-[1440px]:text-[18px] min-[1920px]:text-[20px]">
                             {data.subtitle}
                         </p>
                     </div>
                     <Link href={`/${data.category === 'films' ? 'films' : 'literature'}/${data.slug}`}>
-                        <button className="inline-flex h-11 items-center gap-2 self-center rounded-full bg-[#DC2828] px-8 py-2 text-sm font-medium tracking-[0.12em] text-white uppercase lg:self-start transition-all hover:bg-black hover:px-10">
+                        <button className="inline-flex h-10 items-center gap-2 self-center rounded-full bg-[#DC2828] px-6 py-2 text-xs font-medium uppercase tracking-[0.12em] text-white transition-all hover:bg-black hover:px-8 min-[640px]:h-11 min-[640px]:px-8 min-[640px]:text-sm min-[1024px]:self-start min-[1440px]:h-12 min-[1440px]:px-10 min-[1440px]:text-base">
                             Read More <ArrowRight className="size-4" />
                         </button>
                     </Link>
                 </div>
             </div>
-        </section>
+        </MaxWidthWrapper>
     );
 }
 
 function SectionHeader({ title, redirectionUrl, className }: { title: string; className?: string, redirectionUrl?: string }) {
 
     return (
-        <div className="flex items-center gap-4 flex-row justify-between sm:gap-6 border-b border-zinc-100 pb-6">
-            <div className="relative">
-                <div className={cn("mb-3 h-1 w-12 bg-[#DC2828]", className)} />
-                <h2 className="font-heading text-3xl font-semibold text-zinc-900 md:text-4xl">{title}</h2>
+        <div className="flex flex-col border-b border-zinc-100">
+            <div className={cn("h-1 w-12 bg-[#DC2828]", className)} />
+            <div className="relative flex items-center justify-between gap-4 py-2 min-[768px]:py-3">
+                <h2 className="font-heading text-xl font-semibold text-zinc-900 min-[360px]:text-2xl min-[640px]:text-3xl min-[768px]:text-4xl min-[1440px]:text-[44px] min-[1920px]:text-[52px]">{title}</h2>
+                {redirectionUrl && (
+                    <Link href={redirectionUrl}>
+                        <button className="group inline-flex h-9 items-center justify-center gap-2 border border-zinc-200 bg-[#DC2828] px-4 py-2 text-[9px] font-bold uppercase tracking-[0.16em] text-white transition-all hover:border-[#DC2828] min-[480px]:h-10 min-[480px]:px-5 min-[480px]:text-[10px] min-[768px]:h-11 min-[768px]:px-6">
+                            View All <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                        </button>
+                    </Link>
+                )}
             </div>
-            {redirectionUrl && (
-                <Link href={redirectionUrl}>
-                    <button className="inline-flex h-11 items-center justify-center gap-2 bg-transparent border border-zinc-200 px-6 py-2 text-[10px] font-bold tracking-[0.16em] text-zinc-900 uppercase transition-all hover:bg-[#DC2828] hover:text-white hover:border-[#DC2828] group">
-                        View All <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                    </button>
-                </Link>
-            )}
+
         </div>
     );
 }
