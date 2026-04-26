@@ -3,6 +3,7 @@ import { PicOfTheDayHero } from "./_components/pick-of-the-day-hero";
 import { FeaturedPickCard, type PickArticle } from "./_components/featured-pick-card";
 import { PicksGrid } from "./_components/picks-grid";
 import type { Metadata } from "next";
+import MaxWidthWrapper from "@/components/max-width-wraper";
 
 export const revalidate = 300; // 5 minutes
 
@@ -35,17 +36,22 @@ export default async function PicOfTheDayPage() {
     return (
         <main className="bg-[#FAFAFA] min-h-screen">
             <PicOfTheDayHero />
-            {featured ? (
-                <FeaturedPickCard article={featured} />
-            ) : (
-                <div className="mx-auto max-w-360 px-6 py-20 text-center">
-                    <p className="font-heading text-[24px] font-bold text-[#1A1A1A] mb-3">No picks yet</p>
-                    <p className="font-sans text-[16px] text-[#737373]">
-                        Check back soon — our editors are curating today&apos;s selection.
-                    </p>
-                </div>
-            )}
-            {rest.length > 0 && <PicksGrid items={rest} />}
+
+            <MaxWidthWrapper className="px-1 py-8 min-[360px]:px-1 min-[480px]:py-10 min-[640px]:px-2 min-[768px]:px-3 min-[768px]:py-6 min-[1024px]:py-7 min-[1200px]:px-4 min-[1200px]:py-8 min-[1440px]:py-10 min-[1920px]:py-14">
+                {featured ? (
+                    <FeaturedPickCard article={featured} />
+                ) : (
+                    <div className="mx-auto w-full max-w-360 px-4 py-14 text-center min-[640px]:px-6 min-[768px]:py-20 min-[1440px]:py-24">
+                        <p className="mb-3 font-heading text-[24px] font-bold text-[#1A1A1A] min-[640px]:text-[28px] min-[768px]:text-[32px]">
+                            No picks yet
+                        </p>
+                        <p className="font-sans text-[16px] text-[#737373] min-[640px]:text-[17px] min-[768px]:text-[18px]">
+                            Check back soon — our editors are curating today&apos;s selection.
+                        </p>
+                    </div>
+                )}
+                {rest.length > 0 && <PicksGrid items={rest} />}
+            </MaxWidthWrapper>
         </main>
     );
 }

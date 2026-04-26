@@ -5,7 +5,7 @@ export function PicOfTheDayHero() {
     return (
         <section className="relative mx-auto w-full min-h-[313px] overflow-hidden border-b border-[#262626] bg-[#0F0F0F] mt-0">
             <Image
-                src="/pick-of-the-day/hero.png"
+                src="/literature/hero.png"
                 alt=""
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -36,12 +36,6 @@ export function PicOfTheDayHero() {
                         One book or film we think you should read or watch today — curated daily, archived forever.
                     </p>
                 </div>
-
-                <Link href="#latest-pick" className="hidden shrink-0 items-center justify-center gap-2.5 h-[50px] w-[209px] rounded-[8px] bg-[#DC2828] px-6 py-4.5 transition-colors hover:bg-[#b02020] sm:flex">
-                    <span className="font-sans text-[18px] font-semibold leading-6.75 text-white sm:text-[22px]">
-                        Read Now
-                    </span>
-                </Link>
             </div>
         </section>
     );
