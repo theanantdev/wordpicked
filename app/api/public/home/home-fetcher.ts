@@ -35,7 +35,7 @@ type RawHomeArticle = {
     created_at: string;
     featured_image_url: string | null;
     category: string;
-    views?: number | null;
+    view_count?: number | null;
 };
 
 type RawHomeArtist = {
@@ -60,7 +60,7 @@ function normalizeArticle(article: RawHomeArticle): HomeArticle {
         created_at: article.created_at,
         featured_image_url: article.featured_image_url ?? '',
         category: article.category,
-        view_count: Number(article.views ?? 0),
+        view_count: Number(article.view_count ?? 0),
     };
 }
 
@@ -98,7 +98,7 @@ export async function fetchHomeData(): Promise<HomeData> {
     // 1. Pick of the Day (Latest one)
     const { data: pickOfDay } = await supabase
         .from('articles')
-        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, views')
+        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, view_count')
         .eq('status', 'published')
         .eq('is_pick_of_the_day', true)
         .order('publish_at', { ascending: false, nullsFirst: false })
@@ -108,7 +108,7 @@ export async function fetchHomeData(): Promise<HomeData> {
     // 2. Literature
     const { data: litRecent } = await supabase
         .from('articles')
-        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, views')
+        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, view_count')
         .eq('status', 'published')
         .eq('category', 'literature')
         .order('publish_at', { ascending: false, nullsFirst: false })
@@ -117,17 +117,17 @@ export async function fetchHomeData(): Promise<HomeData> {
 
     const { data: litPopular } = await supabase
         .from('articles')
-        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, views')
+        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, view_count')
         .eq('status', 'published')
         .eq('category', 'literature')
-        .order('views', { ascending: false, nullsFirst: false })
+        .order('view_count', { ascending: false, nullsFirst: false })
         .limit(6)
         .returns<RawHomeArticle[]>();
 
     // 3. Films (Cinema)
     const { data: filmsRecent } = await supabase
         .from('articles')
-        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, views')
+        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, view_count')
         .eq('status', 'published')
         .eq('category', 'films')
         .order('publish_at', { ascending: false, nullsFirst: false })
@@ -136,10 +136,10 @@ export async function fetchHomeData(): Promise<HomeData> {
 
     const { data: filmsPopular } = await supabase
         .from('articles')
-        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, views')
+        .select('id, title, subtitle, slug, tags, author_name, publish_at, created_at, featured_image_url, category, view_count')
         .eq('status', 'published')
         .eq('category', 'films')
-        .order('views', { ascending: false, nullsFirst: false })
+        .order('view_count', { ascending: false, nullsFirst: false })
         .limit(6)
         .returns<RawHomeArticle[]>();
 
