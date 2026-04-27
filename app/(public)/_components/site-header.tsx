@@ -13,7 +13,7 @@ export function SiteHeader() {
 
     const navLinks = [
         { name: "Home", href: "/" },
-        { name: "Pick Of The Day", href: "/pick-of-the-day" },
+        { name: "Pick of the day", href: "/pick-of-the-day" },
         { name: "Literature", href: "/literature" },
         { name: "Films", href: "/films" },
         { name: "Artists", href: "/artists" },

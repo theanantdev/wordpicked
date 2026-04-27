@@ -65,7 +65,7 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
                         src={data.featured_image_url || "/home/pick-of-the-day.png"}
                         alt={data.title}
                         fill
-                        className="object-cover transition-transform duration-500 hover:scale-101"
+                        className="object-cover transition-transform duration-500  shadow-[0_1px_2px_rgba(0,0,0,0.05)] rounded-xs"
                     />
                 </div>
                 <div className="space-y-1 text-start max-w-2xl min-[1024px]:space-y-8 min-[1024px]:text-left min-[1440px]:space-y-10">

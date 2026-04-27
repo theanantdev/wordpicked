@@ -79,7 +79,7 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
                 {/* Literature Section */}
                 <div>
                     <div className="">
-                        <div className="flex flex-col border-b border-zinc-100">
+                        <div className="flex flex-col">
                             <div className="h-1 w-12 bg-[#DC2828]" />
                             <div className="relative flex items-center flex-row w-full justify-between gap-4 py-2 min-[768px]:py-3">
                                 <h2 className="font-heading text-xl font-semibold text-zinc-900 min-[360px]:text-2xl min-[640px]:text-3xl min-[768px]:text-4xl min-[1440px]:text-[44px] min-[1920px]:text-[52px]">Literature</h2>
@@ -100,7 +100,7 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
                 {/* Films Section */}
                 <div>
                     <div className="">
-                        <div className="flex flex-col border-b border-zinc-100">
+                        <div className="flex flex-col">
                             <div className="h-1 w-12 bg-[#DC2828]" />
                             <div className="relative flex items-center flex-row w-full justify-between gap-4 py-2 min-[768px]:py-3">
                                 <h2 className="font-heading text-xl font-semibold text-zinc-900 min-[360px]:text-2xl min-[640px]:text-3xl min-[768px]:text-4xl min-[1440px]:text-[44px] min-[1920px]:text-[52px]">Films</h2>

@@ -6,7 +6,7 @@ export function StoryCard({ tag, title, summary, author, date, image, slug }: St
     return (
         <Link
             href={`/literature/${slug}`}
-            className="overflow-hidden bg-[#fdf9f2] border border-[1px] border-[#E3DAC8] ">
+            className="overflow-hidden bg-[#fdf9f2] shadow-md transition-all hover:-translate-y-1 rounded-xs">
             <div className="relative aspect-4/3 w-full overflow-hidden">
                 <Image
                     loading="lazy"

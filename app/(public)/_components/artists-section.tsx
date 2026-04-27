@@ -47,8 +47,8 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
         return (
             <div className="mx-auto mt-6 grid gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:mt-5 min-[1440px]:gap-8">
                 {artists.slice(0, 3).map((artist) => (
-                    <article key={artist.id} className="group text-center min-[1200px]:text-left">
-                        <div className="relative mx-auto aspect-square w-full max-w-84 overflow-hidden rounded-xs shadow-sm min-[768px]:max-w-96 min-[1200px]:mx-0 min-[1200px]:max-w-100 min-[1440px]:max-w-104 min-[1920px]:max-w-110">
+                    <article key={artist.id} className="group text-center min-[1200px]:text-left shadow-md ">
+                        <div className="relative mx-auto aspect-square w-full max-w-84 overflow-hidden rounded-xs shadow-sm min-[768px]:max-w-96 min-[1200px]:mx-0 min-[1200px]:max-w-120 min-[1440px]:max-w-140 min-[1920px]:max-w-110">
                             <Image
                                 loading="lazy"
                                 src={artist.image_url || "/home/hero.jpg"}
@@ -59,14 +59,17 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
                             />
                             <div className="absolute inset-0 bg-black/10 opacity-0 transition-opacity group-hover:opacity-100" />
                         </div>
-                        <h3 className="font-heading text-[30px] text-[#1c1c18] transition-colors group-hover:text-[#DC2828] min-[768px]:mt-6 min-[768px]:text-[34px] min-[1200px]:text-[30px] min-[1440px]:text-[34px] min-[1920px]:text-[38px]">{artist.full_name}</h3>
-                        <div >
+                        <div className="mx-auto px-3 mb-1 max-w-70 text-start min-[768px]:mx-0 min-[768px]:max-w-full" >
+                            <h3 className="font-heading text-[30px] text-[#1c1c18] transition-colors group-hover:text-[#DC2828] min-[768px]:mt-6 min-[768px]:text-[34px] min-[1200px]:text-[30px] min-[1440px]:text-[34px] min-[1920px]:text-[38px]">{artist.full_name}</h3>
+                            <div >
 
-                            <p className="mx-auto text-start max-w-70 text-sm leading-relaxed text-zinc-600 line-clamp-3 min-[768px]:mt-4 min-[1200px]:mx-0 min-[1200px]:max-w-[32ch] min-[1440px]:text-[15px] min-[1920px]:max-w-[36ch] min-[1920px]:text-base">
-                                {artist.biography}
-                            </p>
-                            <p className="mt-1 text-[11px]  font-bold uppercase tracking-[0.2em] text-[#a8812a] min-[768px]:text-xs">{artist.art_form}</p>
+                                <p className="mx-auto text-start max-w-70 text-sm leading-relaxed text-zinc-600 line-clamp-3 min-[768px]:mt-4 min-[1200px]:mx-0 min-[1200px]:max-w-[32ch] min-[1440px]:text-[15px] min-[1920px]:max-w-[36ch] min-[1920px]:text-base">
+                                    {artist.biography}
+                                </p>
+                                <p className="mt-1 text-[11px]  font-bold uppercase tracking-[0.2em] text-[#a8812a] min-[768px]:text-xs">{artist.art_form}</p>
+                            </div>
                         </div>
+
 
                     </article>
                 ))}
