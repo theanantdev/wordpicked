@@ -71,7 +71,7 @@ export function ArtistsContent({ artists }: { artists: Artist[] }) {
                                         onClick={() => setActiveTab(tab)}
                                         aria-pressed={activeTab === tab}
                                         className={`font-heading border-b-2 pb-1 text-[12px] md:text-[14px] uppercase tracking-[1.1px] transition-colors whitespace-nowrap ${activeTab === tab
-                                            ? "text-[#B5542A] border-[#B5542A] border-b-2"
+                                            ? "text-[#B5542A] border-[#B5542A] border-b-4"
                                             : "border-transparent text-[#8C857C] hover:text-[#B5542A]"
                                             }`}
                                     >
@@ -93,7 +93,7 @@ export function ArtistsContent({ artists }: { artists: Artist[] }) {
             </MaxWidthWrapper>
             <div className="bg-[#FDF9F2]">
                 <MaxWidthWrapper>
-                    <div className=" w-full mx-auto flex flex-col gap-15 px-6 pt-15 md:px-15 lg:px-20 md:pt-25 md:gap-25 ">
+                    <div className=" w-full mx-auto flex flex-col gap-5 px-6 pt-5 md:px-15 lg:px-20  ">
                         {/* Writers & Novelists Section */}
                         {visibleWriters.length > 0 && (
                             <div className="flex flex-col gap-10">

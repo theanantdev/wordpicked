@@ -217,7 +217,7 @@ export function LiteratureContent() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
                         {items.map(article => (
-                            <Link key={article.id} href={`/literature/${article.slug}`} className="group block">
+                            <Link key={article.id} href={`/literature/${article.slug}`} className="group block shadow-sm">
                                 <div className="relative aspect-[16/9] overflow-hidden bg-zinc-100 border border-zinc-200">
                                     <Image
                                         loading="lazy"
@@ -235,7 +235,7 @@ export function LiteratureContent() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 flex flex-col gap-3">
+                                <div className="mt-6 flex flex-col gap-3 pl-1 pb-1">
                                     <div className="flex items-center gap-3">
                                         <span className="text-[10px] font-bold tracking-[2px] text-zinc-400 uppercase">{article.readTime}</span>
                                         <span className="w-1 h-1 bg-zinc-200 rounded-full" />

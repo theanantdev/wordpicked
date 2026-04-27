@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Search, X, BookOpen, Film, ArrowRight, Loader2, Clock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useMobile } from "@/hooks/use-mobile";
 
 type SearchResult = {
     id: string;
@@ -182,6 +183,7 @@ export function GlobalSearch() {
     const filmResults = results.filter((r) => r.category === "films");
     const showResults = query.trim().length > 0;
     const showRecent = !showResults && recent.length > 0;
+    const isMobile = useMobile();
 
     return (
         <>
@@ -189,10 +191,10 @@ export function GlobalSearch() {
             <button
                 onClick={open}
                 aria-label="Open search"
-                className="flex h-7 w-50 items-center gap-2 rounded-[3px] border border-white/30 bg-white/5 px-2.5 py-1 text-[11px] font-sans text-white/70 transition-all group hover:border-white/50 hover:bg-white/10 min-[360px]:h-8 min-[360px]:w-54 min-[360px]:px-3 min-[360px]:text-[12px] min-[480px]:w-60 min-[480px]:text-[12px] min-[640px]:w-70 min-[640px]:text-[13px] min-[768px]:h-9 min-[768px]:w-90 min-[768px]:px-3.5 min-[1024px]:h-10 min-[1024px]:w-52 min-[1024px]:px-4 min-[1200px]:w-56 min-[1440px]:w-[330px] min-[1920px]:w-64"
+                className="flex h-7 w-50 items-center gap-2 rounded-[3px] border border-white/30 bg-white/5 px-2.5 py-1 text-[11px] font-sans text-white/70 transition-all group hover:border-white/50 hover:bg-white/10 min-[360px]:h-8 min-[360px]:w-54 min-[360px]:px-3 min-[360px]:text-[12px] min-[480px]:w-60 min-[480px]:text-[12px] min-[640px]:w-70 min-[640px]:text-[13px] min-[768px]:h-9 min-[768px]:w-90 min-[768px]:px-3.5 min-[1024px]:h-10 min-[1024px]:w-82 min-[1024px]:px-4 min-[1200px]:w-56 min-[1440px]:w-[330px] min-[1920px]:w-164"
             >
                 <Search className="h-3 w-3 shrink-0 min-[360px]:h-3.5 min-[360px]:w-3.5" />
-                <span className="inline flex-1 text-left">Search articles, films, authors.... </span>
+                <span className="inline flex-1 text-left">{isMobile ? "Search Movies..." : "Search Movies, Books And More..."}</span>
                 <kbd className="ml-auto inline-flex items-center gap-0.5 rounded border border-white/20 px-1 py-0.5 text-[9px] text-white/40 min-[360px]:text-[10px]">
                     ⌘K
                 </kbd>
@@ -224,7 +226,7 @@ export function GlobalSearch() {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                placeholder="Search articles, films, authors…"
+                                placeholder="Search Movies, Books And More..."
                                 className="flex-1 bg-transparent text-white text-[15px] font-sans placeholder:text-white/30 outline-none"
                                 autoComplete="off"
                                 spellCheck={false}

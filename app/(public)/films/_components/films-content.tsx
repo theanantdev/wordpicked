@@ -218,7 +218,7 @@ export function FilmsContent() {
                     {/* Grid */}
                     <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3">
                         {items.map(article => (
-                            <Link key={article.id} href={`/films/${article.slug}`} className="group flex flex-col">
+                            <Link key={article.id} href={`/films/${article.slug}`} className="group flex flex-col shadow-sm">
                                 <div className="relative aspect-video w-full overflow-hidden  bg-zinc-100 shadow-sm">
                                     <Image
                                         loading="lazy"
@@ -230,7 +230,7 @@ export function FilmsContent() {
                                     <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity group-hover:opacity-100" />
                                 </div>
 
-                                <div className="mt-6 flex flex-col gap-3">
+                                <div className="mt-6 flex flex-col gap-3 pl-1.5 pb-1.5">
                                     <div className="flex items-center gap-3">
                                         <span className="text-[10px] font-black tracking-[2px] text-[#E50914] uppercase">
                                             {article.category}
