@@ -139,7 +139,7 @@ export function LiteratureContent() {
     };
 
     return (
-        <MaxWidthWrapper>
+        <MaxWidthWrapper className="px-3  py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-1 min-[1920px]:py-14">
             {/* Header & Filters */}
             <div className="w-full border-b border-zinc-100 bg-white/50 backdrop-blur-md sticky top-0 z-40">
                 <div className="flex flex-col gap-4 py-6">
@@ -273,7 +273,7 @@ export function LiteratureContent() {
 
                 {/* Pagination */}
                 {total > 0 && (
-                    <div className="mt-20 pt-10 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-8">
+                    <div className=" pt-10 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between gap-8">
                         <p className="text-xs font-bold tracking-widest text-zinc-400 uppercase">
                             Volume {page} of {totalPages} — {total} Items
                         </p>
