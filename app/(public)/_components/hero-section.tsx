@@ -5,12 +5,13 @@ import Image from "next/image";
 import { useMobile } from "@/hooks/use-mobile";
 
 type HeroSlide = {
+    id?: string;
     eyebrow: string;
     image: string;
     mobileImage: string;
 };
 
-const slides: HeroSlide[] = [
+const FALLBACK_SLIDES: HeroSlide[] = [
     { eyebrow: "Wordpicked presents", image: "/home/hero.png", mobileImage: "/home/hero-mobile.png" },
     { eyebrow: "Literature first", image: "/home/hero.png", mobileImage: "/home/hero-mobile.png" },
     { eyebrow: "Cinema in view", image: "/home/hero.png", mobileImage: "/home/hero-mobile.png" },
@@ -19,24 +20,63 @@ const slides: HeroSlide[] = [
 
 export function HeroSection() {
     const [activeSlide, setActiveSlide] = useState(0);
+    const [slides, setSlides] = useState<HeroSlide[]>(FALLBACK_SLIDES);
     const isMobile = useMobile();
 
     useEffect(() => {
+        let cancelled = false;
+
+        const fetchSlides = async () => {
+            try {
+                const response = await fetch("/api/public/hero", { cache: "no-store" });
+                const data = await response.json();
+
+                if (!response.ok || !data.success) return;
+
+                const mappedSlides = (data.data || [])
+                    .map((slide: { id: string; eyebrow: string; image_url: string; mobile_image_url: string }) => ({
+                        id: slide.id,
+                        eyebrow: slide.eyebrow,
+                        image: slide.image_url,
+                        mobileImage: slide.mobile_image_url,
+                    }))
+                    .filter((slide: HeroSlide) => Boolean(slide.image && slide.mobileImage));
+
+                if (!cancelled && mappedSlides.length > 0) {
+                    setSlides(mappedSlides);
+                    setActiveSlide(0);
+                }
+            } catch {
+                // Fallback slides stay in place when API fetch fails.
+            }
+        };
+
+        fetchSlides();
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (slides.length <= 1) return;
+
         const interval = window.setInterval(() => {
             setActiveSlide((current) => (current + 1) % slides.length);
         }, 5500);
+
         return () => window.clearInterval(interval);
-    }, []);
+    }, [slides.length]);
 
     return (
         /* Standardized the height across the whole section */
-        <section className="relative isolate h-125 w-full overflow-hidden border-b border-white/10 bg-[#0d0d0d] sm:h-137.5 md:h-150 lg:h-162.5 xl:h-165 2xl:h-[827px]">
+        <section className="relative isolate h-125 w-full overflow-hidden border-b border-white/10 bg-[#0d0d0d] sm:h-137.5 md:h-150 lg:h-162.5 xl:h-165">
 
             {/* Background Images Layer */}
             <div className="absolute inset-0 z-0">
                 {slides.map((slide, index) => (
                     <div
-                        key={`${slide.image}-${index}`}
+                        key={slide.id || `${slide.image}-${index}`}
                         aria-hidden={index !== activeSlide}
                         className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === activeSlide
                             ? "opacity-100 scale-100"
@@ -44,9 +84,9 @@ export function HeroSection() {
                             }`}
                     >
                         <Image
-                            loading="eager"
+                            loading={index === 0 ? "eager" : "lazy"}
                             src={isMobile ? slide.mobileImage : slide.image}
-                            alt="Hero Image"
+                            alt={slide.eyebrow || "Hero Image"}
                             fill
                             sizes="100vw"
                             className={isMobile ? "object-cover object-bottom" : "object-cover object-top"}

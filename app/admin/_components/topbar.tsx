@@ -37,6 +37,7 @@ export function Topbar({ onMenuClick, session }: TopbarProps) {
         "/admin/literature": <>Literature <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
         "/admin/films": <>Films <span className="italic text-[#B5542A] font-normal hidden sm:inline">Manage Content</span></>,
         "/admin/artists": <>Artists <span className="italic text-[#B5542A] font-normal hidden sm:inline">Profiles</span></>,
+        "/admin/hero": <>Home Hero <span className="italic text-[#B5542A] font-normal hidden sm:inline">CMS</span></>,
         "/admin/contact": <>Contact <span className="italic text-[#B5542A] font-normal hidden sm:inline">Messages</span></>,
     }
 

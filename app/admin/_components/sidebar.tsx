@@ -30,6 +30,7 @@ export function Sidebar({ onLinkClick, session }: SidebarProps) {
                 { name: "Literature", href: "/admin/literature", icon: FileText },
                 { name: "Films", href: "/admin/films", icon: PenLine },
                 { name: "Artists", href: "/admin/artists", icon: Users },
+                { name: "Home Hero", href: "/admin/hero", icon: Star },
                 { name: "Pick of the Day", href: "/admin/pick-of-the-day", icon: Star },
                 { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
                 { name: "Contact", href: "/admin/contact", icon: Mail },
