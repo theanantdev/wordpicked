@@ -32,6 +32,7 @@ export function Sidebar({ onLinkClick, session }: SidebarProps) {
                 { name: "Artists", href: "/admin/artists", icon: Users },
                 { name: "Pick of the Day", href: "/admin/pick-of-the-day", icon: Star },
                 { name: "Newsletter", href: "/admin/newsletter", icon: Mail },
+                { name: "Contact", href: "/admin/contact", icon: Mail },
                 { name: "Comments", href: "/admin/comments", icon: MessageSquare },
             ]
         },

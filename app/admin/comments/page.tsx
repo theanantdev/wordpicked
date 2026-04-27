@@ -109,20 +109,20 @@ export default function AdminCommentsPage() {
                     { label: "Approved", value: approved, color: "text-green-600" },
                     { label: "Rejected", value: comments.filter(c => c.status === "rejected").length, color: "text-red-600" },
                 ].map(s => (
-                    <div key={s.label} className="bg-white border border-[#DDD7CC] rounded-[4px] px-5 py-4">
+                    <div key={s.label} className="rounded-lg border border-[#DDD7CC] bg-white px-5 py-4">
                         <div className={`font-heading font-bold text-[28px] ${s.color}`}>{s.value}</div>
-                        <div className="font-sans text-[11px] uppercase tracking-[0.1em] text-[#8C857C] mt-0.5">{s.label}</div>
+                        <div className="mt-0.5 font-sans text-[11px] uppercase tracking-widest text-[#8C857C]">{s.label}</div>
                     </div>
                 ))}
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 mb-4 border border-[#DDD7CC] bg-white rounded-[4px] p-1 w-fit flex-wrap">
+            <div className="mb-4 flex w-fit flex-wrap gap-1 rounded-lg border border-[#DDD7CC] bg-white p-1">
                 {tabs.map(t => (
                     <button
                         key={t.key}
                         onClick={() => setFilter(t.key)}
-                        className={`px-4 py-1.5 text-[12px] font-medium uppercase tracking-[0.08em] rounded-[2px] transition-colors ${filter === t.key ? "bg-[#B5542A] text-white" : "text-[#8C857C] hover:text-[#1A1714]"}`}
+                        className={`rounded-xs px-4 py-1.5 text-[12px] font-medium uppercase tracking-[0.08em] transition-colors ${filter === t.key ? "bg-[#B5542A] text-white" : "text-[#8C857C] hover:text-[#1A1714]"}`}
                     >
                         {t.label}
                     </button>
@@ -131,13 +131,13 @@ export default function AdminCommentsPage() {
 
             {/* Error */}
             {error && (
-                <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-[2px] text-[13px]">
+                <div className="mb-4 flex items-center gap-2 rounded-xs border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
                     <AlertCircle className="w-4 h-4 shrink-0" />{error}
                 </div>
             )}
 
             {/* Comment list */}
-            <div className="bg-white border border-[#DDD7CC] rounded-[4px] overflow-hidden">
+            <div className="overflow-hidden rounded-lg border border-[#DDD7CC] bg-white">
                 {loading ? (
                     <div className="flex items-center justify-center py-20 gap-2 text-[#8C857C]">
                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -158,7 +158,7 @@ export default function AdminCommentsPage() {
                                         <div className="flex flex-wrap items-center gap-2 mb-1">
                                             <span className="font-sans text-[13px] font-semibold text-[#1A1714]">{c.name}</span>
                                             <span className="text-[11px] text-[#8C857C]">{c.email}</span>
-                                            <span className={`text-[10px] font-semibold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded-[2px] ${STATUS_STYLES[c.status]}`}>
+                                            <span className={`rounded-xs px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] ${STATUS_STYLES[c.status]}`}>
                                                 {c.status}
                                             </span>
                                             {c.liked && <Heart className="w-3.5 h-3.5 text-[#B5542A] fill-[#B5542A]" />}
@@ -166,7 +166,7 @@ export default function AdminCommentsPage() {
                                         </div>
                                         <p className="font-sans text-[13px] text-[#44403C] leading-relaxed mb-2">{c.message}</p>
                                         <div className="flex items-center gap-1.5">
-                                            <span className={`text-[10px] font-semibold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded-[2px] ${c.article_type === "films" ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700"}`}>
+                                            <span className={`rounded-xs px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] ${c.article_type === "films" ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700"}`}>
                                                 {c.article_type}
                                             </span>
                                             <Link
@@ -186,7 +186,7 @@ export default function AdminCommentsPage() {
                                             <button
                                                 onClick={() => act(c.id, "approve")}
                                                 title="Approve"
-                                                className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-green-700 bg-green-50 border border-green-200 rounded-[2px] hover:bg-green-100 transition-colors"
+                                                className="flex items-center gap-1 rounded-xs border border-green-200 bg-green-50 px-2.5 py-1.5 text-[11px] font-medium text-green-700 transition-colors hover:bg-green-100"
                                             >
                                                 <Check className="w-3.5 h-3.5" />Approve
                                             </button>
@@ -195,7 +195,7 @@ export default function AdminCommentsPage() {
                                             <button
                                                 onClick={() => act(c.id, "reject")}
                                                 title="Reject"
-                                                className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-red-700 bg-red-50 border border-red-200 rounded-[2px] hover:bg-red-100 transition-colors"
+                                                className="flex items-center gap-1 rounded-xs border border-red-200 bg-red-50 px-2.5 py-1.5 text-[11px] font-medium text-red-700 transition-colors hover:bg-red-100"
                                             >
                                                 <X className="w-3.5 h-3.5" />Reject
                                             </button>
@@ -203,14 +203,14 @@ export default function AdminCommentsPage() {
                                         <button
                                             onClick={() => act(c.id, c.liked ? "unlike" : "like")}
                                             title={c.liked ? "Remove Editor's Pick" : "Mark Editor's Pick"}
-                                            className={`flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium rounded-[2px] border transition-colors ${c.liked ? "text-[#B5542A] bg-[#B5542A]/10 border-[#B5542A]/20 hover:bg-[#B5542A]/20" : "text-[#8C857C] bg-[#FAF7F2] border-[#DDD7CC] hover:border-[#B5542A]/40 hover:text-[#B5542A]"}`}
+                                            className={`flex items-center gap-1 rounded-xs border px-2.5 py-1.5 text-[11px] font-medium transition-colors ${c.liked ? "border-[#B5542A]/20 bg-[#B5542A]/10 text-[#B5542A] hover:bg-[#B5542A]/20" : "border-[#DDD7CC] bg-[#FAF7F2] text-[#8C857C] hover:border-[#B5542A]/40 hover:text-[#B5542A]"}`}
                                         >
                                             <Heart className={`w-3.5 h-3.5 ${c.liked ? "fill-[#B5542A]" : ""}`} />
                                         </button>
                                         <button
                                             onClick={() => del(c.id)}
                                             title="Delete permanently"
-                                            className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-medium text-[#8C857C] bg-[#FAF7F2] border border-[#DDD7CC] rounded-[2px] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+                                            className="flex items-center gap-1 rounded-xs border border-[#DDD7CC] bg-[#FAF7F2] px-2.5 py-1.5 text-[11px] font-medium text-[#8C857C] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                                         >
                                             <Trash2 className="w-3.5 h-3.5" />
                                         </button>
