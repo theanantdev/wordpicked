@@ -218,7 +218,7 @@ export function FilmsContent() {
                     {/* Grid */}
                     <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3">
                         {items.map(article => (
-                            <Link key={article.id} href={`/films/${article.slug}`} className="group flex flex-col shadow-sm rounded-md">
+                            <Link key={article.id} href={`/films/${article.slug}`} className="group flex flex-col shadow-md rounded-md">
                                 <div className="relative aspect-video w-full overflow-hidden  bg-zinc-100 shadow-sm">
                                     <Image
                                         loading="lazy"

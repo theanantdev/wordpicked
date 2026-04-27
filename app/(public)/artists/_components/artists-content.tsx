@@ -65,20 +65,20 @@ export function ArtistsContent({ artists }: { artists: Artist[] }) {
                     <div className="max-w-310 mx-auto flex h-12 flex-row items-center justify-between overflow-x-auto px-6 md:px-15 lg:px-20 no-scrollbar">
                         <div className="flex min-w-max flex-row items-center gap-6 md:gap-10 px-2">
                             {(["ALL", "WRITERS", "FILMMAKERS", "MUSICIANS", "VISUAL ARTISTS", "PHOTOGRAPHERS"] as FilterTab[]).map(tab => (
-                                <>
-                                    <button
-                                        key={tab}
-                                        onClick={() => setActiveTab(tab)}
-                                        aria-pressed={activeTab === tab}
-                                        className={`font-heading border-b-2 pb-1 text-[12px] md:text-[14px] uppercase tracking-[1.1px] transition-colors whitespace-nowrap ${activeTab === tab
-                                            ? "text-[#B5542A] border-[#B5542A] border-b-4"
-                                            : "border-transparent text-[#8C857C] hover:text-[#B5542A]"
-                                            }`}
-                                    >
-                                        {tab}
-                                    </button>
 
-                                </>
+                                <button
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    aria-pressed={activeTab === tab}
+                                    className={`font-heading border-b-2 pb-1 text-[12px] md:text-[14px] uppercase tracking-[1.1px] transition-colors whitespace-nowrap ${activeTab === tab
+                                        ? "text-[#B5542A] border-[#B5542A] border-b-4"
+                                        : "border-transparent text-[#8C857C] hover:text-[#B5542A]"
+                                        }`}
+                                >
+                                    {tab}
+                                </button>
+
+
                             ))}
                         </div>
 

@@ -139,7 +139,7 @@ export function LiteratureContent() {
     };
 
     return (
-        <MaxWidthWrapper className="px-3  py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-1 min-[1920px]:py-14">
+        <MaxWidthWrapper className="px-3  py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-6 min-[1024px]:py-8 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-10 min-[1920px]:py-14">
             {/* Header & Filters */}
             <div className="w-full border-b border-zinc-100 bg-white/50 backdrop-blur-md sticky top-0 z-40">
                 <div className="flex flex-col gap-4 py-6">
@@ -215,7 +215,7 @@ export function LiteratureContent() {
                         {error}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
                         {items.map(article => (
                             <Link key={article.id} href={`/literature/${article.slug}`} className="group block shadow-sm">
                                 <div className="relative aspect-[16/9] overflow-hidden bg-zinc-100 border border-zinc-200">
