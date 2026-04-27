@@ -29,9 +29,9 @@ export function SiteHeader() {
                     <Image
                         src="/logo.png"
                         alt="Logo"
-                        width={96}
-                        height={96}
-                        className="h-7.5 w-auto min-[360px]:h-10 min-[480px]:h-10 min-[640px]:h-11 min-[768px]:h-12 min-[1024px]:h-14"
+                        width={80}
+                        height={80}
+                        className="h-7.5 w-auto min-h-10"
                     />
                 </Link>
 

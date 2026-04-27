@@ -56,7 +56,7 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
             );
         }
         return (
-            <div className="mt-5 grid gap-4 min-[360px]:mt-6 min-[360px]:gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:gap-8">
+            <div className=" grid gap-4 min-[360px]:mt-6 min-[360px]:gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:gap-8">
                 {articles.map((article) => (
                     <StoryCard
                         key={article.id}
@@ -72,10 +72,10 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
         );
     };
 
-    return (<section className=" bg-[#fdf9f2]">
-        <MaxWidthWrapper className="px-1 py-8 min-[360px]:px-4 min-[360px]:py-9 min-[480px]:px-5 min-[640px]:py-10 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-8 min-[1200px]:py-16 min-[1440px]:py-20 min-[1920px]:py-24">
+    return (<section className="  bg-[#fdf9f2]">
+        <MaxWidthWrapper className="px-1  py-2 min-[360px]:px-4 min-[360px]:py-1 min-[480px]:px-5 min-[640px]:py-1 min-[768px]:px-6 min-[768px]:py-1 min-[1024px]:py-1 min-[1200px]:px-8 min-[1200px]:py-1 min-[1440px]:py-0 min-[1920px]:py-1">
 
-            <div className="mx-auto w-full space-y-10 min-[768px]:space-y-12 min-[1200px]:space-y-14 min-[1440px]:space-y-16">
+            <div className="mx-auto w-full space-y-5 min-[768px]:space-y-10 min-[1200px]:space-y-10 min-[1440px]:space-y-10">
                 {/* Literature Section */}
                 <div>
                     <div className="">
