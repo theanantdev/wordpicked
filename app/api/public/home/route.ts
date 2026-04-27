@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { fetchHomeData } from '@/utils/home-fetcher';
+import { fetchHomeData } from './home-fetcher';
 
 export const revalidate = 600; // 10 minutes cache
 
