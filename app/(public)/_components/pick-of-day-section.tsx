@@ -68,7 +68,7 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
                         className="object-cover transition-transform duration-500 hover:scale-101"
                     />
                 </div>
-                <div className="space-y-1 text-start min-[1024px]:space-y-8 min-[1024px]:text-left min-[1440px]:space-y-10">
+                <div className="space-y-1 text-start max-w-2xl min-[1024px]:space-y-8 min-[1024px]:text-left min-[1440px]:space-y-10">
                     <div className="space-y-2 min-[768px]:space-y-4 min-[1440px]:space-y-5">
                         <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500 min-[640px]:text-xs">{displayDate}</p>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#DC2828] min-[768px]:text-sm">{data.category}</p>
