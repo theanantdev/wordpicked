@@ -333,11 +333,11 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Instagram</label>
-                                    <input name="instagram" type="text" value={formValues.instagram} onChange={(e) => setFormValues((prev) => ({ ...prev, instagram: e.target.value }))} placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                    <input name="instagram" type="text" value={formValues.instagram} onChange={(e) => setFormValues((prev) => ({ ...prev, instagram: e.target.value }))} placeholder="URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Twitter / X</label>
-                                    <input name="twitter" type="text" value={formValues.twitter} onChange={(e) => setFormValues((prev) => ({ ...prev, twitter: e.target.value }))} placeholder="@handle or URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
+                                    <input name="twitter" type="text" value={formValues.twitter} onChange={(e) => setFormValues((prev) => ({ ...prev, twitter: e.target.value }))} placeholder="URL" className="w-full bg-white border border-[#DDD7CC] text-[13px] px-3 py-2 rounded-[2px] text-[#1A1714] outline-none hover:border-[#1A1714] focus:border-[#1A1714] transition-colors" />
                                 </div>
                                 <div className="flex flex-col gap-1.5">
                                     <label className="text-[11px] font-medium tracking-[0.08em] uppercase text-[#1A1714]">Website</label>

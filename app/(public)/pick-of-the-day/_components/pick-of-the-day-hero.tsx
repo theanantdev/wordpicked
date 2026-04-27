@@ -9,7 +9,6 @@ export function PicOfTheDayHero() {
                 alt=""
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                priority
                 className="object-cover object-center opacity-70"
 
             />
