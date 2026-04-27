@@ -29,7 +29,6 @@ export function SiteFooter() {
                     <ul className="mt-4 space-y-2 font-heading text-zinc-600">
                         <li><Link href="/about" className="hover:text-[#a8812a] transition-colors">About Us</Link></li>
                         <li><Link href="/terms" className="hover:text-[#a8812a] transition-colors">Terms of Service</Link></li>
-                        <li><Link href="/login" className="hover:text-[#a8812a] transition-colors">Sign In</Link></li>
                         <li><Link href="/contact" className="hover:text-[#a8812a] transition-colors">Contact</Link></li>
                         <li><Link href="/privacy" className="hover:text-[#a8812a] transition-colors">Privacy Policy</Link></li>
                     </ul>
