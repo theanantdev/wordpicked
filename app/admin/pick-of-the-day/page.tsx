@@ -170,7 +170,7 @@ export default function AdminPickOfTheDayPage() {
                                 {/* Thumbnail */}
                                 <div className="relative w-12 h-12 rounded-[2px] overflow-hidden shrink-0 bg-[#EDE7D9]">
                                     {article.featured_image_url ? (
-                                        <Image src={article.featured_image_url} alt={article.title} fill className="object-cover" />
+                                        <Image loading="lazy" src={article.featured_image_url} alt={article.title} fill className="object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center">
                                             {article.category === "films" ? (
@@ -204,11 +204,10 @@ export default function AdminPickOfTheDayPage() {
                                 <button
                                     onClick={() => togglePick(article)}
                                     disabled={togglingId === article.id}
-                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-[11px] font-medium uppercase tracking-[0.08em] transition-colors shrink-0 ${
-                                        article.is_pick_of_the_day
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-[11px] font-medium uppercase tracking-[0.08em] transition-colors shrink-0 ${article.is_pick_of_the_day
                                             ? "bg-red-50 border border-red-200 text-red-600 hover:bg-red-100"
                                             : "bg-[#EDE7D9] border border-[#DDD7CC] text-[#1A1714] hover:bg-[#E3DAC8]"
-                                    }`}
+                                        }`}
                                 >
                                     {togglingId === article.id ? (
                                         <Loader2 className="w-3.5 h-3.5 animate-spin" />

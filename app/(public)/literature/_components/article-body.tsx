@@ -221,6 +221,7 @@ export function ArticleBody({ blocks, tags }: ArticleBodyProps) {
                             <figure key={`image-${index}`} className="my-6 space-y-3">
                                 <div className="overflow-hidden border border-[#DCD6CC] bg-[#F7F3EC]">
                                     <Image
+                                        loading="lazy"
                                         src={imageUrl}
                                         alt={caption || "Article image"}
                                         width={1200}

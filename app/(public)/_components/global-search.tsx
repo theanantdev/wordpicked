@@ -295,7 +295,7 @@ export function GlobalSearch() {
                                                 >
                                                     <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xs bg-white/10">
                                                         {item.imageUrl && (
-                                                            <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                            <Image src={item.imageUrl} alt={item.title} loading="lazy" fill className="object-cover" />
                                                         )}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
@@ -327,7 +327,7 @@ export function GlobalSearch() {
                                                 >
                                                     <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xs bg-white/10">
                                                         {item.imageUrl && (
-                                                            <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
+                                                            <Image src={item.imageUrl} alt={item.title} loading="lazy" fill className="object-cover" />
                                                         )}
                                                     </div>
                                                     <div className="flex-1 min-w-0">

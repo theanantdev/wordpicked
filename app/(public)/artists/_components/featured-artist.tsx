@@ -13,6 +13,7 @@ export function FeaturedArtist({ artist }: { artist: Artist }) {
                     {/* Left Image */}
                     <div className="relative aspect-4/5 w-full shrink-0 md:aspect-3/4 md:w-[45%] lg:w-[35%]">
                         <Image
+                            loading="lazy"
                             src={artist.image_url || FALLBACK_IMAGE}
                             alt={artist.full_name}
                             fill

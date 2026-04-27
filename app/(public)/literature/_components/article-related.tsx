@@ -49,6 +49,7 @@ export function ArticleRelated({ items }: ArticleRelatedProps) {
                         <Link key={item.title} href={item.href} className="flex flex-col gap-5 pt-4 group cursor-pointer">
                             <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[2px]">
                                 <Image
+                                    loading="lazy"
                                     src={item.img}
                                     fill
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

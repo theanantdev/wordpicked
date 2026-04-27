@@ -59,7 +59,7 @@ export default function AboutPage() {
             <section className="relative h-95 w-full overflow-hidden bg-[#1C1C18] sm:h-107.5 md:h-119.5">
 
                 {/* Angled book/film covers — hidden on very small screens */}
-                <Image src="/literature/hero.png" alt="Stack of book and film covers" fill className="object-cover object-center opacity-40 " sizes="100vw" priority />
+                <Image loading="lazy" src="/literature/hero.png" alt="Stack of book and film covers" fill className="object-cover object-center opacity-40 " sizes="100vw" priority />
 
                 {/* Dark gradient — bottom-heavy so text is legible */}
                 <div

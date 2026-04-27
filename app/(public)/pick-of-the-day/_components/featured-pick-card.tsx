@@ -30,10 +30,10 @@ export function FeaturedPickCard({ article }: { article: PickArticle }) {
             {/* Image */}
             <div className="relative aspect-429/455 w-full max-w-107.25 shrink-0">
                 <Image
+                    loading="lazy"
                     src={article.featured_image_url || "/home/pick-of-the-day.png"}
                     alt={article.title}
                     fill
-                    loading="lazy"
                     sizes="(max-width: 1024px) 100vw, 429px"
                     className="object-cover"
                 />

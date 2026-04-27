@@ -4,6 +4,7 @@ export function PicOfTheDayHero() {
     return (
         <section className="relative mx-auto w-full min-h-[313px] overflow-hidden border-b border-[#262626] bg-[#0F0F0F] mt-0">
             <Image
+                loading="lazy"
                 src="/literature/hero.png"
                 alt=""
                 fill

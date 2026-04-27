@@ -32,6 +32,7 @@ export function PicksGrid({ items }: { items: PickArticle[] }) {
                     <Link key={pick.id} href={articleHref(pick)} className="flex flex-col bg-white overflow-hidden group border border-transparent hover:border-neutral-100 transition-colors shadow-sm hover:shadow-md pb-4 rounded-sm">
                         <div className="relative mb-4 w-full aspect-4/3">
                             <Image
+                                loading="lazy"
                                 src={pick.featured_image_url || "/pick-of-the-day/Recent-Picks/image.png"}
                                 alt={pick.title}
                                 fill

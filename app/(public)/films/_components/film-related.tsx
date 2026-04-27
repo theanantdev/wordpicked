@@ -56,6 +56,7 @@ export function FilmRelated({ items = [] }: FilmRelatedProps) {
                     <Link key={(film as FilmRelatedItem).href || `related-${index}`} href={(film as FilmRelatedItem).href || "/films"} className="group flex w-full flex-col gap-7 cursor-pointer">
                         <div className="relative aspect-4/5 w-full max-h-111.5 overflow-hidden rounded-xs border border-[rgba(0,0,0,0.05)] bg-[#F5F5F5]">
                             <Image
+                                loading="lazy"
                                 src={(film as FilmRelatedItem).img || (film as { image?: string }).image || "https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=800&auto=format&fit=crop"}
                                 alt={film.title}
                                 fill

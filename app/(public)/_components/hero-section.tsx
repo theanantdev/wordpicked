@@ -44,6 +44,7 @@ export function HeroSection() {
                             }`}
                     >
                         <Image
+                            loading="lazy"
                             src={isMobile ? slide.mobileImage : slide.image}
                             alt="Hero Image"
                             fill

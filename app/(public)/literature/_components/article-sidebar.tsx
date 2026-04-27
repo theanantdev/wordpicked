@@ -51,6 +51,7 @@ export function ArticleSidebar() {
                     <div className="flex flex-col gap-4 group cursor-pointer">
                         <div className="relative aspect-video w-full overflow-hidden">
                             <Image
+                                loading="lazy"
                                 src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=600&auto=format&fit=crop"
                                 fill
                                 alt="Essays"
@@ -70,6 +71,7 @@ export function ArticleSidebar() {
                     <div className="flex flex-col gap-4 group cursor-pointer">
                         <div className="relative aspect-video w-full overflow-hidden">
                             <Image
+                                loading="lazy"
                                 src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?q=80&w=600&auto=format&fit=crop"
                                 fill
                                 alt="Poetry"

@@ -87,12 +87,12 @@ export function ArticleHero({ categoryLabel, title, subtitle, authorName, publis
 
                 {/* Desktop Cover Representation */}
                 <div className="relative w-full aspect-[2/3] max-h-[600px] h-full max-w-[440px] ml-auto hidden md:block">
-                    <Image src={coverImageUrl} alt={title} fill className="object-cover shadow-2xl" />
+                    <Image loading="lazy" src={coverImageUrl} alt={title} fill className="object-cover shadow-2xl" />
                 </div>
 
                 {/* Mobile Cover Representation */}
                 <div className="relative w-full max-w-[95%] mx-auto aspect-[2/3] md:hidden shadow-2xl mt-4">
-                    <Image src={coverImageUrl} alt={title} fill className="object-cover" />
+                    <Image loading="lazy" src={coverImageUrl} alt={title} fill className="object-cover" />
                 </div>
 
             </div>

@@ -221,6 +221,7 @@ export function FilmsContent() {
                             <Link key={article.id} href={`/films/${article.slug}`} className="group flex flex-col">
                                 <div className="relative aspect-video w-full overflow-hidden  bg-zinc-100 shadow-sm">
                                     <Image
+                                        loading="lazy"
                                         src={article.imageUrl}
                                         alt={article.title}
                                         fill

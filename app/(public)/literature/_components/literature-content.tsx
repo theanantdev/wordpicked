@@ -220,6 +220,7 @@ export function LiteratureContent() {
                             <Link key={article.id} href={`/literature/${article.slug}`} className="group block">
                                 <div className="relative aspect-[16/9] overflow-hidden bg-zinc-100 border border-zinc-200">
                                     <Image
+                                        loading="lazy"
                                         src={article.imageUrl}
                                         alt={article.title}
                                         fill

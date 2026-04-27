@@ -7,6 +7,7 @@ export function ArtistsHero() {
         <section className="relative h-83.75 w-full overflow-hidden min-[360px]:h-70 min-[425px]:h-80 min-[640px]:h-100 min-[768px]:h-90 min-[1024px]:h-100 min-[1200px]:h-140 min-[1440px]:h-120 min-[1920px]:h-190">
             {/* Background Image */}
             <Image
+                loading="lazy"
                 src="/artist/hero.jpg"
                 alt="Artists Hero Image"
                 fill

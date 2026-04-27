@@ -4,6 +4,7 @@ export function LiteratureHero() {
     return (
         <section className="relative mx-auto mt-0 w-full min-h-88.25 overflow-hidden border-b border-[#262626] bg-[#0F0F0F] sm:min-h-95 md:min-h-112">
             <Image
+                loading="lazy"
                 src="/literature/hero.png"
                 alt="The Weight of Silence: A Meditation on Absence"
                 fill

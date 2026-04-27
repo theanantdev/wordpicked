@@ -295,6 +295,7 @@ export default function PostsPage() {
                                         <div className="flex items-center gap-4">
                                             {post.featured_image_url ? (
                                                 <Image
+                                                    loading="lazy"
                                                     src={post.featured_image_url}
                                                     alt={post.title}
                                                     width={60}

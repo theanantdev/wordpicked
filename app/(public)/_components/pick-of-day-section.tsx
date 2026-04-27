@@ -61,6 +61,7 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
             <div className="mt-4 grid gap-6 min-[640px]:gap-8 min-[1024px]:grid-cols-[1fr_1.6fr] min-[1024px]:items-start min-[1200px]:grid-cols-[1fr_1.8fr] min-[1440px]:gap-10 min-[1920px]:grid-cols-[1fr_2fr]">
                 <div className="relative aspect-4/5 w-full overflow-hidden rounded-xs shadow-sm min-[640px]:aspect-5/6 min-[1024px]:aspect-4/5 min-[1440px]:min-h-140 min-[1920px]:min-h-160">
                     <Image
+                        loading="lazy"
                         src={data.featured_image_url || "/home/pick-of-the-day.png"}
                         alt={data.title}
                         fill

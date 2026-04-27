@@ -523,7 +523,7 @@ export default function NewPostPage() {
                                 </label>
                                 {featuredImageUrl && (
                                     <div className="mt-3 overflow-hidden rounded border border-slate-200">
-                                        <Image src={featuredImageUrl} alt="Featured" width={640} height={256} className="h-32 w-full object-cover" />
+                                        <Image loading="lazy" src={featuredImageUrl} alt="Featured" width={640} height={256} className="h-32 w-full object-cover" />
                                     </div>
                                 )}
                             </div>

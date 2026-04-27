@@ -9,6 +9,7 @@ export function StoryCard({ tag, title, summary, author, date, image, slug }: St
             className="overflow-hidden bg-[#fdf9f2]">
             <div className="relative aspect-4/3 w-full overflow-hidden">
                 <Image
+                    loading="lazy"
                     src={image}
                     alt={title}
                     fill

@@ -50,6 +50,7 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
                     <article key={artist.id} className="group text-center min-[1200px]:text-left">
                         <div className="relative mx-auto aspect-square w-full max-w-84 overflow-hidden rounded-xs shadow-sm min-[768px]:max-w-96 min-[1200px]:mx-0 min-[1200px]:max-w-100 min-[1440px]:max-w-104 min-[1920px]:max-w-110">
                             <Image
+                                loading="lazy"
                                 src={artist.image_url || "/home/hero.jpg"}
                                 alt={artist.full_name}
                                 fill

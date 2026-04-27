@@ -112,6 +112,7 @@ export function ArtistsContent({ artists }: { artists: Artist[] }) {
                                             {/* Image Section */}
                                             <div className="relative w-full aspect-4/5 overflow-hidden">
                                                 <Image
+                                                    loading="lazy"
                                                     src={writer.uiImage}
                                                     alt={writer.full_name}
                                                     fill

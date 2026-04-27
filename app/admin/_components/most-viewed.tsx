@@ -16,8 +16,9 @@ export function MostViewed({ posts }: { posts: DashboardMostViewed[] }) {
                 ) : posts.map((post, idx) => (
                     <div key={post.id} className={`flex items-center gap-4 px-5 py-3.5 ${idx !== posts.length - 1 ? 'border-b border-[#EDE7D9] ' : ''} hover:bg-[#FAFAFA] transition-colors group`}>
                         <div className="relative w-10 h-10 shrink-0 overflow-hidden rounded-[2px] bg-[#E3DAC8]">
-                            <Image 
-                                src={post.image} 
+                            <Image
+                                loading="lazy"
+                                src={post.image}
                                 alt={post.title}
                                 fill
                                 className="object-cover transition-transform group-hover:scale-110"
