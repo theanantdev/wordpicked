@@ -57,22 +57,22 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
 
     return (
         <MaxWidthWrapper>
-            <SectionHeader title="Pick of the Day" redirectionUrl="/pick-of-the-day" />
+            <SectionHeader title="Pick of the Day" redirectionUrl="/pick-of-the-day" className="mt-2" />
             <div className="mt-4 grid gap-6 min-[640px]:gap-8 min-[1024px]:grid-cols-[1fr_1.6fr] min-[1024px]:items-start min-[1200px]:grid-cols-[1fr_1.8fr] min-[1440px]:gap-10 min-[1920px]:grid-cols-[1fr_2fr]">
-                <div className="relative aspect-4/5 w-full overflow-hidden rounded-xs shadow-sm min-[640px]:aspect-5/6 min-[1024px]:aspect-4/5 min-[1440px]:min-h-140 min-[1920px]:min-h-160">
+                <div className="relative aspect-[16/13] w-full">
                     <Image
                         loading="lazy"
                         src={data.featured_image_url || "/home/pick-of-the-day.png"}
                         alt={data.title}
                         fill
-                        className="object-cover transition-transform duration-500 hover:scale-105"
+                        className="object-cover transition-transform duration-500 hover:scale-101"
                     />
                 </div>
                 <div className="space-y-1 text-start min-[1024px]:space-y-8 min-[1024px]:text-left min-[1440px]:space-y-10">
                     <div className="space-y-2 min-[768px]:space-y-4 min-[1440px]:space-y-5">
                         <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500 min-[640px]:text-xs">{displayDate}</p>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#DC2828] min-[768px]:text-sm">{data.category}</p>
-                        <h3 className="font-heading text-[28px] font-semibold leading-tight text-zinc-900 min-[360px]:text-[30px] min-[480px]:text-[34px] min-[768px]:text-[38px] min-[1024px]:text-[42px] min-[1440px]:text-[52px] min-[1920px]:text-[60px]">
+                        <h3 className="font-heading text-[28px] font-semibold leading-tight text-zinc-900 min-[360px]:text-[30px] min-[480px]:text-[34px] min-[768px]:text-[38px] min-[1024px]:text-[42px] min-[1440px]:text-[42px] min-[1920px]:text-[60px]">
                             {data.title}
                         </h3>
                         <p className=" max-w-2xl leading-relaxed text-zinc-600 min-[480px]:text-[15px] min-[1024px]:mx-0 min-[1024px]:text-[16px] min-[1440px]:max-w-[48ch] min-[1440px]:text-[18px] min-[1920px]:text-[20px]">
