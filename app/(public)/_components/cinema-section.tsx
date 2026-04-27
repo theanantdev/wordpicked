@@ -74,9 +74,9 @@ export function CinemaSection({ initialData }: { initialData?: { recent: Article
 
     return (
         <section className="bg-[#f7f3ec]">
-            <MaxWidthWrapper className="px-3 py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py- min-[1200px]:px-6 min-[1200px]:py-8 min-[1440px]:py-10 min-[1920px]:py-14">
-                <div className="space-y-8 min-[768px]:space-y-10 min-[1200px]:space-y-12 min-[1440px]:space-y-14">
-                    <div className="grid items-center gap-2 min-[640px]:gap-10 min-[1024px]:grid-cols-2 min-[1200px]:gap-12 min-[1440px]:gap-16">
+            <MaxWidthWrapper className="px-3  py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-10 min-[1920px]:py-14">
+                <div className="space-y-8 min-[768px]:space-y-10 min-[1200px]:space-y-7 min-[1440px]:space-y-10">
+                    <div className="grid items-center gap-10 min-[640px]:gap-10 min-[1024px]:grid-cols-2 min-[1200px]:gap-12 min-[1440px]:gap-16">
                         <div className="relative aspect-4/3 w-full overflow-hidden shadow-sm min-[640px]:aspect-16/10 min-[1024px]:aspect-5/4 min-[1440px]:aspect-16/11 min-[1920px]:aspect-18/12">
                             <Image
                                 loading="lazy"
