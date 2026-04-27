@@ -17,12 +17,12 @@ export function PicksGrid({ items }: { items: PickArticle[] }) {
     if (!items.length) return null;
 
     return (
-        <section className="mx-auto mb-20 w-full">
-            <div className="mb-1 flex flex-col gap-3.25 lg:mb-15">
-                <h2 className="font-heading text-[28px] leading-[1.2] font-bold tracking-[1px] text-[#141210] sm:text-[32px] md:text-[36px] md:leading-12">
+        <section className="mx-auto mb-5 w-full">
+            <div className="flex mb-3 flex-col lg:mb-5 gap-3.25 ">
+                <h2 className="font-heading text-[28px] mt-5 leading-[1.2] font-bold tracking-[1px] text-[#141210] sm:text-[32px] md:text-[36px] md:leading-5">
                     More Picks
                 </h2>
-                <p className="font-sans text-[15px] leading-6 text-[#7C7468] sm:text-[18px]">
+                <p className="font-sans text-[15px] leading-5 text-[#7C7468] sm:text-[18px]">
                     Our editors&apos; recent selections
                 </p>
             </div>
