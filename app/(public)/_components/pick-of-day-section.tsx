@@ -72,7 +72,7 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
                     <div className="space-y-2 min-[768px]:space-y-4 min-[1440px]:space-y-5">
                         <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500 min-[640px]:text-xs">{displayDate}</p>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#DC2828] min-[768px]:text-sm">{data.category}</p>
-                        <h3 className="font-heading text-[28px] font-semibold leading-tight text-zinc-900 min-[360px]:text-[30px] min-[480px]:text-[34px] min-[768px]:text-[38px] min-[1024px]:text-[42px] min-[1440px]:text-[42px] min-[1920px]:text-[60px]">
+                        <h3 className="font-heading text-[18px] font-semibold leading-tight text-zinc-900 min-[360px]:text-[30px] min-[480px]:text-[34px] min-[768px]:text-[38px] min-[1024px]:text-[42px] min-[1440px]:text-[42px] min-[1920px]:text-[60px]">
                             {data.title}
                         </h3>
                         <p className=" max-w-2xl leading-relaxed text-zinc-600 min-[480px]:text-[15px] min-[1024px]:mx-0 min-[1024px]:text-[16px] min-[1440px]:max-w-[48ch] min-[1440px]:text-[18px] min-[1920px]:text-[20px]">
