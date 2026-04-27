@@ -45,7 +45,7 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
             );
         }
         return (
-            <div className="mx-auto mt-6 grid gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:mt-5 min-[1440px]:gap-8">
+            <div className="mx-auto mt-6 mb-10 grid gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:mt-5 min-[1440px]:gap-8">
                 {artists.slice(0, 3).map((artist) => (
                     <article key={artist.id} className="group text-center min-[1200px]:text-left shadow-md ">
                         <div className="relative mx-auto aspect-square w-full max-w-84 overflow-hidden rounded-xs shadow-sm min-[768px]:max-w-96 min-[1200px]:mx-0 min-[1200px]:max-w-120 min-[1440px]:max-w-140 min-[1920px]:max-w-110">

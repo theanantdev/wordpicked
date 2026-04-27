@@ -45,7 +45,7 @@ export function SiteFooter() {
                         </ul>
                     </div>
                 </div>
-                <div className="mx-auto w-full max-w-310 border-t border-zinc-200 px-4 pt-6 text-center text-sm text-zinc-500 md:px-6 md:text-left">
+                <div className="mx-auto w-full pt-6 text-center text-sm text-zinc-500 border-t border-zinc-200 mt-5 sm:text-left">
                     © 2026 The Wordpicked. The Digital Curator. All rights reserved.
                 </div>
             </MaxWidthWrapper>
