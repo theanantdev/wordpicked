@@ -22,7 +22,7 @@ export function SiteHeader() {
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-[#141210]">
-            <div className="relative mx-auto flex h-16 w-full max-w-[320px] items-center justify-between px-3 min-[360px]:max-w-90 min-[360px]:px-4 min-[480px]:max-w-120 min-[480px]:px-5 min-[640px]:max-w-160 min-[640px]:px-5 min-[768px]:max-w-3xl min-[768px]:h-18 min-[768px]:px-6 min-[1024px]:max-w-5xl min-[1024px]:h-19 min-[1024px]:px-8 min-[1200px]:max-w-300 min-[1200px]:px-10 min-[1440px]:max-w-360 min-[1920px]:max-w-480">
+            <div className="relative mx-auto flex h-16 w-full max-w-[320px] items-center justify-between px-3 min-[360px]:max-w-90 min-[360px]:px-1 min-[480px]:max-w-120 min-[480px]:px-3 min-[640px]:max-w-160 min-[640px]:px-5 min-[768px]:max-w-3xl min-[768px]:h-18 min-[768px]:px-6 min-[1024px]:max-w-5xl min-[1024px]:h-19 min-[1024px]:px-8 min-[1200px]:max-w-300 min-[1200px]:px-10 min-[1440px]:max-w-360 min-[1920px]:max-w-480">
 
                 {/* Desktop Logo */}
                 <Link href="/" className="font-heading text-[26px] font-semibold -mt-1 tracking-[0.26px] text-[#f5f0e8]">

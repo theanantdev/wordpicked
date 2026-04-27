@@ -71,14 +71,14 @@ export default function AboutPage() {
                 />
 
                 {/* Headline + subtitle */}
-                <div className="absolute inset-0 z-20 flex flex-col justify-end px-5 pb-10 sm:px-10 md:px-18 md:pb-16">
+                <MaxWidthWrapper className="absolute inset-0 z-20 flex flex-col mx-auto h-full items-start justify-end px-4 pb-12 sm:px-8 md:px-18 lg:px-30 min-[1440px]:px-34 min-[1920px]:px-40 ">
                     <h1 className="font-heading font-semibold text-[26px] sm:text-[38px] md:text-[52px] leading-[1.15] tracking-[-1.5px] text-white mb-3 max-w-3xl">
                         We believe great stories deserve serious attention.
                     </h1>
                     <p className="font-heading italic text-[13px] sm:text-[15px] md:text-[17px] leading-[1.7] text-white/80 max-w-xl">
                         The Wordpicked is a platform for thoughtful, daily recommendations, and intimate conversations with the artists who shape our cultural moment.
                     </p>
-                </div>
+                </MaxWidthWrapper>
             </section>
 
             {/* ── What We Are ───────────────────────────────── */}

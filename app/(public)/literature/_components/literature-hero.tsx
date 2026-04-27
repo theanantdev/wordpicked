@@ -1,13 +1,13 @@
 import Image from "next/image";
-
+import MaxWidthWraper from "@/components/max-width-wraper";
 export function LiteratureHero() {
     return (
-        <section className="relative mx-auto mt-0 w-full min-h-88.25 overflow-hidden border-b border-[#262626] bg-[#0F0F0F]">
+        <section className="relative mx-auto mt-0 w-full min-h-88.25 overflow-hidden border-b border-[#262626] bg-[#0F0F0F] sm:min-h-95 md:min-h-112">
             <Image
                 src="/literature/hero.png"
                 alt="The Weight of Silence: A Meditation on Absence"
                 fill
-                sizes="(max-width: 1024px) 100vw, 342px"
+                sizes="100vw"
                 className="object-cover"
             />
 
@@ -21,9 +21,9 @@ export function LiteratureHero() {
             />
 
             {/* Content Layer */}
-            <div className="relative z-10 mx-auto flex min-h-88.25 max-w-360 flex-col items-start justify-center gap-8 px-4 py-10 sm:px-8 md:flex-row md:items-center md:justify-between md:gap-10 md:px-20.75">
-                <div className="flex w-full max-w-3xl flex-col text-left">
-                    <p className="mb-2 font-sans text-[16px] uppercase tracking-[1.54px] text-[#D4AC5A]">
+            <MaxWidthWraper className="relative z-10 mx-auto flex min-h-88.25 flex-col items-start justify-center gap-6 px-1 py-1 sm:px-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-2">
+                <div className="flex w-full max-w-3xl flex-col">
+                    <p className="mb-2 font-sans text-[14px] uppercase tracking-[1.54px] text-[#D4AC5A] sm:text-[16px]">
                         Thursday, March 26 2026
                     </p>
                     <h1 className="font-heading text-[34px] font-bold leading-tight text-white sm:text-[44px] md:text-[48px] md:leading-16">
@@ -31,9 +31,10 @@ export function LiteratureHero() {
                     </h1>
                     <p className="mt-4 max-w-195.25 font-sans text-[15px] leading-[150%] text-white sm:text-[17px] md:text-[18px]">
                         Curated insights into the world of written word. From contemporary fiction to
-                        timeless poetry, we explore the narratives that shape our cultural landscape.                    </p>
+                        timeless poetry, we explore the narratives that shape our cultural landscape.
+                    </p>
                 </div>
-            </div>
+            </MaxWidthWraper>
         </section>
     );
 }

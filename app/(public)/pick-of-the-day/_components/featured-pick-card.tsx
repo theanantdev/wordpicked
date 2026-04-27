@@ -26,13 +26,14 @@ function articleHref(article: PickArticle) {
 
 export function FeaturedPickCard({ article }: { article: PickArticle }) {
     return (
-        <section className="mx-auto mt-8 mb-20 flex w-full max-w-360 flex-col items-start gap-8 px-4 sm:px-6 lg:mt-15 lg:mb-37.5 lg:flex-row lg:items-center lg:gap-7.5 lg:px-21.5" id="latest-pick">
+        <section className="mt-2  flex w-full  max-w-360 flex-col items-start justify-start gap-8  lg:mt-1 lg:mb-3.5 lg:flex-row lg:items-center lg:gap-7.5" id="latest-pick">
             {/* Image */}
             <div className="relative aspect-429/455 w-full max-w-107.25 shrink-0">
                 <Image
                     src={article.featured_image_url || "/home/pick-of-the-day.png"}
                     alt={article.title}
                     fill
+                    loading="lazy"
                     sizes="(max-width: 1024px) 100vw, 429px"
                     className="object-cover"
                 />

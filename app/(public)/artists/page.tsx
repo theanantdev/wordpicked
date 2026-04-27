@@ -11,7 +11,7 @@ export default async function ArtistsPage() {
     // console.log(featuredArtist)
 
     return (
-        <main className="bg-[#FDF9F2] min-h-screen">
+        <main className=" min-h-screen">
             <ArtistsHero />
             {featuredArtist && <FeaturedArtist artist={featuredArtist} />}
             <ArtistsContent artists={artists} />

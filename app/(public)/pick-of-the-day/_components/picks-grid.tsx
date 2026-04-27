@@ -18,7 +18,7 @@ export function PicksGrid({ items }: { items: PickArticle[] }) {
 
     return (
         <section className="mx-auto mb-20 w-full">
-            <div className="mb-10 flex flex-col gap-3.25 lg:mb-15">
+            <div className="mb-1 flex flex-col gap-3.25 lg:mb-15">
                 <h2 className="font-heading text-[28px] leading-[1.2] font-bold tracking-[1px] text-[#141210] sm:text-[32px] md:text-[36px] md:leading-12">
                     More Picks
                 </h2>
@@ -27,7 +27,7 @@ export function PicksGrid({ items }: { items: PickArticle[] }) {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-10">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-5">
                 {items.map((pick) => (
                     <Link key={pick.id} href={articleHref(pick)} className="flex flex-col bg-white overflow-hidden group border border-transparent hover:border-neutral-100 transition-colors shadow-sm hover:shadow-md pb-4 rounded-sm">
                         <div className="relative mb-4 w-full aspect-4/3">

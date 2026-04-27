@@ -1,6 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
-
+import MaxWidthWraper from "@/components/max-width-wraper";
 export function PicOfTheDayHero() {
     return (
         <section className="relative mx-auto w-full min-h-[313px] overflow-hidden border-b border-[#262626] bg-[#0F0F0F] mt-0">
@@ -24,7 +23,7 @@ export function PicOfTheDayHero() {
             />
 
             {/* Content Layer */}
-            <div className="relative z-10 flex min-h-[313px] max-w-360 mx-auto items-center justify-between gap-10 px-6 py-10 sm:px-10 md:px-20.75">
+            <MaxWidthWraper className="relative z-10 mx-auto flex min-h-88.25 flex-col items-start justify-center gap-6 px-1 py-1 sm:px-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-2">
                 <div className="flex max-w-3xl flex-col">
                     <p className="mb-2 font-sans text-[16px] uppercase tracking-[1.54px] text-[#D4AC5A]">
                         Thursday, March 26 2026
@@ -36,7 +35,7 @@ export function PicOfTheDayHero() {
                         One book or film we think you should read or watch today — curated daily, archived forever.
                     </p>
                 </div>
-            </div>
+            </MaxWidthWraper>
         </section>
     );
 }
