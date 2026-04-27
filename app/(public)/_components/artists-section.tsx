@@ -45,7 +45,7 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
             );
         }
         return (
-            <div className="mx-auto mt-6 grid gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:mt-8 min-[1440px]:gap-8">
+            <div className="mx-auto mt-6 grid gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:mt-5 min-[1440px]:gap-8">
                 {artists.slice(0, 3).map((artist) => (
                     <article key={artist.id} className="group text-center min-[1200px]:text-left">
                         <div className="relative mx-auto aspect-square w-full max-w-84 overflow-hidden rounded-xs shadow-sm min-[768px]:max-w-96 min-[1200px]:mx-0 min-[1200px]:max-w-100 min-[1440px]:max-w-104 min-[1920px]:max-w-110">
@@ -76,7 +76,7 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
 
     return (
         <section className="bg-[#fdf9f2] border-t border-zinc-100">
-            <MaxWidthWrapper className="px-3 py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-8 min-[1200px]:py-16 min-[1440px]:py-20 min-[1920px]:py-24">
+            <MaxWidthWrapper className="px-3 py-1 min-[360px]:px-4 min-[640px]:px-5 min-[768px]:px-6 mt-2 mb-3   min-[1200px]:px-8 ">
                 <div>
                     <div className="">
                         <div className="text-center min-[768px]:text-left">
