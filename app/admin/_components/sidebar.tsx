@@ -43,8 +43,8 @@ export function Sidebar({ onLinkClick, session }: SidebarProps) {
             label: "Management",
             items: [
                 { name: "Users", href: "/admin/users", icon: Users },
-                { name: "Google Ads", href: "/admin/ads", icon: Settings },
-                { name: "Settings", href: "/admin/settings", icon: Settings },
+                // { name: "Google Ads", href: "/admin/ads", icon: Settings },
+                // { name: "Settings", href: "/admin/settings", icon: Settings },
             ],
         });
     }

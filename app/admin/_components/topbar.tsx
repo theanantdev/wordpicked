@@ -59,19 +59,19 @@ export function Topbar({ onMenuClick, session }: TopbarProps) {
             </div>
 
             <div className="flex items-center gap-2 md:gap-4 ml-auto">
-                <div className="hidden md:flex items-center gap-2 bg-[#F5F0E8] border border-[#DDD7CC] rounded-xs px-3.5 py-2 w-55">
+                {/* <div className="hidden md:flex items-center gap-2 bg-[#F5F0E8] border border-[#DDD7CC] rounded-xs px-3.5 py-2 w-55">
                     <Search className="w-3.25 h-3.25 text-[#8C857C] shrink-0" />
                     <input
                         type="text"
                         placeholder="Search posts, artists…"
                         className="bg-transparent border-none outline-none text-[12.5px] text-[#1A1714] w-full placeholder:text-[#8C857C]"
                     />
-                </div>
+                </div> */}
 
-                <button className="relative w-9 h-9 shrink-0 flex items-center justify-center border border-[#DDD7CC] rounded-xs cursor-pointer transition-colors hover:bg-[#EDE7D9]">
+                {/* <button className="relative w-9 h-9 shrink-0 flex items-center justify-center border border-[#DDD7CC] rounded-xs cursor-pointer transition-colors hover:bg-[#EDE7D9]">
                     <Bell className="w-3.75 h-3.75 text-[#8C857C]" />
                     <div className="absolute top-2 right-2 w-1.75 h-1.75 bg-[#B5542A] rounded-full" />
-                </button>
+                </button> */}
 
                 <div ref={createMenuRef} className="relative hidden sm:block">
                     <button
