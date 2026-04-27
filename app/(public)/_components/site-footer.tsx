@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 export function SiteFooter() {
     return (
-        <footer className="border-t border-[#a8812a] bg-[#fdf9f2] py-16">
-            <MaxWidthWrapper className="px-2">
+        <footer className="border-t border-[#a8812a] bg-[#fdf9f2]">
+            <MaxWidthWrapper className="px-2 py-5 min-[360px]:px-4 min-[360px]:py-2 min-[480px]:px-5 min-[640px]:py-4 min-[768px]:px-6 min-[768px]:py-6 min-[1024px]:px-8 min-[1024px]:py-8 min-[1200px]:px-10 min-[1200px]:py-10 min-[1440px]:py-5 min-[1920px]:py-8">
                 <div className="mx-auto grid w-full gap-10 sm:grid-cols-2 md:grid-cols-4">
                     <div>
                         <div>
@@ -45,7 +45,7 @@ export function SiteFooter() {
                         </ul>
                     </div>
                 </div>
-                <div className="mx-auto mt-12 w-full max-w-310 border-t border-zinc-200 px-4 pt-6 text-center text-sm text-zinc-500 md:px-6 md:text-left">
+                <div className="mx-auto w-full max-w-310 border-t border-zinc-200 px-4 pt-6 text-center text-sm text-zinc-500 md:px-6 md:text-left">
                     © 2026 The Wordpicked. The Digital Curator. All rights reserved.
                 </div>
             </MaxWidthWrapper>

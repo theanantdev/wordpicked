@@ -56,9 +56,9 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
     });
 
     return (
-        <MaxWidthWrapper>
-            <SectionHeader title="Pick of the Day" redirectionUrl="/pick-of-the-day" className="mt-2" />
-            <div className="mt-4 grid gap-6 min-[640px]:gap-8 min-[1024px]:grid-cols-[1fr_1.6fr] min-[1024px]:items-start min-[1200px]:grid-cols-[1fr_1.8fr] min-[1440px]:gap-10 min-[1920px]:grid-cols-[1fr_2fr]">
+        <MaxWidthWrapper className="px-1 py-8 min-[360px]:px-4 min-[360px]:py-9 min-[480px]:px-5 min-[640px]:py-10 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-8 min-[1200px]:py-8 min-[1440px]:py-10 min-[1920px]:py-14">
+            <SectionHeader title="Pick of the Day" redirectionUrl="/pick-of-the-day" className="" />
+            <div className="grid gap-6 min-[640px]:gap-8 min-[1024px]:grid-cols-[1fr_1.6fr] min-[1024px]:items-start min-[1200px]:grid-cols-[1fr_1.8fr] min-[1440px]:gap-10 min-[1920px]:grid-cols-[1fr_2fr]">
                 <div className="relative aspect-[16/13] w-full">
                     <Image
                         loading="lazy"
