@@ -546,7 +546,7 @@ export default function NewPostPage() {
                                         >
                                             <option value="literature">Literature</option>
                                             <option value="films">Films</option>
-                                            <option value="artists">Artists</option>
+                                            {/* <option value="artists">Artists</option> */}
                                         </select>
                                         <ChevronDown className="w-3.5 sm:w-4 h-3.5 sm:h-4 absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
                                     </div>

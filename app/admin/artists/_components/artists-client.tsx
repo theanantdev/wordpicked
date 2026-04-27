@@ -419,7 +419,7 @@ export function ArtistsClient({ initialArtists }: ArtistsClientProps) {
 
                         <div className="flex items-center gap-2 pt-4 border-t border-[#EDE7D9]">
                             <button onClick={() => handleEditArtist(artist)} className="flex-1 text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors">Edit</button>
-                            <button className="flex-1 text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors">View Posts</button>
+                            {/* <button className="flex-1 text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2 py-1.5 rounded-[2px] hover:bg-[#EDE7D9] transition-colors">View Posts</button> */}
                             <button onClick={() => handleDelete(artist.id)} className="text-[11px] font-medium text-[#B5542A] bg-white border border-[#B5542A]/30 px-3 py-1.5 rounded-[2px] hover:bg-[#B5542A]/10 transition-colors flex items-center justify-center gap-1">
                                 <Trash2 className="w-3 h-3" />
                             </button>

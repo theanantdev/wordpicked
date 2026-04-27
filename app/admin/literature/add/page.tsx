@@ -29,7 +29,7 @@ type TiptapNode = {
 const SUBCATEGORY_OPTIONS: Record<string, string[]> = {
     literature: ["Poetry", "Novels", "Essays", "Short Stories", "Criticism"],
     films: ["Reviews", "Trailers", "Interviews", "Box Office", "OTT Releases"],
-    artists: ["Profiles", "Exhibitions", "Interviews", "Techniques", "Awards"],
+    // artists: ["Profiles", "Exhibitions", "Interviews", "Techniques", "Awards"],
 };
 
 function extractText(node?: TiptapNode): string {
@@ -524,7 +524,7 @@ export default function NewPostPage() {
                                 <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-3 py-2">
                                     <option value="literature">Literature</option>
                                     <option value="films">Films</option>
-                                    <option value="artists">Artists</option>
+                                    {/* <option value="artists">Artists</option> */}
                                 </select>
 
                                 <select value={subcategory} onChange={(e) => setSubcategory(e.target.value)} className="w-full bg-white border border-slate-300 text-xs sm:text-sm px-3 py-2">

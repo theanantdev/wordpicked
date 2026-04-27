@@ -5,6 +5,7 @@ import { createAdminClient } from '@/utils/supabase/admin';
 type PostRow = {
     id: string;
     title: string;
+    slug: string | null;
     subtitle: string | null;
     category: string | null;
     status: string | null;
@@ -17,7 +18,8 @@ type PostRow = {
 type PostListItem = {
     id: string;
     title: string;
-    sub: string;
+    subtitle: string | null;
+    slug: string;
     category: string;
     status: 'Published' | 'Draft';
     date: string;
@@ -87,7 +89,7 @@ export async function GET(request: NextRequest) {
         const supabase = createAdminClient();
         let query = supabase
             .from('articles')
-            .select('id, title, subtitle, category, status, publish_at, created_at, featured_image_url, view_count', { count: 'exact' });
+            .select('id, title, slug, subtitle, category, status, publish_at, created_at, featured_image_url, view_count', { count: 'exact' });
 
         if (search) {
             const escaped = search.replaceAll(',', ' ');
@@ -129,13 +131,14 @@ export async function GET(request: NextRequest) {
             return {
                 id: post.id,
                 title: post.title,
-                sub: post.subtitle || '-',
+                subtitle: post.subtitle || '-',
                 category,
                 status,
                 date: formatDisplayDate(post.publish_at || post.created_at),
                 views: (post.view_count || 0).toLocaleString(),
                 gradient: gradientForCategory(category),
                 featured_image_url: post.featured_image_url || null,
+                slug: post.slug || '',
             };
         });
 

@@ -8,7 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 type PostListItem = {
     id: string;
     title: string;
-    sub: string;
+    slug: string;
+    subtitle: string;
     category: string;
     status: "Published" | "Draft";
     date: string;
@@ -307,7 +308,7 @@ export default function PostsPage() {
                                             )}
                                             <div>
                                                 <div className="font-heading font-bold text-[14.5px] text-[#1A1714] leading-[1.25] mb-0.5">{post.title}</div>
-                                                <div className="text-[11.5px] text-[#8C857C]">{post.sub.split(/\s+/).filter(Boolean).slice(0, 10).join(' ')} ...</div>
+                                                <div className="text-[11.5px] text-[#8C857C]">{post.subtitle.split(/\s+/).filter(Boolean).slice(0, 10).join(' ')} ...</div>
                                             </div>
                                         </div>
                                     </td>
@@ -336,7 +337,9 @@ export default function PostsPage() {
                                     <td className="py-4 px-5 align-middle">
                                         <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <Link href={`/admin/literature/add?id=${encodeURIComponent(post.id)}`} className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">Edit</Link>
-                                            <button className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">Preview</button>
+                                            <button className="text-[11px] font-medium text-[#1A1714] bg-white border border-[#DDD7CC] px-2.5 py-1 rounded-[2px] hover:bg-[#EDE7D9]">{
+                                                post.category === "Literature" ? <Link href={`/literature/${encodeURIComponent(post.slug)}`} className="text-[11px] font-medium text-[#1A1714]">Preview</Link> : <Link href={`/films/${encodeURIComponent(post.slug)}`} className="text-[11px] font-medium text-[#1A1714]">Preview</Link>
+                                            }</button>
                                             <button onClick={() => void handleDeletePost(post.id)} disabled={deletingId === post.id} className="text-[11px] font-medium text-[#B5542A] bg-white border border-[#B5542A]/30 px-2.5 py-1 rounded-[2px] hover:bg-[#B5542A]/10 disabled:opacity-60 disabled:cursor-not-allowed">{deletingId === post.id ? "Deleting..." : "Delete"}</button>
                                         </div>
                                     </td>
