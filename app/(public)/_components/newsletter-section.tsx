@@ -40,7 +40,7 @@ export function NewsletterSection() {
     };
 
     return (
-        <section className="bg-[#ebe8e1] py-10">
+        <section className="bg-[#ebe8e1] py-10" id="newsletter">
             <MaxWidthWrapper className="px-4 text-center min-[360px]:px-6 min-[480px]:px-8 min-[640px]:px-10 min-[768px]:px-12 min-[1200px]:px-16">
                 <div className="mx-auto flex w-full max-w-80 flex-col items-center gap-6 px-4 text-center min-[360px]:max-w-90 min-[480px]:max-w-120 min-[640px]:max-w-160 min-[768px]:max-w-3xl min-[1024px]:max-w-5xl min-[1200px]:max-w-300 min-[1440px]:max-w-340 min-[1920px]:max-w-380 min-[768px]:gap-8">
                     <p className="text-xl text-[#4b3600] min-[768px]:text-2xl">

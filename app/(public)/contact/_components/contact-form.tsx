@@ -60,8 +60,8 @@ export function ContactForm() {
     };
 
     return (
-        <div className="mb-12 rounded-lg border border-zinc-100 bg-white p-8 shadow-sm md:p-10">
-            <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="mb-12 rounded-lg p-2 md:p-10">
+            <form className="space-y-3" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <div>
                         <label htmlFor="first-name" className="block text-sm font-medium text-zinc-700">
