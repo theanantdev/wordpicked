@@ -5,19 +5,19 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { GlobalSearch } from "./global-search";
+// import { GlobalSearch } from "./global-search";
 
 export function SiteHeader() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const pathname = usePathname();
 
     const navLinks = [
-        { name: "Home", href: "/" },
-        { name: "Pick of the day", href: "/pick-of-the-day" },
-        { name: "Literature", href: "/literature" },
-        { name: "Films", href: "/films" },
-        { name: "Artists", href: "/artists" },
-        { name: "About", href: "/about" },
+        { name: "HOME", href: "/" },
+        // { name: "Pick of the day", href: "/pick-of-the-day" },
+        { name: "LITERATURE", href: "/literature" },
+        { name: "FILMS", href: "/films" },
+        { name: "ARTISTS", href: "/artists" },
+        { name: "ABOUT", href: "/about" },
     ];
 
     return (
@@ -37,7 +37,7 @@ export function SiteHeader() {
 
                 {/* Desktop Navigation */}
                 <div className="flex items-center justify-center gap-3 min-[360px]:gap-4 min-[640px]:gap-5 min-[768px]:gap-6 min-[1024px]:gap-8">
-                    <GlobalSearch />
+                    {/* <GlobalSearch /> */}
 
                     <nav className="hidden items-center gap-4 min-[1024px]:flex min-[1200px]:gap-6 min-[1440px]:gap-8">
                         {navLinks.map((link) => {

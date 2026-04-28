@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useMobile } from "@/hooks/use-mobile";
+import { GlobalSearch } from "./global-search";
 
 type HeroSlide = {
     id?: string;
@@ -107,7 +108,9 @@ export function HeroSection() {
 
             {/* Content Layer */}
             <div className="relative z-30 h-full mx-auto w-full max-w-7xl flex flex-col items-center justify-end pb-16 px-4 text-center">
-
+                <div className="">
+                    <GlobalSearch />
+                </div>
                 {/* Pagination Dots */}
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3">
                     {slides.map((_, index) => {
