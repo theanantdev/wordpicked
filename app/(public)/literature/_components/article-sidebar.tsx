@@ -42,7 +42,7 @@ export function ArticleSidebar() {
         <aside className="flex h-full w-full flex-col">
 
             {/* Related Critiques */}
-            <div className="flex flex-col gap-8 px-4 min-[360px]:px-5 md:px-0">
+            <div className="flex flex-col gap-8 ">
                 <div className="border-b border-[#2B5940] pb-2">
                     <h3 className="font-sans text-[22px] leading-6.75 text-[#1C1C18]">Related Critiques</h3>
                 </div>

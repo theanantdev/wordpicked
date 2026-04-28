@@ -104,41 +104,44 @@ export default async function LiteraturePostPage({ params }: PageProps) {
 
     return (
         <main className="w-full bg-[#FDF9F2] min-h-screen">
-            <ArticleHero
-                categoryLabel={data.article.categoryLabel}
-                title={data.article.title}
-                subtitle={data.article.subtitle}
-                authorName={data.article.authorName}
-                publishDate={data.article.publishDate}
-                coverImageUrl={data.article.coverImageUrl}
-                viewCount={data.article.viewCount}
-            />
-            <ViewTracker articleId={data.article.id} />
-
-            <MaxWidthWrapper>
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-16 xl:gap-[100px] relative">
-                    {/* <div className=" w-full mx-auto flex flex-col gap-5 px-6 pt-5 md:px-15 lg:px-20  "> */}
-                    <ArticleBody blocks={data.article.blocks} tags={data.article.tags} />
-
-                    {/* Optional separator line visible only on large screens if desired */}
-                    {/* <div className="hidden lg:block absolute left-[calc(100%-250px-50px)] xl:left-[calc(100%-350px-50px)] top-0 bottom-0 w-px bg-[#E7E5E4]" /> */}
-
-
-                    {/* </div> */}
-                    <ArticleSidebar />
-                </div>
-            </MaxWidthWrapper>
-
-            <ArticleRelated items={data.related} />
-
-            {/* Comments */}
-            <div className="max-w-[1240px] mx-auto px-6 md:px-[60px] lg:px-[80px] pb-[80px]">
-                <CommentsSection
-                    articleId={data.article.id}
-                    articleSlug={data.article.slug}
-                    articleTitle={data.article.title}
-                    articleType="literature"
+            <div className=" w-full mx-auto flex px-2 flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
+                <ArticleHero
+                    categoryLabel={data.article.categoryLabel}
+                    title={data.article.title}
+                    subtitle={data.article.subtitle}
+                    authorName={data.article.authorName}
+                    publishDate={data.article.publishDate}
+                    coverImageUrl={data.article.coverImageUrl}
+                    viewCount={data.article.viewCount}
                 />
+                <ViewTracker articleId={data.article.id} />
+
+                <MaxWidthWrapper>
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-10 xl:gap-[60px] relative">
+
+                        <ArticleBody blocks={data.article.blocks} tags={data.article.tags} />
+
+                        {/* Optional separator line visible only on large screens if desired */}
+                        {/* <div className="hidden lg:block absolute left-[calc(100%-250px-50px)] xl:left-[calc(100%-350px-50px)] top-0 bottom-0 w-px bg-[#E7E5E4]" /> */}
+                        <div className="">
+                            <ArticleSidebar />
+                        </div>
+
+
+                    </div>
+                </MaxWidthWrapper>
+
+                <ArticleRelated items={data.related} />
+
+                {/* Comments */}
+                <div className="w-full mx-auto px-0  lg:px-[80px] pb-[80px]">
+                    <CommentsSection
+                        articleId={data.article.id}
+                        articleSlug={data.article.slug}
+                        articleTitle={data.article.title}
+                        articleType="literature"
+                    />
+                </div>
             </div>
         </main>
     );

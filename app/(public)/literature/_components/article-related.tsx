@@ -37,8 +37,8 @@ export function ArticleRelated({ items }: ArticleRelatedProps) {
     const data = items.length > 0 ? items : fallbackItems;
 
     return (
-        <section className="w-full bg-[#F7F3EC] border-t border-[#C1C9C1]/20 py-[96px] md:py-[120px]">
-            <div className="max-w-[1280px] md:max-w-[1536px] mx-auto px-6 md:px-[32px] lg:px-[80px] flex flex-col gap-12">
+        <section className="w-full bg-[#F7F3EC] border-t border-[#C1C9C1]/20 md:py-[120px]">
+            <div className="max-w-[1280px] md:max-w-[1536px] mx-auto md:px-[32px] lg:px-[80px] flex flex-col gap-12">
 
                 <h2 className="font-heading font-normal text-[30px] leading-[40px] text-center text-[#1C1C18]">
                     More from The Digital Curator
