@@ -23,7 +23,7 @@ export function LiteratureHero() {
 
             {/* Content Layer */}
             <MaxWidthWraper className="relative z-10 mx-auto flex min-h-88.25 flex-col items-start justify-center gap-6 px-1 py-1 sm:px-1 md:flex-row md:items-center md:justify-between md:gap-10 md:px-2">
-                <div className="flex w-full max-w-3xl flex-col">
+                <div className=" w-full mx-auto flex flex-col gap-5 px-6 pt-5 md:px-15 lg:px-20  ">
                     <p className="mb-2 font-sans text-[14px] uppercase tracking-[1.54px] text-[#D4AC5A] sm:text-[16px]">
                         Thursday, March 26 2026
                     </p>

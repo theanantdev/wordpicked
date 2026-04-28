@@ -45,21 +45,21 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
             );
         }
         return (
-            <div className="mx-auto mt-6 mb-10 grid gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:mt-5 min-[1440px]:gap-8">
+            <div className=" mt-6 mb-10 grid gap-5 min-[640px]:mt-7 min-[640px]:grid-cols-2 min-[768px]:gap-6 min-[1200px]:grid-cols-3 min-[1440px]:mt-5 min-[1440px]:gap-8">
                 {artists.slice(0, 3).map((artist) => (
                     <article key={artist.id} className="group text-center min-[1200px]:text-left shadow-md ">
-                        <div className="relative mx-auto aspect-square w-full max-w-84 overflow-hidden rounded-xs shadow-sm min-[768px]:max-w-96 min-[1200px]:mx-0 min-[1200px]:max-w-120 min-[1440px]:max-w-140 min-[1920px]:max-w-110">
+                        <div className="relative aspect-square w-full overflow-hidden rounded-xs shadow-sm">
                             <Image
                                 loading="lazy"
                                 src={artist.image_url || "/home/hero.jpg"}
                                 alt={artist.full_name}
                                 fill
-                                sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                sizes="(max-width: 650px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
                             />
                             <div className="absolute inset-0 bg-black/10 opacity-0 transition-opacity group-hover:opacity-100" />
                         </div>
-                        <div className="mx-auto px-3 mb-1 max-w-70 text-start min-[768px]:mx-0 min-[768px]:max-w-full" >
+                        <div className="mx-auto mb-1 w-full px-3 text-start min-[768px]:mx-0" >
                             <h3 className="font-heading text-[30px] text-[#1c1c18] transition-colors group-hover:text-[#DC2828] min-[768px]:mt-6 min-[768px]:text-[34px] min-[1200px]:text-[30px] min-[1440px]:text-[34px] min-[1920px]:text-[38px]">{artist.full_name}</h3>
                             <div >
 
@@ -79,8 +79,8 @@ export function ArtistsSection({ initialData }: { initialData?: { recent: Artist
 
     return (
         <section className="bg-[#fdf9f2] border-t border-zinc-100">
-            <MaxWidthWrapper className="px-3 py-1 min-[360px]:px-4 min-[640px]:px-5 min-[768px]:px-6 mt-2 mb-3   min-[1200px]:px-8 ">
-                <div>
+            <MaxWidthWrapper className=" py-1 min-[360px]:px-4 min-[640px]:px-5 min-[768px]:px-6 mt-2 mb-3   min-[1200px]:px-8 ">
+                <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
                     <div className="">
                         <div className="text-center min-[768px]:text-left">
                             <div className="flex flex-col border-b border-zinc-100">

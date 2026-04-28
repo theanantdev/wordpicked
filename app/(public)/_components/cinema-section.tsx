@@ -74,34 +74,36 @@ export function CinemaSection({ initialData }: { initialData?: { recent: Article
 
     return (
         <section className="bg-[#f7f3ec]">
-            <MaxWidthWrapper className="px-3  py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-10 min-[1920px]:py-14">
-                <div className="space-y-8 min-[768px]:space-y-10 min-[1200px]:space-y-7 min-[1440px]:space-y-10">
-                    <div className="grid items-center gap-10 min-[640px]:gap-10 min-[1024px]:grid-cols-2 min-[1200px]:gap-12 min-[1440px]:gap-16">
-                        <div className="relative aspect-4/3 w-full overflow-hidden shadow-sm min-[640px]:aspect-16/10 min-[1024px]:aspect-5/4 min-[1440px]:aspect-16/11 min-[1920px]:aspect-18/12">
-                            <Image
-                                loading="lazy"
-                                src="/home/image.png"
-                                alt="Cinema"
-                                fill
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 60vw"
-                                className="object-cover object-center"
-                            />
-                        </div>
-                        <div className="text-start min-[1024px]:text-left">
-                            <h2 className="font-heading text-center sm:text-start text-[34px] leading-tight text-[#1c1c18] min-[360px]:text-[36px] min-[640px]:text-[42px] min-[768px]:text-[48px] min-[1200px]:text-[54px] min-[1440px]:text-[60px] min-[1920px]:text-[68px]">Cinema as Ritual</h2>
-                            <p className=" items-start max-w-xl text-[15px] leading-7 text-zinc-700 min-[480px]:text-[16px] min-[768px]:mt-1 min-[768px]:text-[18px] min-[1024px]:mx-0 min-[1200px]:max-w-[58ch] min-[1440px]:text-[19px] min-[1920px]:text-[20px]">
-                                Our film critiques go beyond the surface of plot and performance. We dissect the visual grammar,
-                                the acoustic textures, and the psychological resonance of masterpieces.
-                            </p>
-                            <div className="mt-8 flex flex-col items-center justify-center gap-6 min-[480px]:flex-row min-[480px]:gap-8 min-[1024px]:justify-start min-[1440px]:mt-10 min-[1440px]:gap-10">
-                                <Link className="inline-flex border-b-2 border-[#4b3600] pb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#11412a] transition-all hover:border-[#DC2828] hover:text-[#DC2828] min-[768px]:text-xs min-[1440px]:text-[13px]" href="/films">
-                                    Explore Filmography
-                                </Link>
+            <MaxWidthWrapper className="  py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-10 min-[1920px]:py-14">
+                <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
+                    <div className="space-y-8 min-[768px]:space-y-10 min-[1200px]:space-y-7 min-[1440px]:space-y-10">
+                        <div className="grid items-center gap-10 min-[640px]:gap-10 min-[1024px]:grid-cols-2 min-[1200px]:gap-12 min-[1440px]:gap-16">
+                            <div className="relative aspect-4/3 w-full overflow-hidden shadow-sm min-[640px]:aspect-16/10 min-[1024px]:aspect-5/4 min-[1440px]:aspect-16/11 min-[1920px]:aspect-18/12">
+                                <Image
+                                    loading="lazy"
+                                    src="/home/image.png"
+                                    alt="Cinema"
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 60vw"
+                                    className="object-cover object-center"
+                                />
+                            </div>
+                            <div className="text-start min-[1024px]:text-left">
+                                <h2 className="font-heading text-center sm:text-start text-[34px] leading-tight text-[#1c1c18] min-[360px]:text-[36px] min-[640px]:text-[42px] min-[768px]:text-[48px] min-[1200px]:text-[54px] min-[1440px]:text-[60px] min-[1920px]:text-[68px]">Cinema as Ritual</h2>
+                                <p className=" items-start max-w-xl text-[15px] leading-7 text-zinc-700 min-[480px]:text-[16px] min-[768px]:mt-1 min-[768px]:text-[18px] min-[1024px]:mx-0 min-[1200px]:max-w-[58ch] min-[1440px]:text-[19px] min-[1920px]:text-[20px]">
+                                    Our film critiques go beyond the surface of plot and performance. We dissect the visual grammar,
+                                    the acoustic textures, and the psychological resonance of masterpieces.
+                                </p>
+                                <div className="mt-8 flex flex-col items-center justify-center gap-6 min-[480px]:flex-row min-[480px]:gap-8 min-[1024px]:justify-start min-[1440px]:mt-10 min-[1440px]:gap-10">
+                                    <Link className="inline-flex border-b-2 border-[#4b3600] pb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[#11412a] transition-all hover:border-[#DC2828] hover:text-[#DC2828] min-[768px]:text-xs min-[1440px]:text-[13px]" href="/films">
+                                        Explore Filmography
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {renderGrid(data?.recent || [])}
+                        {renderGrid(data?.recent || [])}
+                    </div>
                 </div>
             </MaxWidthWrapper>
         </section>

@@ -56,34 +56,36 @@ export function PickOfDaySection({ initialData }: { initialData?: Article | null
     });
 
     return (
-        <MaxWidthWrapper className="px-1  min-[360px]:px-4 min-[360px]:py-9 min-[480px]:px-5 min-[640px]:py-10 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-10 min-[1200px]:px-8 min-[1200px]:py-8 min-[1440px]:py-10 min-[1920px]:py-14">
-            <SectionHeader title="Pick Of The Day" redirectionUrl="/pick-of-the-day" className="" />
-            <div className="grid gap-6 min-[640px]:gap-8 min-[1024px]:grid-cols-[1fr_1.6fr] min-[1024px]:items-start min-[1200px]:grid-cols-[1fr_1.8fr] min-[1440px]:gap-10 min-[1920px]:grid-cols-[1fr_2fr]">
-                <div className="relative mx-0 aspect-16/13 w-[90%] min-[1024px]:w-[88%]">
-                    <Image
-                        loading="lazy"
-                        src={data.featured_image_url || "/home/pick-of-the-day.png"}
-                        alt={data.title}
-                        fill
-                        className="object-cover transition-transform duration-500  shadow-[0_1px_2px_rgba(0,0,0,0.05)] rounded-xs"
-                    />
-                </div>
-                <div className="space-y-1 text-start max-w-2xl min-[1024px]:space-y-8 min-[1024px]:text-left min-[1440px]:space-y-10">
-                    <div className="space-y-2 min-[768px]:space-y-4 min-[1440px]:space-y-5">
-                        <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500 min-[640px]:text-xs">{displayDate}</p>
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#DC2828] min-[768px]:text-sm">{data.category}</p>
-                        <h3 className="font-heading text-[18px] font-semibold leading-tight text-zinc-900 min-[360px]:text-[30px] min-[480px]:text-[34px] min-[768px]:text-[38px] min-[1024px]:text-[42px] min-[1440px]:text-[42px] min-[1920px]:text-[60px]">
-                            {data.title}
-                        </h3>
-                        <p className=" max-w-2xl leading-relaxed text-zinc-600 min-[480px]:text-[15px] min-[1024px]:mx-0 min-[1024px]:text-[16px] min-[1440px]:max-w-[48ch] min-[1440px]:text-[18px] min-[1920px]:text-[20px]">
-                            {data.subtitle}
-                        </p>
+        <MaxWidthWrapper className=" min-[360px]:px-4 min-[360px]:py-9 min-[480px]:px-5 min-[640px]:py-10 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-10 min-[1200px]:px-8 min-[1200px]:py-8 min-[1440px]:py-10 min-[1920px]:py-14">
+            <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
+                <SectionHeader title="Pick Of The Day" redirectionUrl="/pick-of-the-day" className="" />
+                <div className="grid gap-6 min-[640px]:gap-8 min-[1024px]:grid-cols-[1fr_1.6fr] min-[1024px]:items-start min-[1200px]:grid-cols-[1fr_1.8fr] min-[1440px]:gap-10 min-[1920px]:grid-cols-[1fr_2fr]">
+                    <div className="relative mx-0 aspect-16/13 w-[100%] min-[1024px]:w-[88%]">
+                        <Image
+                            loading="lazy"
+                            src={data.featured_image_url || "/home/pick-of-the-day.png"}
+                            alt={data.title}
+                            fill
+                            className="object-cover transition-transform duration-500  shadow-[0_1px_2px_rgba(0,0,0,0.05)] rounded-xs"
+                        />
                     </div>
-                    <Link href={`/${data.category === 'films' ? 'films' : 'literature'}/${data.slug}`}>
-                        <button className="inline-flex h-10 items-center gap-2 self-center rounded-full bg-[#DC2828] px-6 py-2 text-xs font-medium uppercase tracking-[0.12em] text-white transition-all hover:bg-black hover:px-8 min-[640px]:h-11 min-[640px]:px-8 min-[640px]:text-sm min-[1024px]:self-start min-[1440px]:h-12 min-[1440px]:px-10 min-[1440px]:text-base">
-                            Read More <ArrowRight className="size-4" />
-                        </button>
-                    </Link>
+                    <div className="space-y-1 text-start max-w-2xl min-[1024px]:space-y-8 min-[1024px]:text-left min-[1440px]:space-y-10">
+                        <div className="space-y-2 min-[768px]:space-y-4 min-[1440px]:space-y-5">
+                            <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500 min-[640px]:text-xs">{displayDate}</p>
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#DC2828] min-[768px]:text-sm">{data.category}</p>
+                            <h3 className="font-heading text-[18px] font-semibold leading-tight text-zinc-900 min-[360px]:text-[30px] min-[480px]:text-[34px] min-[768px]:text-[38px] min-[1024px]:text-[42px] min-[1440px]:text-[42px] min-[1920px]:text-[60px]">
+                                {data.title}
+                            </h3>
+                            <p className=" max-w-2xl leading-relaxed text-zinc-600 min-[480px]:text-[15px] min-[1024px]:mx-0 min-[1024px]:text-[16px] min-[1440px]:max-w-[48ch] min-[1440px]:text-[18px] min-[1920px]:text-[20px]">
+                                {data.subtitle}
+                            </p>
+                        </div>
+                        <Link href={`/${data.category === 'films' ? 'films' : 'literature'}/${data.slug}`}>
+                            <button className="inline-flex h-10 items-center gap-2 self-center rounded-full bg-[#DC2828] px-6 py-2 text-xs font-medium uppercase tracking-[0.12em] text-white transition-all hover:bg-black hover:px-8 min-[640px]:h-11 min-[640px]:px-8 min-[640px]:text-sm min-[1024px]:self-start min-[1440px]:h-12 min-[1440px]:px-10 min-[1440px]:text-base">
+                                Read More <ArrowRight className="size-4" />
+                            </button>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </MaxWidthWrapper>

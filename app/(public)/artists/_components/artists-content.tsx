@@ -93,7 +93,7 @@ export function ArtistsContent({ artists }: { artists: Artist[] }) {
             </MaxWidthWrapper>
             <div className="bg-[#FDF9F2]">
                 <MaxWidthWrapper>
-                    <div className=" w-full mx-auto flex flex-col gap-5 px-6 pt-5 md:px-15 lg:px-20  ">
+                    <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
                         {/* Writers & Novelists Section */}
                         {visibleWriters.length > 0 && (
                             <div className="flex flex-col gap-10">

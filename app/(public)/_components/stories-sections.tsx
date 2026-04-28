@@ -73,11 +73,11 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
     };
 
     return (<section className="  bg-[#fdf9f2]">
-        <MaxWidthWrapper className="px-1  py-2 min-[360px]:px-4 min-[360px]:py-1 min-[480px]:px-5 min-[640px]:py-1 min-[768px]:px-6 min-[768px]:py-1 min-[1024px]:py-1 min-[1200px]:px-8 min-[1200px]:py-1 min-[1440px]:py-0 min-[1920px]:py-1">
+        <MaxWidthWrapper className=" py-2 min-[360px]:px-4 min-[360px]:py-1 min-[480px]:px-5 min-[640px]:py-1 min-[768px]:px-6 min-[768px]:py-1 min-[1024px]:py-1 min-[1200px]:px-8 min-[1200px]:py-1 min-[1440px]:py-0 min-[1920px]:py-1">
 
             <div className="mx-auto w-full space-y-5 min-[768px]:space-y-10 min-[1200px]:space-y-10 min-[1440px]:space-y-10">
                 {/* Literature Section */}
-                <div>
+                <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
                     <div className="">
                         <div className="flex flex-col">
                             <div className="h-1 w-12 bg-[#DC2828]" />
@@ -98,7 +98,7 @@ export function StoriesSections({ initialLiterature, initialFilms }: { initialLi
                 </div>
 
                 {/* Films Section */}
-                <div>
+                <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
                     <div className="">
                         <div className="flex flex-col">
                             <div className="h-1 w-12 bg-[#DC2828]" />

@@ -139,9 +139,9 @@ export function LiteratureContent() {
     };
 
     return (
-        <MaxWidthWrapper className="px-3  py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-6 min-[1024px]:py-8 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-10 min-[1920px]:py-14">
+        <MaxWidthWrapper className="w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
             {/* Header & Filters */}
-            <div className="w-full border-b border-zinc-100 bg-white/50 backdrop-blur-md sticky top-0 z-40">
+            <div className="w-full border-b border-zinc-100 bg-white/50 backdrop-blur-md top-0 z-40">
                 <div className="flex flex-col gap-4 py-6">
                     {/* Categories */}
                     <div className="flex flex-wrap items-center gap-2">
@@ -235,7 +235,7 @@ export function LiteratureContent() {
                                     </div>
                                 </div>
 
-                                <div className="mt-6 flex flex-col gap-3 pl-1 pb-1">
+                                <div className="mt-6 flex flex-col gap-3 pl-2 pb-2">
                                     <div className="flex items-center gap-3">
                                         <span className="text-[10px] font-bold tracking-[2px] text-zinc-400 uppercase">{article.readTime}</span>
                                         <span className="w-1 h-1 bg-zinc-200 rounded-full" />

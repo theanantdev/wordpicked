@@ -37,7 +37,7 @@ export default async function PicOfTheDayPage() {
         <main className="bg-[#FAFAFA] min-h-screen">
             <PicOfTheDayHero />
 
-            <MaxWidthWrapper className="px-1 py-2 min-[360px]:px-1 min-[480px]:py-10 min-[640px]:px-2 min-[768px]:px-3 min-[768px]:py-6 min-[1024px]:py-7 min-[1200px]:px-4 min-[1200px]:py-4 min-[1440px]:py-5 min-[1920px]:py-5">
+            <MaxWidthWrapper className="w-full mx-auto flex flex-col gap-5 px-1 pt-5 md:px-15 lg:px-20">
                 {featured ? (
                     <FeaturedPickCard article={featured} />
                 ) : (

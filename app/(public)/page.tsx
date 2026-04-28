@@ -13,7 +13,8 @@ export default async function Home() {
   const homeData = await fetchHomeData();
   // console.log("Fetched home data:", homeData.artists); // Debug log to verify data structure
   return (
-    <main className="bg-[#fafafa] text-zinc-900">
+    <main className="bg-[#fafafa] text-zinc-900 ">
+
       <HeroSection />
       <PickOfDaySection initialData={homeData.pickOfDay} />
       <StoriesSections

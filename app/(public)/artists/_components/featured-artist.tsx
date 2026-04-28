@@ -8,7 +8,7 @@ export function FeaturedArtist({ artist }: { artist: Artist }) {
     return (
         <div className="bg-[#EBE8E1]">
             <MaxWidthWraper className="flex w-full justify-start border-t-[0.8px] border-white/5 py-10 min-[360px]:py-12 md:py-15">
-                <div className="flex w-full flex-col items-start gap-8 px-4 min-[360px]:px-5 sm:px-6 md:flex-row md:items-start md:gap-10 md:px-10 lg:px-12">
+                <div className="flex w-full flex-col items-start gap-8  min-[360px]:px-1 sm:px-6 md:flex-row md:items-start md:gap-10 md:px-10 lg:px-12">
 
                     {/* Left Image */}
                     <div className="relative aspect-4/5 w-full shrink-0 md:aspect-3/4 md:w-[45%] lg:w-[35%]">

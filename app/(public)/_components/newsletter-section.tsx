@@ -41,44 +41,46 @@ export function NewsletterSection() {
 
     return (
         <section className="bg-[#ebe8e1] py-10" id="newsletter">
-            <MaxWidthWrapper className="px-4 text-center min-[360px]:px-6 min-[480px]:px-8 min-[640px]:px-10 min-[768px]:px-12 min-[1200px]:px-16">
-                <div className="mx-auto flex w-full max-w-80 flex-col items-center gap-6 px-4 text-center min-[360px]:max-w-90 min-[480px]:max-w-120 min-[640px]:max-w-160 min-[768px]:max-w-3xl min-[1024px]:max-w-5xl min-[1200px]:max-w-300 min-[1440px]:max-w-340 min-[1920px]:max-w-380 min-[768px]:gap-8">
-                    <p className="text-xl text-[#4b3600] min-[768px]:text-2xl">
-                        <svg width="33" height="30" viewBox="0 0 33 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16.5 29.25C15.3 28.3 14 27.5625 12.6 27.0375C11.2 26.5125 9.75 26.25 8.25 26.25C7.2 26.25 6.16875 26.3875 5.15625 26.6625C4.14375 26.9375 3.175 27.325 2.25 27.825C1.725 28.1 1.21875 28.0875 0.73125 27.7875C0.24375 27.4875 0 27.05 0 26.475V8.4C0 8.125 0.06875 7.8625 0.20625 7.6125C0.34375 7.3625 0.55 7.175 0.825 7.05C1.975 6.45 3.175 6 4.425 5.7C5.675 5.4 6.95 5.25 8.25 5.25C9.7 5.25 11.1188 5.4375 12.5063 5.8125C13.8938 6.1875 15.225 6.75 16.5 7.5V25.65C17.775 24.85 19.1125 24.25 20.5125 23.85C21.9125 23.45 23.325 23.25 24.75 23.25C25.65 23.25 26.5312 23.325 27.3937 23.475C28.2562 23.625 29.125 23.85 30 24.15V6.15C30.375 6.275 30.7438 6.40625 31.1063 6.54375C31.4688 6.68125 31.825 6.85 32.175 7.05C32.45 7.175 32.6562 7.3625 32.7938 7.6125C32.9313 7.8625 33 8.125 33 8.4V26.475C33 27.05 32.7562 27.4875 32.2687 27.7875C31.7812 28.0875 31.275 28.1 30.75 27.825C29.825 27.325 28.8563 26.9375 27.8438 26.6625C26.8312 26.3875 25.8 26.25 24.75 26.25C23.25 26.25 21.8 26.5125 20.4 27.0375C19 27.5625 17.7 28.3 16.5 29.25ZM19.5 21.75V7.5L27 0V15L19.5 21.75ZM13.5 24.1875V9.3375C12.675 8.9875 11.8187 8.71875 10.9312 8.53125C10.0437 8.34375 9.15 8.25 8.25 8.25C7.325 8.25 6.425 8.3375 5.55 8.5125C4.675 8.6875 3.825 8.95 3 9.3V24.1875C3.875 23.8625 4.74375 23.625 5.60625 23.475C6.46875 23.325 7.35 23.25 8.25 23.25C9.15 23.25 10.0312 23.325 10.8938 23.475C11.7563 23.625 12.625 23.8625 13.5 24.1875ZM13.5 24.1875V9.3375V24.1875Z" fill="#4B3600" />
-                        </svg>
-                    </p>
-                    <blockquote className="font-heading sm:text-center text-start text-[24px] leading-tight text-[#11412a] min-[360px]:text-[26px] min-[640px]:text-[30px] min-[768px]:text-[34px] min-[1200px]:text-[40px] min-[1440px]:text-[46px]">
-                        &ldquo;Curating is the art of deciding what stays in the room
-                        when everyone else has left. It is the final word on what truly matters.&rdquo;
-                    </blockquote>
+            <MaxWidthWrapper className=" text-center min-[360px]:px-6 min-[480px]:px-8 min-[640px]:px-10 min-[768px]:px-12 min-[1200px]:px-16">
+                <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-8 lg:px-8  ">
+                    <div className="mx-auto flex w-full max-w-80 flex-col items-center gap-6 px-4 text-center min-[360px]:max-w-90 min-[480px]:max-w-120 min-[640px]:max-w-160 min-[768px]:max-w-3xl min-[1024px]:max-w-5xl min-[1200px]:max-w-300 min-[1440px]:max-w-340 min-[1920px]:max-w-380 min-[768px]:gap-8">
+                        <p className="text-xl text-[#4b3600] min-[768px]:text-2xl">
+                            <svg width="33" height="30" viewBox="0 0 33 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.5 29.25C15.3 28.3 14 27.5625 12.6 27.0375C11.2 26.5125 9.75 26.25 8.25 26.25C7.2 26.25 6.16875 26.3875 5.15625 26.6625C4.14375 26.9375 3.175 27.325 2.25 27.825C1.725 28.1 1.21875 28.0875 0.73125 27.7875C0.24375 27.4875 0 27.05 0 26.475V8.4C0 8.125 0.06875 7.8625 0.20625 7.6125C0.34375 7.3625 0.55 7.175 0.825 7.05C1.975 6.45 3.175 6 4.425 5.7C5.675 5.4 6.95 5.25 8.25 5.25C9.7 5.25 11.1188 5.4375 12.5063 5.8125C13.8938 6.1875 15.225 6.75 16.5 7.5V25.65C17.775 24.85 19.1125 24.25 20.5125 23.85C21.9125 23.45 23.325 23.25 24.75 23.25C25.65 23.25 26.5312 23.325 27.3937 23.475C28.2562 23.625 29.125 23.85 30 24.15V6.15C30.375 6.275 30.7438 6.40625 31.1063 6.54375C31.4688 6.68125 31.825 6.85 32.175 7.05C32.45 7.175 32.6562 7.3625 32.7938 7.6125C32.9313 7.8625 33 8.125 33 8.4V26.475C33 27.05 32.7562 27.4875 32.2687 27.7875C31.7812 28.0875 31.275 28.1 30.75 27.825C29.825 27.325 28.8563 26.9375 27.8438 26.6625C26.8312 26.3875 25.8 26.25 24.75 26.25C23.25 26.25 21.8 26.5125 20.4 27.0375C19 27.5625 17.7 28.3 16.5 29.25ZM19.5 21.75V7.5L27 0V15L19.5 21.75ZM13.5 24.1875V9.3375C12.675 8.9875 11.8187 8.71875 10.9312 8.53125C10.0437 8.34375 9.15 8.25 8.25 8.25C7.325 8.25 6.425 8.3375 5.55 8.5125C4.675 8.6875 3.825 8.95 3 9.3V24.1875C3.875 23.8625 4.74375 23.625 5.60625 23.475C6.46875 23.325 7.35 23.25 8.25 23.25C9.15 23.25 10.0312 23.325 10.8938 23.475C11.7563 23.625 12.625 23.8625 13.5 24.1875ZM13.5 24.1875V9.3375V24.1875Z" fill="#4B3600" />
+                            </svg>
+                        </p>
+                        <blockquote className="font-heading sm:text-center text-start text-[24px] leading-tight text-[#11412a] min-[360px]:text-[26px] min-[640px]:text-[30px] min-[768px]:text-[34px] min-[1200px]:text-[40px] min-[1440px]:text-[46px]">
+                            &ldquo;Curating is the art of deciding what stays in the room
+                            when everyone else has left. It is the final word on what truly matters.&rdquo;
+                        </blockquote>
 
-                    <div className="w-full max-w-full min-[640px]:max-w-130 min-[768px]:max-w-150 min-[1200px]:max-w-160">
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-3 h-24 min-[640px]:flex-row min-[640px]:items-center">
-                            <input
-                                className="h-11 w-full flex-1 bg-[#fdf9f2] px-4 text-sm text-zinc-700 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50 min-[640px]:h-12"
-                                placeholder="Enter your email for our weekly dispatch"
-                                type="email"
-                                required
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                disabled={status === "loading"}
-                            />
-                            <button
-                                type="submit"
-                                disabled={status === "loading"}
-                                className="h-11 w-full bg-[#11412a] px-6 text-[11px] uppercase tracking-[0.14em] text-white transition hover:bg-[#0a2f1e] disabled:opacity-50 min-[480px]:px-8 min-[640px]:h-12 min-[640px]:w-auto"
-                            >
-                                {status === "loading" ? "Subscribing..." : "Subscribe"}
-                            </button>
-                        </form>
+                        <div className="w-full max-w-full min-[640px]:max-w-130 min-[768px]:max-w-150 min-[1200px]:max-w-160">
+                            <form onSubmit={handleSubmit} className="flex flex-col gap-3 h-24 min-[640px]:flex-row min-[640px]:items-center">
+                                <input
+                                    className="h-11 w-full flex-1 bg-[#fdf9f2] px-4 text-sm text-zinc-700 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50 min-[640px]:h-12"
+                                    placeholder="Enter your email for our weekly dispatch"
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={status === "loading"}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={status === "loading"}
+                                    className="h-11 w-full bg-[#11412a] px-6 text-[11px] uppercase tracking-[0.14em] text-white transition hover:bg-[#0a2f1e] disabled:opacity-50 min-[480px]:px-8 min-[640px]:h-12 min-[640px]:w-auto"
+                                >
+                                    {status === "loading" ? "Subscribing..." : "Subscribe"}
+                                </button>
+                            </form>
 
-                        {status === "success" && (
-                            <p className="mt-3 text-sm text-[#11412a] font-medium">{message}</p>
-                        )}
-                        {status === "error" && (
-                            <p className="mt-3 text-sm text-[#DC2828] font-medium">{message}</p>
-                        )}
+                            {status === "success" && (
+                                <p className="mt-3 text-sm text-[#11412a] font-medium">{message}</p>
+                            )}
+                            {status === "error" && (
+                                <p className="mt-3 text-sm text-[#DC2828] font-medium">{message}</p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </MaxWidthWrapper>

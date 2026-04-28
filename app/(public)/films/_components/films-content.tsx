@@ -142,7 +142,7 @@ export function FilmsContent() {
     return (
         <div className="min-h-screen bg-[#F5F0E8]/30">
             {/* Toolbar: Search, Tabs, and Sort */}
-            <div className="sticky top-0 z-40 w-full border-b border-zinc-200 bg-[#F5F0E8] py-4 shadow-sm">
+            <div className="top-0 z-40 w-full border-b border-zinc-200 py-4 shadow-sm">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
@@ -213,8 +213,8 @@ export function FilmsContent() {
                 </div>
             </div>
 
-            <MaxWidthWrapper className="px-3 py-8 min-[360px]:px-4 min-[480px]:py-10 min-[640px]:px-5 min-[768px]:px-6 min-[768px]:py-12 min-[1024px]:py-14 min-[1200px]:px-6 min-[1200px]:py-6 min-[1440px]:py-10 min-[1920px]:py-14">
-                <div className="">
+            <MaxWidthWrapper className="">
+                <div className=" w-full mx-auto flex flex-col gap-5 pt-5 md:px-15 lg:px-20  ">
                     {/* Grid */}
                     <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3">
                         {items.map(article => (

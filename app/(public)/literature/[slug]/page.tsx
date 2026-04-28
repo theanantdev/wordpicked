@@ -117,11 +117,14 @@ export default async function LiteraturePostPage({ params }: PageProps) {
 
             <MaxWidthWrapper>
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-16 xl:gap-[100px] relative">
+                    {/* <div className=" w-full mx-auto flex flex-col gap-5 px-6 pt-5 md:px-15 lg:px-20  "> */}
                     <ArticleBody blocks={data.article.blocks} tags={data.article.tags} />
 
                     {/* Optional separator line visible only on large screens if desired */}
                     {/* <div className="hidden lg:block absolute left-[calc(100%-250px-50px)] xl:left-[calc(100%-350px-50px)] top-0 bottom-0 w-px bg-[#E7E5E4]" /> */}
 
+
+                    {/* </div> */}
                     <ArticleSidebar />
                 </div>
             </MaxWidthWrapper>
